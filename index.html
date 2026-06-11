@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#ffffff">
+<title>RESONANCE — angel.com</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23050505'/%3E%3Cpath d='M14 43h36M14 32h36M14 21h36' stroke='%23f4f1eb' stroke-width='4'/%3E%3C/svg%3E">
+
+<meta name="description" content="Find angel.com movies by meaning.">
+<meta property="og:title" content="RESONANCE — angel.com">
+<meta property="og:description" content="Find angel.com movies by meaning.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="RESONANCE">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RESONANCE — angel.com">
+<meta name="twitter:description" content="Find angel.com movies by meaning.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff;
+  --bg2:#f5f3ee;
+  --ink:#0b0b0b;
+  --ink-mid:rgba(11,11,11,.56);
+  --ink-soft:rgba(11,11,11,.36);
+  --ink-faint:rgba(11,11,11,.16);
+  --line:rgba(11,11,11,.18);
+  --wall:#050505;
+  --wall-filter:contrast(1.08) saturate(1.04) brightness(.98);
+  --tile-lift:0 10px 28px rgba(0,0,0,.18);
+  --tile-edge:0 0 0 1px rgba(255,255,255,.03);
+  --grain-svg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+  --hero-text:#f6f1e8;
+  --hero-text-mid:rgba(246,241,232,.72);
+  --hero-text-soft:rgba(246,241,232,.48);
+  --accent:#b24b36;
+  --mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;
+  --sans:'General Sans','Inter',system-ui,sans-serif;
+  --brand:'Unbounded','General Sans',sans-serif;
+}
+body[data-theme="dark"]{
+  --bg:#050505;
+  --bg2:#0a0a0a;
+  --ink:#f4f1eb;
+  --ink-mid:rgba(244,241,235,.56);
+  --ink-soft:rgba(244,241,235,.36);
+  --ink-faint:rgba(244,241,235,.14);
+  --line:rgba(244,241,235,.14);
+  --accent:#d86b4c;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+button,input,textarea{font:inherit}
+button{border:0;background:none;color:inherit;cursor:pointer}
+img{display:block}
+
+html,body{
+  width:100%;min-height:100%;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--sans);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body::after{
+  content:'';position:fixed;inset:0;z-index:999;pointer-events:none;
+  opacity:.032;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.76' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:220px;
+}
+
+.top{
+  min-height:100svh;
+  display:grid;
+  grid-template-columns:34.5vw 1fr;
+  border-bottom:1px solid var(--line);
+  background:var(--bg);
+}
+
+.search-pane{
+  min-height:100svh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:64px clamp(28px,4vw,72px);
+  position:relative;
+}
+
+.brand{
+  font-family:var(--brand);
+  font-weight:700;
+  text-transform:uppercase;
+  font-size:clamp(38px,4.6vw,66px);
+  letter-spacing:-.075em;
+  line-height:.84;
+  color:var(--ink);
+}
+
+.prompt-label{
+  margin-top:34px;
+  font-family:var(--mono);font-size:10px;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-mid);
+}
+.search-form{
+  margin-top:18px;max-width:520px;
+  display:grid;grid-template-columns:minmax(0,1fr) 30px;
+  gap:14px;align-items:end;
+  border-bottom:1px solid var(--ink-mid);
+  padding-bottom:12px;
+}
+#query{
+  width:100%;min-width:0;outline:0;border:0;background:transparent;
+  color:var(--ink);font-family:var(--mono);font-size:18px;line-height:1.25;
+}
+#query::placeholder{color:var(--ink-soft)}
+#go{
+  font-family:var(--mono);font-size:24px;line-height:1;
+  color:var(--ink-mid);transition:transform .15s ease,color .15s ease;
+}
+#go:hover{transform:translateX(3px);color:var(--ink)}
+.search-hint{
+  margin-top:12px;max-width:520px;
+  font-family:var(--mono);font-size:10px;
+  text-transform:uppercase;letter-spacing:.12em;
+  color:var(--ink-soft);
+  display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+
+.mode-row{
+  margin-top:18px;max-width:560px;
+  display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+}
+.source-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 12px;
+  border:1px solid var(--ink-faint);
+  font-family:var(--mono);font-size:10px;
+  text-transform:uppercase;letter-spacing:.08em;
+  color:var(--ink-mid);
+}
+.source-badge .dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--accent);
+  animation:pulse 2s ease-in-out infinite;
+}
+
+.theme-switch{
+  width:34px;height:16px;padding:0;border:0;
+  background:transparent;position:relative;
+  opacity:.6;transition:opacity .16s,transform .16s;
+}
+.theme-switch:hover{opacity:.9}
+.theme-switch:active{transform:scale(.97)}
+.theme-switch::before{
+  content:'';position:absolute;inset:0;border-radius:999px;
+  background:var(--ink-faint);
+  box-shadow:inset 0 0 0 1px var(--ink-faint);
+}
+.theme-switch span{
+  position:absolute;top:3px;left:3px;
+  width:10px;height:10px;border-radius:2px;
+  background:var(--ink);transition:transform .18s cubic-bezier(.4,0,.2,1);
+}
+body[data-theme="dark"] .theme-switch span{transform:translateX(18px)}
+
+.corpus-load-state{
+  margin-top:14px;max-width:520px;
+  font-family:var(--mono);
+}
+.corpus-load-copy{
+  font-size:10px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-soft);
+  min-height:1.2em;font-variant-numeric:tabular-nums;
+}
+.corpus-load-bar{
+  position:relative;margin-top:8px;height:1px;
+  overflow:hidden;background:var(--ink-faint);
+}
+.corpus-load-bar span{
+  position:absolute;top:0;left:0;height:100%;width:0%;
+  background:var(--ink);transition:width .32s;
+}
+body.corpus-loading .corpus-load-copy{color:var(--ink-mid)}
+body.corpus-loading .corpus-load-bar span{
+  width:34%;animation:barSweep 1.15s cubic-bezier(.4,0,.2,1) infinite;
+}
+body.corpus-ready .corpus-load-bar span{width:100%;animation:none;opacity:.4}
+
+.query-traces{
+  margin-top:20px;max-width:520px;
+  font-family:var(--mono);color:var(--ink-soft);user-select:none;
+}
+.trace-label{
+  font-size:9px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px;
+}
+.trace-line{
+  min-height:18px;display:flex;align-items:baseline;gap:8px;
+  font-size:11px;line-height:1.45;letter-spacing:.015em;
+  color:var(--ink-mid);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.trace-prefix{color:var(--ink-faint)}
+.trace-cursor{
+  display:inline-block;width:6px;height:1em;
+  border-right:1px solid var(--ink-soft);
+  transform:translateY(2px);animation:blink 1.1s steps(2,end) infinite;
+}
+
+.resolve-state{display:none;margin-top:20px;max-width:520px;font-family:var(--mono)}
+body.searching .resolve-state{display:block}
+body.searching .query-traces{display:none}
+.resolve-kicker{
+  font-size:9px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:6px;
+}
+.resolve-status{
+  min-height:18px;font-size:11px;letter-spacing:.06em;
+  color:var(--ink-mid);font-weight:500;margin-bottom:10px;
+}
+.resolve-bar{
+  position:relative;height:1px;overflow:hidden;background:var(--ink-faint);
+}
+.resolve-bar span{
+  position:absolute;top:0;left:0;height:100%;width:34%;
+  background:var(--ink);transform:translateX(-120%);
+}
+body.searching .resolve-bar span{animation:barSweep 1.15s cubic-bezier(.4,0,.2,1) infinite}
+
+.film-wall-pane{
+  min-height:100svh;height:100svh;
+  background:var(--wall);overflow:auto;position:relative;
+  overscroll-behavior:contain;
+}
+.film-wall-pane::-webkit-scrollbar{width:0;height:0}
+
+.film-wall{
+  position:relative;
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-auto-rows:auto;
+  gap:1px;
+  background:var(--wall);
+}
+
+.wall-cell{
+  position:relative;overflow:hidden;
+  aspect-ratio:3/4;
+  background:var(--wall);
+  box-shadow:var(--tile-edge),var(--tile-lift);
+  isolation:isolate;
+}
+.wall-cell img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  filter:var(--wall-filter);
+  transform:scale(1.01);
+  transition:filter .3s ease,transform .3s ease;
+}
+.wall-cell::before{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(circle at center,
+    rgba(0,0,0,0) 42%,
+    rgba(0,0,0,.08) 76%,
+    rgba(0,0,0,.16) 100%);
+}
+.wall-cell::after{
+  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:
+    linear-gradient(to bottom,transparent 55%,rgba(0,0,0,.12) 100%),
+    var(--grain-svg);
+  background-size:auto,160px 160px;
+  mix-blend-mode:soft-light;
+  opacity:.12;
+}
+
+body.searching .film-wall{animation-play-state:paused}
+body.searching .film-wall-pane{
+  filter:brightness(.68) saturate(.84);
+  transition:filter .3s ease;
+}
+body.searching .resolve-kicker{color:var(--ink-mid)}
+body.searching .resolve-status{color:var(--ink);font-weight:600}
+
+body.cutting::before{
+  content:'';position:fixed;inset:0;z-index:2000;
+  background:#000;pointer-events:none;
+  animation:cutFlash .24s ease both;
+}
+body.has-results .results{animation:fadeIn .28s ease both}
+
+body.has-results .top{display:none}
+
+.results{
+  display:none;
+  grid-template-columns:minmax(380px,52vw) 1fr;
+  min-height:100svh;background:var(--bg);
+}
+body.has-results .results{display:grid}
+
+.feature{
+  position:relative;min-height:100svh;
+  background:#080808;color:var(--hero-text);overflow:hidden;
+}
+.feature-media{
+  position:absolute;inset:0;width:100%;height:100%;
+  background:#050505;overflow:hidden;isolation:isolate;
+}
+.feature-media::before{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:radial-gradient(circle at center,
+    rgba(0,0,0,0) 44%,
+    rgba(0,0,0,.08) 78%,
+    rgba(0,0,0,.16) 100%);
+}
+.feature-media::after{
+  content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:var(--grain-svg);
+  background-size:160px 160px;
+  mix-blend-mode:soft-light;
+  opacity:.10;
+}
+.feature-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  image-rendering:auto;
+  filter:contrast(1.08) saturate(1.04) brightness(.98);
+  transform:scale(1.01);
+}
+.feature::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:
+    linear-gradient(to right,rgba(0,0,0,.58) 0%,rgba(0,0,0,.18) 46%,rgba(0,0,0,.04) 100%),
+    linear-gradient(to bottom,rgba(0,0,0,.03) 0%,rgba(0,0,0,.04) 54%,rgba(0,0,0,.44) 100%);
+}
+.feature-img.is-posterish{object-position:center 28%}
+.feature.posterish::after{
+  background:
+    linear-gradient(to right,rgba(0,0,0,.68) 0%,rgba(0,0,0,.32) 42%,rgba(0,0,0,.10) 72%,rgba(0,0,0,.28) 100%),
+    linear-gradient(to bottom,rgba(0,0,0,.04) 0%,rgba(0,0,0,.05) 52%,rgba(0,0,0,.54) 100%);
+}
+.feature-content{
+  position:relative;z-index:3;min-height:100svh;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:clamp(26px,4vw,58px);
+}
+.back{
+  position:absolute;top:clamp(20px,2.6vw,38px);
+  left:clamp(26px,4vw,58px);align-self:flex-start;
+  font-family:var(--mono);font-size:11px;text-transform:uppercase;
+  color:var(--hero-text-mid);
+}
+.feature-main{max-width:430px;padding-bottom:clamp(10px,2vw,26px)}
+#title{
+  font-family:var(--sans);font-size:clamp(34px,4.2vw,64px);
+  line-height:.96;font-weight:600;letter-spacing:-.05em;
+  color:#fff;text-wrap:balance;max-width:12ch;
+  text-shadow:0 2px 24px rgba(0,0,0,.36);
+}
+.meta{
+  margin-top:12px;display:flex;flex-wrap:wrap;gap:8px;
+  font-size:12px;letter-spacing:.01em;color:var(--hero-text-mid);
+}
+.meta span:not(:last-child)::after{
+  content:'·';margin-left:8px;color:var(--hero-text-soft);
+}
+.score-row{
+  display:inline-flex;margin-top:16px;
+  border:1px solid var(--hero-text-soft);
+  font-family:var(--mono);font-size:10px;text-transform:uppercase;
+  background:rgba(0,0,0,.34);
+  backdrop-filter:blur(8px) saturate(.9);
+  -webkit-backdrop-filter:blur(8px) saturate(.9);
+  box-shadow:0 10px 34px rgba(0,0,0,.22);
+}
+.score-row span{padding:8px 12px;border-right:1px solid var(--hero-text-soft);color:rgba(246,241,232,.92);text-shadow:0 1px 12px rgba(0,0,0,.48)}
+.score-row span:last-child{border-right:0;color:#fff}
+#overview{
+  margin-top:16px;max-width:37ch;
+  font-size:14px;line-height:1.52;color:var(--hero-text-mid);
+}
+.actions{display:flex;gap:16px;align-items:center;margin-top:24px}
+.action{
+  font-family:var(--mono);font-size:11px;
+  color:var(--hero-text-mid);text-transform:uppercase;
+  text-decoration:underline;text-underline-offset:4px;
+}
+.action.link{opacity:.7}
+
+.ranking{
+  min-height:100svh;
+  padding:clamp(34px,4.5vw,70px) clamp(32px,4.8vw,76px);
+  background:var(--bg);border-left:1px solid var(--line);
+  overflow:auto;
+}
+.ranking::-webkit-scrollbar{width:0}
+.result-query-shell{
+  margin-bottom:28px;padding-bottom:22px;
+  border-bottom:1px solid var(--line);
+}
+.result-mode{
+  margin-bottom:12px;font-family:var(--mono);
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-soft);
+}
+.result-query-form{
+  display:grid;grid-template-columns:minmax(0,1fr) 34px;
+  gap:18px;align-items:start;
+}
+#resultQuery{
+  width:100%;min-width:0;min-height:2.4em;resize:none;overflow:hidden;
+  border:0;outline:0;background:transparent;
+  color:var(--ink);font-family:var(--sans);
+  font-size:clamp(24px,2.6vw,42px);line-height:1.08;
+  font-weight:500;letter-spacing:-.045em;
+  white-space:pre-wrap;
+}
+#resultQuery::placeholder{color:var(--ink-soft)}
+#resultGo{
+  padding-top:.15em;font-family:var(--mono);
+  font-size:24px;color:var(--ink-mid);
+  transition:transform .16s,opacity .16s;
+}
+#resultGo:hover{transform:translateX(3px)}
+#resultGo:active{transform:translateX(6px) scale(.96)}
+
+.result-processing{
+  display:none;margin-top:14px;
+  font-family:var(--mono);font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);
+}
+.result-processing i{
+  display:block;position:relative;height:1px;margin-top:8px;
+  overflow:hidden;background:var(--ink-faint);
+}
+.result-processing i::after{
+  content:'';position:absolute;top:0;left:0;
+  width:34%;height:100%;background:var(--ink);
+  transform:translateX(-120%);
+}
+body.has-results.searching .result-processing{display:block}
+body.has-results.searching .result-processing i::after{
+  animation:barSweep 1.15s cubic-bezier(.4,0,.2,1) infinite;
+}
+body.has-results.searching .rank-list{opacity:.4;transition:opacity .24s}
+body.has-results.searching .feature-img{
+  filter:saturate(.86) brightness(.72);transition:filter .28s;
+}
+body.has-results.searching #resultGo{
+  animation:arrowPulse .75s ease-in-out infinite alternate;
+}
+
+.rank-intro{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:18px;
+}
+.rank-kicker,.rank-count{
+  font-family:var(--mono);font-size:10px;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);
+}
+.rank-list{display:flex;flex-direction:column}
+.rank-row{
+  width:100%;text-align:left;
+  display:grid;grid-template-columns:28px 72px minmax(0,1fr) auto;
+  gap:16px;align-items:center;padding:13px 0;
+  border-bottom:1px solid var(--ink-faint);
+  color:var(--ink);background:transparent;
+  transition:background .12s;
+}
+.rank-row:hover{background:var(--ink-faint)}
+.rank-row.active .rank-title{color:var(--accent)}
+.rank-num{
+  font-family:var(--mono);font-size:11px;color:var(--ink-soft);
+}
+.rank-thumb{
+  width:72px;height:48px;object-fit:cover;object-position:center top;
+  filter:contrast(1.12) saturate(1.045) brightness(.95);
+  background:var(--wall);
+  box-shadow:0 0 0 1px rgba(255,255,255,.035),0 10px 24px rgba(0,0,0,.16);
+}
+.rank-copy{min-width:0}
+.rank-title{
+  display:block;font-size:15px;font-weight:500;line-height:1.15;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  color:var(--ink);letter-spacing:-.01em;
+}
+.rank-meta{
+  margin-top:4px;display:flex;flex-wrap:wrap;gap:6px;
+  font-family:var(--mono);font-size:10px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);
+}
+.rank-score{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:62px;padding:7px 10px;
+  border:1px solid var(--ink-soft);
+  font-family:var(--mono);font-size:12px;
+  color:var(--ink-mid);font-variant-numeric:tabular-nums;
+  transition:border-color .16s,color .16s;
+}
+.rank-row.active .rank-score{border-color:var(--accent);color:var(--accent)}
+.rank-actions{
+  margin-top:26px;display:flex;justify-content:space-between;align-items:center;
+  font-family:var(--mono);font-size:11px;text-transform:uppercase;
+  color:var(--ink-soft);
+}
+.rank-actions button{color:var(--ink-mid)}
+
+.lower-links{
+  position:absolute;left:clamp(28px,4vw,72px);right:clamp(28px,4vw,72px);
+  bottom:34px;display:flex;justify-content:space-between;gap:20px;
+  align-items:flex-end;
+  font-family:var(--mono);font-size:10px;text-transform:uppercase;
+  color:var(--ink-mid);
+  border-top:1px solid var(--ink-faint);padding-top:16px;
+}
+.site-signals{
+  display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;
+  font-variant-numeric:tabular-nums;line-height:1.6;
+}
+.site-signal-primary{flex-basis:100%;color:var(--ink-mid)}
+.site-signal:not(.site-signal-primary){color:var(--ink-soft)}
+.site-signal:not(.site-signal-primary)::after{
+  content:'';display:inline-block;width:14px;height:1px;
+  margin-left:12px;vertical-align:middle;background:var(--ink-faint);
+}
+.site-signal:last-child::after{display:none}
+
+.result-theme-switch{
+  position:fixed;top:18px;right:18px;z-index:1000;display:none;
+}
+body.has-results .result-theme-switch{display:block}
+
+.toast{
+  position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);
+  z-index:120;background:#000;color:#fff;
+  font-family:var(--mono);font-size:11px;padding:10px 16px;
+  pointer-events:none;opacity:0;transition:opacity .2s;
+}
+.toast.show{opacity:1}
+
+.error-banner{
+  display:none;
+  margin-top:10px;
+  padding:8px 12px;
+  border:1px solid var(--accent);
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.08em;
+  color:var(--accent);
+  max-width:520px;
+}
+.error-banner.visible{display:block}
+
+@keyframes barSweep{
+  from{transform:translateX(-120%)}
+  to{transform:translateX(330%)}
+}
+@keyframes blink{50%{opacity:0}}
+@keyframes cutFlash{
+  0%{opacity:0}45%{opacity:1}100%{opacity:0}
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes arrowPulse{
+  from{transform:translateX(0);opacity:.5}
+  to{transform:translateX(4px);opacity:1}
+}
+@keyframes pulse{
+  0%,100%{opacity:.6}
+  50%{opacity:1}
+}
+
+/* ─── Editorial Cinema Image Pass ─── */
+:root{
+  --wall-filter:contrast(1.13) saturate(1.045) brightness(.94) !important;
+  --tile-lift:0 12px 34px rgba(0,0,0,.22) !important;
+  --tile-edge:0 0 0 1px rgba(255,255,255,.045) !important;
+}
+
+.wall-cell{
+  background:#030303 !important;
+  box-shadow:
+    var(--tile-edge),
+    0 8px 22px rgba(0,0,0,.18),
+    0 18px 48px rgba(0,0,0,.16) !important;
+}
+
+.wall-cell img{
+  filter:contrast(1.13) saturate(1.045) brightness(.94) !important;
+  transform:scale(1.012) !important;
+  backface-visibility:hidden !important;
+}
+
+.wall-cell::before{
+  z-index:1 !important;
+  background:
+    radial-gradient(circle at 48% 42%,
+      rgba(255,255,255,.045) 0%,
+      rgba(255,255,255,.018) 28%,
+      rgba(0,0,0,0) 46%,
+      rgba(0,0,0,.12) 78%,
+      rgba(0,0,0,.24) 100%) !important;
+  mix-blend-mode:soft-light !important;
+  opacity:.82 !important;
+}
+
+.wall-cell::after{
+  z-index:2 !important;
+  background:
+    linear-gradient(to bottom,rgba(255,255,255,.025),rgba(0,0,0,.10)),
+    var(--grain-svg) !important;
+  background-size:auto,132px 132px !important;
+  mix-blend-mode:soft-light !important;
+  opacity:.16 !important;
+}
+
+@media(pointer:fine){
+  .wall-cell:hover img{
+    transform:scale(1.026) !important;
+    filter:contrast(1.16) saturate(1.06) brightness(.98) !important;
+  }
+  .wall-cell:hover{
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,.06),
+      0 18px 44px rgba(0,0,0,.28) !important;
+  }
+}
+
+.feature-media{background:#020202 !important}
+.feature-img{
+  filter:contrast(1.12) saturate(1.05) brightness(.94) !important;
+  transform:scale(1.012) !important;
+}
+
+.feature-media::before{
+  background:
+    radial-gradient(circle at 52% 40%,
+      rgba(255,255,255,.035) 0%,
+      rgba(255,255,255,.012) 28%,
+      rgba(0,0,0,0) 46%,
+      rgba(0,0,0,.14) 78%,
+      rgba(0,0,0,.28) 100%) !important;
+  mix-blend-mode:soft-light !important;
+  opacity:.9 !important;
+}
+
+.feature-media::after{
+  background:var(--grain-svg) !important;
+  background-size:132px 132px !important;
+  mix-blend-mode:soft-light !important;
+  opacity:.135 !important;
+}
+
+.feature::after{
+  background:
+    linear-gradient(to right,
+      rgba(0,0,0,.62) 0%,
+      rgba(0,0,0,.26) 42%,
+      rgba(0,0,0,.07) 72%,
+      rgba(0,0,0,.20) 100%),
+    linear-gradient(to bottom,
+      rgba(0,0,0,.05) 0%,
+      rgba(0,0,0,.02) 42%,
+      rgba(0,0,0,.50) 100%) !important;
+}
+
+.feature.posterish::after{
+  background:
+    linear-gradient(to right,
+      rgba(0,0,0,.68) 0%,
+      rgba(0,0,0,.32) 42%,
+      rgba(0,0,0,.10) 72%,
+      rgba(0,0,0,.28) 100%),
+    linear-gradient(to bottom,
+      rgba(0,0,0,.04) 0%,
+      rgba(0,0,0,.05) 52%,
+      rgba(0,0,0,.54) 100%) !important;
+}
+
+.rank-thumb{
+  filter:contrast(1.12) saturate(1.045) brightness(.95) !important;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.035),
+    0 10px 24px rgba(0,0,0,.16) !important;
+}
+
+body.searching .film-wall-pane{
+  filter:brightness(.74) saturate(.88) contrast(1.03) !important;
+}
+
+/* Film wall poster geometry */
+body:not(.has-results) .film-wall{
+  min-height:180svh !important;
+  grid-template-columns:repeat(4,minmax(150px,1fr)) !important;
+  gap:2px !important;
+  background:#151515 !important;
+}
+
+body:not(.has-results) .wall-cell{
+  aspect-ratio:2 / 3 !important;
+  background:#111 !important;
+  overflow:hidden !important;
+}
+
+body:not(.has-results) .wall-cell img{
+  width:100% !important;height:100% !important;
+  object-fit:cover !important;object-position:center top !important;
+  display:block !important;
+  filter:contrast(1.08) saturate(1.02) brightness(.95) !important;
+  transform:scale(1.006) !important;
+}
+
+body:not(.has-results) .wall-cell::before{
+  content:'' !important;position:absolute !important;inset:0 !important;
+  z-index:1 !important;pointer-events:none !important;
+  background:
+    radial-gradient(circle at 48% 42%,
+      rgba(255,255,255,.035) 0%,rgba(255,255,255,.012) 28%,
+      rgba(0,0,0,0) 48%,rgba(0,0,0,.10) 78%,rgba(0,0,0,.22) 100%) !important;
+  mix-blend-mode:soft-light !important;
+  opacity:.62 !important;
+}
+
+body:not(.has-results) .wall-cell::after{
+  content:'' !important;position:absolute !important;inset:0 !important;
+  z-index:2 !important;pointer-events:none !important;
+  background:
+    linear-gradient(to bottom,rgba(0,0,0,.02),rgba(0,0,0,.16)),
+    linear-gradient(to top,rgba(0,0,0,.22),transparent 44%),
+    var(--grain-svg) !important;
+  background-size:auto,auto,150px 150px !important;
+  mix-blend-mode:soft-light !important;
+  opacity:.105 !important;
+}
+
+/* Desktop wall drift */
+@media(min-width:981px){
+  .film-wall-pane{overflow:hidden !important}
+  .film-wall{min-height:200svh}
+}
+
+/* Tablet */
+@media(max-width:980px){
+  html,body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto}
+  .top{display:block !important;min-height:auto;background:var(--bg)}
+  .search-pane{
+    min-height:auto;padding:42px 20px 24px;
+    border-bottom:1px solid var(--line);
+  }
+  .brand{font-size:clamp(42px,13.5vw,64px)}
+  .prompt-label{margin-top:28px}
+  #query{font-size:clamp(20px,6.7vw,30px)}
+  .search-form{max-width:100%}
+  .search-hint{max-width:100%;font-size:9px}
+  .mode-row{max-width:100%}
+  .corpus-load-state,.query-traces{max-width:100%}
+  .trace-line{max-width:100%;overflow:hidden}
+  .lower-links{
+    position:relative;inset:auto;margin-top:26px;
+    display:grid;grid-template-columns:minmax(0,1fr) auto;
+    gap:14px;align-items:end;
+  }
+  .site-signals{max-width:100%;font-size:8px}
+  .film-wall-pane{
+    position:relative;height:auto;min-height:0;
+    max-height:none;overflow:visible;
+  }
+  .film-wall{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    min-height:0;height:auto;
+  }
+  body:not(.has-results) .film-wall{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    min-height:120svh !important;gap:1px !important;
+  }
+  .results{display:block !important;min-height:100svh}
+  .feature{min-height:64svh;width:100%}
+  .feature-media{min-height:64svh;width:100%}
+  .feature-content{padding:42px 20px 24px}
+  #title{font-size:clamp(42px,13vw,68px);max-width:92vw;overflow-wrap:break-word}
+  .ranking{
+    width:100%;min-height:auto;
+    padding:28px 20px 40px;border-left:0;
+    border-top:1px solid var(--line);
+  }
+  #resultQuery{font-size:clamp(26px,8vw,38px)}
+  .rank-row{grid-template-columns:24px 64px minmax(0,1fr) auto;gap:10px}
+  .rank-thumb{width:64px;height:44px}
+  .rank-score{min-width:54px;padding:7px 8px;font-size:11px}
+  .result-theme-switch{top:12px;right:12px}
+  .wall-cell img{
+    filter:contrast(1.11) saturate(1.04) brightness(.94) !important;
+    transform:scale(1.008) !important;
+  }
+  .wall-cell::after{opacity:.12 !important;background-size:auto,150px 150px !important}
+  .feature-img{
+    filter:contrast(1.10) saturate(1.04) brightness(.94) !important;
+    transform:scale(1.006) !important;
+  }
+  .feature-media::after{opacity:.105 !important;background-size:150px 150px !important}
+  .score-row{background:rgba(0,0,0,.42) !important}
+}
+
+/* Phone */
+@media(max-width:560px){
+  .search-pane{padding:36px 18px 22px}
+  .brand{font-size:clamp(36px,14vw,54px)}
+  #query{font-size:clamp(18px,6vw,26px)}
+  .film-wall{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .feature{min-height:58svh}
+  .feature-media{min-height:58svh}
+  .feature-content{padding:36px 18px 22px}
+  #title{font-size:clamp(38px,12vw,58px)}
+  .ranking{padding:24px 18px 36px}
+  .rank-row{grid-template-columns:22px 56px minmax(0,1fr) auto;gap:8px}
+  .rank-thumb{width:56px;height:40px}
+  .rank-score{min-width:50px;font-size:10px}
+  #resultQuery{font-size:clamp(24px,7.5vw,34px)}
+}
+
+/* Mobile results fix */
+body.has-results{overflow-x:hidden !important}
+@media(max-width:980px){
+  body.has-results .top{display:none !important}
+  body.has-results .results{
+    display:block !important;visibility:visible !important;opacity:1 !important;
+    min-height:100svh !important;height:auto !important;overflow:visible !important;
+    background:var(--bg) !important;
+  }
+  body.has-results .feature{
+    display:block !important;position:relative !important;visibility:visible !important;
+    opacity:1 !important;min-height:68svh !important;height:auto !important;overflow:hidden !important;
+  }
+  body.has-results .feature-media,
+  body.has-results .feature-img{display:block !important;visibility:visible !important;opacity:1 !important}
+  body.has-results .feature-content{
+    display:flex !important;visibility:visible !important;opacity:1 !important;
+    min-height:68svh !important;height:auto !important;
+  }
+  body.has-results .ranking{
+    display:block !important;position:relative !important;visibility:visible !important;
+    opacity:1 !important;min-height:auto !important;height:auto !important;overflow:visible !important;
+    background:var(--bg) !important;
+  }
+  body.has-results .rank-list,
+  body.has-results #rankList{display:block !important;visibility:visible !important;opacity:1 !important}
+  body.has-results .rank-row{display:grid !important}
+  body.has-results .result-theme-switch{
+    display:block !important;position:fixed !important;top:14px !important;right:14px !important;z-index:3000 !important;
+  }
+  body.has-results .result-theme-switch .theme-switch{display:block !important}
+  body.has-results .search-pane .theme-switch,
+  body.has-results .top .theme-switch,
+  body.has-results .mode-row .theme-switch{display:none !important}
+}
+body:not(.has-results) .result-theme-switch{display:none !important}
+
+/* Input ellipsis */
+.search-form{min-width:0 !important;overflow:hidden !important}
+#query{min-width:0 !important;overflow:hidden !important;text-overflow:ellipsis !important;white-space:nowrap !important}
+#query::placeholder{text-overflow:ellipsis !important}
+#resultQuery{min-width:0 !important;overflow:hidden !important;text-overflow:ellipsis !important}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+</style>
+</head>
+<body data-mode="film">
+<section class="top">
+  <div class="search-pane">
+    <div>
+      <div class="brand" aria-label="RESONANCE">RESONANCE</div>
+      <div class="prompt-label" id="eyebrow">find a film on angel.com</div>
+      <form id="searchForm" class="search-form">
+        <input id="query" autocomplete="off" spellcheck="false" inputmode="search" enterkeyhint="search" placeholder="describe the scene, mood, memory, or idea">
+        <button id="go" aria-label="Search">→</button>
+      </form>
+      <div class="search-hint">
+        <span id="modeHint">search angel.com films by meaning</span>
+      </div>
+      <div class="mode-row">
+        <div class="source-badge" aria-label="Source: angel.com">
+          <span class="dot"></span>
+          <span>angel.com</span>
+        </div>
+        <div class="source-badge" aria-label="Engine: ARBITER">
+          <span>arbiter live</span>
+        </div>
+        <button type="button" class="theme-switch" data-theme-switch aria-label="Toggle theme"><span></span></button>
+      </div>
+      <div class="corpus-load-state" id="corpusLoadState" aria-live="polite">
+        <div class="corpus-load-copy"><span id="corpusLoadText">loading angel.com corpus</span></div>
+        <div class="corpus-load-bar"><span id="corpusLoadBar"></span></div>
+      </div>
+      <div class="error-banner" id="errorBanner"></div>
+      <div class="query-traces" id="queryTraces" aria-hidden="true">
+        <div class="trace-label">query traces</div>
+        <div class="trace-line"><span class="trace-prefix">›</span><span id="traceText"></span><span class="trace-cursor"></span></div>
+      </div>
+      <div class="resolve-state" id="resolveState" aria-hidden="true">
+        <div class="resolve-kicker">resolving</div>
+        <div class="resolve-status" id="resolveStatus">locking archive</div>
+        <div class="resolve-bar"><span id="resolveBar"></span></div>
+      </div>
+    </div>
+    <div class="lower-links">
+      <div class="site-signals">
+        <span class="site-signal site-signal-primary">© 2026 Actual General Intelligence Inc.</span>
+        <span class="site-signal">ARBITER COHERENCE ENGINE</span>
+        <span class="site-signal" id="corpusCount">0 films indexed</span>
+      </div>
+      <button id="shuffleFilms" type="button" data-action="shuffle-corpus">shuffle films</button>
+    </div>
+  </div>
+  <div class="film-wall-pane">
+    <div class="film-wall" id="wall"></div>
+  </div>
+</section>
+
+<section class="results" id="results">
+  <button type="button" class="result-theme-switch theme-switch" data-theme-switch aria-label="Toggle theme"><span></span></button>
+  <div class="feature" id="feature">
+    <div class="feature-media">
+      <img class="feature-img" id="featureImg" alt="" decoding="async" loading="eager" fetchpriority="high" referrerpolicy="no-referrer">
+    </div>
+    <div class="feature-content">
+      <button class="back" id="newSearch">← new search</button>
+      <div class="feature-main">
+        <h1 id="title">Film</h1>
+        <div class="meta" id="meta"></div>
+        <div class="score-row"><span>coherence</span><span id="score">0.000</span></div>
+        <p id="overview"></p>
+        <div class="actions">
+          <button class="action" id="openSource">open on angel.com ↗</button>
+          <button class="action link" id="copyLink">copy link</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ranking">
+    <div class="result-query-shell">
+      <div class="result-mode" id="resultMode">angel.com film corpus · arbiter live</div>
+      <form id="resultSearchForm" class="result-query-form">
+        <textarea id="resultQuery" autocomplete="off" spellcheck="false" rows="2" placeholder="edit the search"></textarea>
+        <button id="resultGo" type="submit" aria-label="Search">→</button>
+      </form>
+      <div class="result-processing" aria-hidden="true">
+        <span id="resultResolveStatus">resolving</span>
+        <i></i>
+      </div>
+    </div>
+    <div class="rank-intro">
+      <span class="rank-kicker">nearby</span>
+      <span class="rank-count" id="rankCount">0 returned</span>
+    </div>
+    <div id="rankList" class="rank-list"></div>
+    <div class="rank-actions">
+      <button id="shuffleFilmsResult" type="button" data-action="shuffle-corpus">shuffle films</button>
+      <span id="status">ready</span>
+    </div>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════
+   RESONANCE — angel.com movies only · ARBITER live
+   ─────────────────────────────────────────────────────────
+   Corpus: the real Angel catalog, scraped from angel.com/movies.
+   Posters: Angel's own Cloudinary CDN (images.angelstudios.com).
+   Scoring: live ARBITER /public/compare — always read data.all.
+   ═══════════════════════════════════════════════════════════ */
+
+const ARBITER_URL = 'https://api.arbiter.traut.ai/public/compare';
+const RETURN_COUNT = 10;
+const BATCH_SIZE = 128;
+const CDN = 'https://images.angelstudios.com/image/upload';
+
+/* Angel CDN helper — v = version segment, u = catalog uuid */
+function ang(v, u, w = 600) {
+  return `${CDN}/q_auto,f_webp,w_${w}/${v}/studio-app/catalog/${u}`;
+}
+
+/* ─── The Angel catalog ───
+   Every entry is a real title currently on angel.com, with its real
+   catalog art. `overview` doubles as the ARBITER candidate body. */
+const ANGEL_CORPUS = [
+  { slug:"secret-between-us", title:"The Secret Between Us", year:2026, genre:"Drama, Family",
+    poster:`${CDN}/q_auto,f_webp,w_620/v1778692155/studio-app/catalog/b05c7fd8-a4e3-4551-9bd6-aa4bb3e9ca9b`,
+    backdrop:`${CDN}/q_auto,f_webp,w_1400/v1778692136/studio-app/catalog/ba5f3810-52f1-4caa-9d51-f6833cbea6f4`,
+    overview:"A respected family man's carefully built life unravels when a stranger at his door reveals a long-buried betrayal: a son he kept hidden for years. His wife and daughter grapple with fractured trust, the grown son carries the weight of feeling forgotten, and a family must choose between protecting its image and the painful, healing work of honesty, accountability, forgiveness, and restoration." },
+  { slug:"sound-of-freedom", title:"Sound of Freedom", year:2023, genre:"Thriller, True Story",
+    poster:ang('v1745959809','0b6c1007-348a-4e01-876d-b936c2a49980'),
+    overview:"A federal agent quits his job to descend into the jungles of Colombia on a dangerous rescue mission, infiltrating traffickers to free children stolen into exploitation. A tense true-story thriller about one man risking everything because God's children are not for sale — conviction, sacrifice, and the rescue of the innocent from darkness." },
+  { slug:"cabrini", title:"Cabrini", year:2024, genre:"Drama, True Story",
+    poster:ang('v1727921347','95aac1e1-8bcc-41b3-a315-f3b62c79052e'),
+    overview:"An Italian immigrant nun arrives in the slums of New York and, against disease, poverty, hostile politicians, and a Church that tells her to stay in her place, builds an empire of hope: orphanages and hospitals for the abandoned. A sweeping true story of stubborn compassion, immigrant dignity, and a woman who refused every no." },
+  { slug:"bonhoeffer", title:"Bonhoeffer", year:2024, genre:"Drama, True Story",
+    poster:ang('v1727921039','06a13e32-c9d1-4121-8ff5-8914452714e7'),
+    overview:"A German pastor and theologian watches his nation surrender to Hitler and must decide what conscience demands when the church goes silent. From pulpit to prison to a plot against the Führer — a true story of costly discipleship, moral courage under tyranny, and the price of standing against evil when everyone else kneels." },
+  { slug:"truth-and-treason", title:"Truth & Treason", year:2025, genre:"Drama, True Story",
+    poster:ang('v1757522077','bc25528a-c834-4b4e-b130-aa2a773ffeca'),
+    overview:"In Hitler's Germany, a teenage boy secretly listens to forbidden broadcasts and prints leaflets telling his neighbors the truth, convinced that being a good German now means resistance. After his Jewish friend is taken, he risks interrogation, prison, and execution. A true story of youthful defiance and truth-telling under a regime built on lies." },
+  { slug:"unsinkable", title:"Unsinkable: Titanic Untold", year:2026, genre:"Drama, History",
+    poster:ang('v1776184424','04f0b893-8f4c-4c85-8cde-cc1f5b41131f'),
+    overview:"In the wake of the Titanic's shocking demise, a United States senator launches a groundbreaking investigation to uncover the truth behind the disaster. Joined by a fearless journalist, he confronts political pressure, corporate power, and a rushed inquiry determined to bury the facts — with haunting flashbacks to that fateful night and the hidden fight for accountability." },
+  { slug:"david", title:"David", year:2025, genre:"Animation, Musical",
+    poster:ang('v1770239652','3fa4f9fe-b043-4e77-89ba-ec88446ca2a7'),
+    overview:"An animated musical of the shepherd boy of Bethlehem who sings to his sheep, is anointed in secret, and steps forward with a sling and unshakable faith when a giant terrorizes a nation. Pursued by a jealous king and driven by purpose, his journey tests loyalty, love, and courage in a battle for the soul of a kingdom." },
+  { slug:"king-of-kings", title:"The King of Kings", year:2025, genre:"Animation, Family",
+    poster:ang('v1767377186','bf5ed28a-2880-4b72-9cd9-f0faa0c0485e'),
+    overview:"Charles Dickens tells his young son the greatest story he knows, and the boy is swept into the life of Jesus: miracles, parables, betrayal, the cross, and resurrection, seen through a child's wondering eyes. A lavish animated retelling of the gospel as a father's bedtime story, full of warmth, awe, and discovery." },
+  { slug:"his-only-son", title:"His Only Son", year:2023, genre:"Drama, Biblical",
+    poster:ang('v1728013901','d6b93f8b-f11a-4cca-8667-56b34275e39f'),
+    overview:"Abraham is commanded to sacrifice his long-promised son and walks three days to the mountain wrestling with the hardest test of faith ever asked of a father. A spare, reverent biblical drama about obedience, doubt, the agony of waiting on God's promises, and the foreshadowing of a greater sacrifice to come." },
+  { slug:"homestead", title:"Homestead", year:2024, genre:"Thriller, Drama",
+    poster:ang('v1743018568','b4df6032-dcef-460a-b8e9-f9d98d579b3c'),
+    overview:"After a nuclear attack throws America into chaos, an ex-Green Beret moves his family into a fortified mountain homestead where preparation meets desperation. As society collapses outside the gates, the community inside must decide between walls and welcome. A survival thriller about family, scarcity, faith, and what we owe strangers when everything runs out." },
+  { slug:"the-shift", title:"The Shift", year:2023, genre:"Sci-Fi, Drama",
+    poster:ang('v1728016182','c6b24114-08f2-4b8e-bf5e-a2b76b1c4662'),
+    overview:"A man is pulled across parallel worlds by a mysterious adversary who offers him everything in exchange for his soul, and fights his way through countless dark realities to return to the woman he loves. A multiverse retelling of Job: suffering, temptation, stubborn faith, and love that refuses to surrender across dimensions." },
+  { slug:"brave-the-dark", title:"Brave the Dark", year:2025, genre:"Drama, True Story",
+    poster:ang('v1733768363','51111bbf-c2fa-4fdb-9c07-6d524610c74d'),
+    overview:"A high school teacher discovers one of his students is homeless, sleeping in a car, and haunted by a childhood tragedy he cannot speak about. He posts bail and takes the boy in, and the slow work of trust begins. A true story of trauma, mentorship, and the teacher who refused to let a kid disappear." },
+  { slug:"between-borders", title:"Between Borders", year:2025, genre:"Drama, True Story",
+    poster:ang('v1741368792','3e170f78-731c-437c-aba0-977672fef404'),
+    overview:"An Armenian family fleeing persecution in the collapsing Soviet Union becomes refugees nowhere wanted, stateless between countries, and finally faces an American asylum courtroom where their entire lives go on trial. A true story of displacement, a mother's faith found in crisis, and a family holding together across borders that keep rejecting them." },
+  { slug:"rule-breakers", title:"Rule Breakers", year:2025, genre:"Drama, True Story",
+    poster:ang('v1737157301','feebee70-4e39-4219-9a97-8ec3a3d242de'),
+    overview:"In Afghanistan, a young woman defies tradition and danger to assemble the country's first all-girls robotics team, daring teenage girls to learn, build, and compete on a world stage while extremists and bureaucrats try to stop them. A true story of education as rebellion, courage, and girls who refused to be unseen." },
+  { slug:"last-rodeo", title:"The Last Rodeo", year:2025, genre:"Drama, Western",
+    poster:ang('v1746149388','c3c60ea9-2fe0-4329-aadc-51d1230bdb2d'),
+    overview:"An aging former bull-riding champion, long retired and carrying old grief, climbs back onto the bull that nearly killed him to win the prize money for his grandson's life-saving surgery. A weathered cowboy story about sacrifice, second chances, family reconciliation, and a grandfather laying his body down for the boy he loves." },
+  { slug:"sketch", title:"Sketch", year:2025, genre:"Adventure, Family",
+    poster:ang('v1749844369','ee7ff5ca-eb5b-4a8b-ac00-ff23aef2532e'),
+    overview:"A grieving young girl's notebook of monster drawings falls into a magic pond and her creations come to life, chaotic and dangerous, forcing her widowed father and her family to face the sadness they've been avoiding. An imaginative adventure-comedy about childhood grief, creativity, and a family learning to talk about loss." },
+  { slug:"sound-of-hope-the-story-of-possum-trot", title:"Sound of Hope: The Story of Possum Trot", year:2024, genre:"Drama, True Story",
+    poster:ang('v1729266107','7f049ade-480f-4711-bfaa-435712909e41'),
+    overview:"Led by a determined pastor's wife and her husband, twenty-two families in a rural East Texas Black church adopt seventy-seven of the hardest-to-place children in the foster system, kickstarting a movement. A true story of radical hospitality, the cost of loving wounded kids, and a tiny congregation that emptied the local foster rolls." },
+  { slug:"cokeville-miracle", title:"The Cokeville Miracle", year:2015, genre:"Drama, True Story",
+    poster:ang('v1758232329','f72b2cee-d465-488f-97ea-58261b99ae2a'),
+    overview:"A small Wyoming town's elementary school is taken hostage by a couple with a bomb, and when the device detonates in a crowded classroom, every child inexplicably survives. Children describe angelic figures. A skeptical investigator father sifts the evidence. A true story of crisis, protection, doubt, and a community's brush with the miraculous." },
+  { slug:"sight", title:"Sight", year:2024, genre:"Drama, True Story",
+    poster:ang('v1748967145','45500026-a9f4-43d8-98c2-5ce743328990'),
+    overview:"A boy who survives the brutality of China's Cultural Revolution becomes a world-renowned eye surgeon in America, but restoring sight to a blind orphan forces him to confront the darkness of his own past. A true immigrant story of trauma, perseverance, scientific brilliance, and the healing that begins when he stops running from memory." },
+  { slug:"after-death", title:"After Death", year:2023, genre:"Documentary",
+    poster:ang('v1766531824','4c4cebb6-e45f-41d8-baec-6d4547367bb7'),
+    overview:"Scientists, doctors, and survivors of clinical death recount what they experienced on the other side: tunnels, light, peace, judgment, and return. A documentary exploring near-death experiences through medical research and firsthand testimony, asking what happens when we die and what those who came back can tell the living about hope beyond the grave." },
+  { slug:"the-blind", title:"The Blind", year:2023, genre:"Drama, True Story",
+    poster:ang('v1733816606','331ed148-1081-4f6c-a8a4-18e3a3a02336'),
+    overview:"Long before the duck calls and the beards, a young man in the Louisiana backwoods spirals into alcoholism, rage, and the wreckage of his marriage, until rock bottom drives him toward the faith that remakes him. A raw true origin story of addiction, a wife who wouldn't quit, and redemption in the swamp." },
+  { slug:"surprised-by-oxford", title:"Surprised by Oxford", year:2023, genre:"Romance, Drama",
+    poster:ang('v1732059507','6ff9847e-ce00-45ec-bc4d-f6e04e51a423'),
+    overview:"A brilliant, skeptical American graduate student arrives at Oxford armored in intellect and ambition, and finds her certainties unsettled by poetry, friendship, and a winsome young man whose faith she cannot argue away. A literate romantic drama about doubt, longing, the life of the mind, and being surprised by joy." },
+  { slug:"testament", title:"Testament", year:2023, genre:"Drama, Thriller",
+    poster:ang('v1737497869','aaa76496-2a9d-4b1f-8d82-00c05752801f'),
+    overview:"The Book of Acts reimagined in a modern authoritarian Britain where the followers of the recently risen Messiah are hunted by a state institution, and a zealous enforcer named Saul has his world overturned on a road north. A stylized retelling of the early church: persecution, conversion, community, and unstoppable witness." },
+  { slug:"sabina", title:"Sabina: Tortured for Christ", year:2021, genre:"Drama, True Story",
+    poster:ang('v1738016831','822f89af-4923-4d3b-af2c-57f60f44c096'),
+    overview:"A Jewish woman in wartime Romania converts to Christianity and, with her husband, shelters the persecuted while choosing to love the very German soldiers whose armies murdered her family. A true story of impossible forgiveness, underground faith under fascism and communism, and grace extended to enemies who deserve none." },
+  { slug:"hiding-place", title:"The Hiding Place", year:2023, genre:"Drama, Stage",
+    poster:ang('v1742922443','b359b026-339e-4366-9309-897c3d74b06d'),
+    overview:"A Dutch watchmaker's family hides Jews behind a false wall during the Nazi occupation until betrayal sends the sisters to a concentration camp, where one learns that no pit is so deep that God's love is not deeper still. A filmed stage masterwork about courage, suffering, and scandalous forgiveness." },
+  { slug:"hard-miles", title:"Hard Miles", year:2024, genre:"Drama, Sports",
+    poster:ang('v1742588745','b3440f15-db51-42a4-865e-9cb09c2eae97'),
+    overview:"A strong-willed social worker at a youth prison assembles a cycling team of teenage convicts and takes them on a transformative thousand-mile ride to the Grand Canyon. Inspired by a true story — troubled young men finding another gear: discipline, brotherhood, busted chains, switchbacks, and the long road out of a broken start." },
+  { slug:"kensukes-kingdom", title:"Kensuke's Kingdom", year:2024, genre:"Animation, Adventure",
+    poster:ang('v1747064818','3e1e5d23-a3af-4290-b469-9888f3076731'),
+    overview:"Swept overboard during a family sailing voyage, a boy and his dog wash up on a remote island where the only other inhabitant is an elderly Japanese man marooned since the war. A hand-drawn animated tale of survival, unlikely friendship across language and generations, orangutans, poachers, and the wild beauty of an island kingdom." },
+  { slug:"lost-on-a-mountain-in-maine", title:"Lost on a Mountain in Maine", year:2024, genre:"Adventure, True Story",
+    poster:ang('v1733515373','17df5075-b385-491c-b465-d8dcef7df490'),
+    overview:"Separated from his father in a sudden storm on Maine's highest peak, a twelve-year-old boy spends nine days lost in the wilderness: no food, no shoes, black flies, bears, and fading hope, while an entire region searches. A true survival story of grit, prayer, a father's desperation, and a boy who walked out alive." },
+  { slug:"escape-from-germany", title:"Escape from Germany", year:2024, genre:"Drama, True Story",
+    poster:ang('v1754586763','c778c1c5-e912-4614-b526-caad8ff4077b'),
+    overview:"In the final days before World War II erupts, young American missionaries scattered across Germany must find their way out as borders slam shut, trains fill with soldiers, and the Gestapo watches everyone. A true story of last-minute evacuations, quiet miracles, improbable timing, and faith under the gathering storm of war." },
+  { slug:"10-lives", title:"10 Lives", year:2024, genre:"Animation, Comedy",
+    poster:ang('v1771021596','5677311b-33f8-44fe-9fda-b070705c66f9'),
+    overview:"A pampered, ungrateful cat who has carelessly burned through eight of his nine lives loses his ninth and bargains his way into extra chances, returning in a series of unexpected animal bodies to protect the kind student who loved him. An animated comedy about gratitude, second chances, and learning to love selflessly." },
+  { slug:"jungle-beat-2-the-past", title:"Jungle Beat 2: The Past", year:2025, genre:"Animation, Family",
+    poster:ang('v1767898678','302956c3-e43e-4361-afbd-6d01ea0f6234'),
+    overview:"The jungle's cheerful animal friends and their alien companion stumble into a time-bending adventure that drags them into the past, where they must outwit dangers, mend old mistakes, and find their way home. A bright, gentle animated romp for the youngest viewers, full of slapstick, friendship, teamwork, and silly jungle joy." },
+  { slug:"tysons-run", title:"Tyson's Run", year:2022, genre:"Drama, Sports",
+    poster:ang('v1747849721','3204d0b7-4974-4d5a-8228-c166f0d5b768'),
+    overview:"A fifteen-year-old with autism, homeschooled and underestimated, discovers a gift for distance running and sets out to win a marathon and his father's approval, coached by a washed-up champion. A heartfelt sports drama about neurodiversity, a family learning to see their son clearly, and the finish line as an act of love." },
+  { slug:"legacy-peak", title:"Legacy Peak", year:2022, genre:"Adventure, Drama",
+    poster:ang('v1778103815','dace5e23-f768-4fcc-aef0-0967f8653dae'),
+    overview:"Flying to meet his girlfriend's family for Christmas with her two skeptical kids aboard, a pilot crash-lands in the remote winter mountains and must lead the children through wilderness, cold, and fear to safety. A snowy survival adventure about earning trust, stepping up as a father figure, and faith tested at altitude." },
+  { slug:"girl-who-believes-in-miracles", title:"The Girl Who Believes in Miracles", year:2021, genre:"Drama, Family",
+    poster:ang('v1770921230','b5527f92-9c04-4cc4-adda-32a147845155'),
+    overview:"After hearing a preacher say faith can move mountains, a young girl prays with such pure conviction that the sick and broken around her town begin inexplicably healing, drawing crowds, skeptics, and chaos while her own strength fades. A gentle drama about childlike faith, miracles, and a family caught in the whirlwind." },
+  { slug:"last-champion", title:"The Last Champion", year:2020, genre:"Drama, Sports",
+    poster:ang('v1742852519','c9e16b4c-39a4-41e1-b924-3d3901f8af7c'),
+    overview:"A disgraced Olympic wrestler returns to the hometown that despises him after his mother's death and reluctantly coaches a fatherless teenager toward a state title, fighting for redemption one practice at a time. A small-town sports drama about shame, second chances, mentorship, and rebuilding a name through quiet faithfulness." },
+  { slug:"runt", title:"Runt", year:2025, genre:"Family, Comedy",
+    poster:ang('v1757091841','e604c530-9d78-4dfa-a8e0-b157e7a3c69a'),
+    overview:"A spirited girl in a drought-stricken Australian farm town adopts a stray dog with a peculiar quirk: he only performs when no one else is watching. Together they enter an agility championship to save the family farm. A warm, funny family film about loyalty, underdogs in every sense, and believing in the overlooked." },
+  { slug:"my-brothers-keeper", title:"My Brother's Keeper", year:2021, genre:"Drama, Military",
+    poster:ang('v1740603776','930fd084-8b94-4019-94b6-cf3097588a43'),
+    overview:"A soldier returns home from his deployment carrying grief and post-traumatic wounds no one can see, struggling with faith, panic, and the memory of the best friend he lost in combat. With a counselor's patience and a community's care — a drama about veterans, invisible injuries, and the slow road back to peace." },
+  { slug:"the-last-rifleman", title:"The Last Rifleman", year:2023, genre:"Drama, War",
+    poster:ang('v1738277761','c6866a10-f153-4539-b359-f8cc1d6da1f7'),
+    overview:"A ninety-two-year-old World War II veteran escapes his Northern Ireland care home and journeys alone across borders to attend the seventy-fifth anniversary of the D-Day landings, confronting the ghosts of the beach and a long-held secret. A tender, wry late-life road movie about memory, guilt, and final reckonings." },
+  { slug:"faith-of-angels", title:"Faith of Angels", year:2024, genre:"Drama, True Story",
+    poster:ang('v1739307774','54cf41ce-48c9-452b-939b-be046120a173'),
+    overview:"When a ten-year-old boy goes missing deep inside an abandoned mine, a desperate days-long rescue grips a small town, and one searcher who feels divinely compelled refuses to stop crawling through the dark. A true story of a community's prayer, a mother's vigil, and the strange promptings that found a child alive." },
+  { slug:"disciples-in-the-moonlight", title:"Disciples in the Moonlight", year:2024, genre:"Thriller, Drama",
+    poster:ang('v1756324355','2dbeac0d-2678-4748-93a5-16a85dda8279'),
+    overview:"In a near-future America where scripture has been banned and rewritten by the state, a reluctant believer assembles a team of smugglers to carry contraband Bibles to hidden churches under government surveillance. A faith thriller about persecution, courage, the cost of conviction, and underground believers running through the dark." },
+  { slug:"cowgirls-n-angels", title:"Cowgirls 'n Angels", year:2012, genre:"Family, Western",
+    poster:ang('v1748642799','342ebcef-7f1d-416f-9709-cda6d4ac483c'),
+    overview:"A feisty fatherless girl falls in with a team of rodeo trick riders and discovers a talent in the saddle while secretly hoping the circuit will lead her to the father she's never met. A warm coming-of-age western about belonging, found family under arena lights, and a grandfather figure's steady love." },
+  { slug:"a-cowgirls-song", title:"A Cowgirl's Song", year:2022, genre:"Drama, Music",
+    poster:ang('v1756999523','05beec02-4187-41df-bbe4-48e631b113b0'),
+    overview:"A teenage girl with a gift for singing moves to her grandmother's Oklahoma ranch after family hardship and, under the wing of the former country star, chases her own musical dream while the family fights to keep the land. A gentle country drama about heritage, grief, grit, and finding your voice." },
+  { slug:"its-christmas-again", title:"It's Christmas Again", year:2022, genre:"Family, Holiday",
+    poster:ang('v1764882809','cda8b5f4-b978-4b30-b1e2-a64cb86f69f5'),
+    overview:"A modern teenager, bitter about his family's struggles at Christmas, is mysteriously transported to ancient Bethlehem on the night of the nativity, where shepherds, soldiers, and a newborn in a manger remake his hardened heart. A family holiday film about perspective, gratitude, and the first Christmas seen firsthand." },
+  { slug:"something-to-stand-for-with-mike-rowe", title:"Something to Stand For", year:2024, genre:"Documentary",
+    poster:ang('v1728709865','341906eb-657e-4a33-852f-bdeb55d13f0d'),
+    overview:"A storyteller travels the country and through history, telling little-known true stories of ordinary Americans who did extraordinary things: soldiers, presidents, inventors, and unsung patriots. A documentary tribute to sacrifice and national character, mixing humor, reverence, and the question of what's still worth standing for." },
+  { slug:"the-lunatic-farmer", title:"The Lunatic Farmer", year:2024, genre:"Documentary",
+    poster:ang('v1733875200','66bd1cb5-d24e-4f2f-a3ee-269778a10a48'),
+    overview:"A documentary portrait of a famously contrarian Virginia farmer who rejects industrial agriculture, moving cows daily, raising chickens on pasture, and preaching soil, sunlight, and stewardship as the path to healing land and food. An invigorating look at regenerative farming, food freedom, and one loud prophet of the dirt." },
+  { slug:"nawi", title:"Nawi: Dear Future Me", year:2025, genre:"Drama",
+    poster:ang('v1774904243','f644e4a0-c55d-45f4-afa0-9d1c066ed161'),
+    overview:"In rural Kenya, a brilliant thirteen-year-old girl who dreams of school is sold by her family into marriage with a much older man for a dowry of livestock, and chooses to run. A powerful drama about child marriage, the fierce pursuit of education, and a girl claiming authorship of her own future." },
+  { slug:"animal-farm", title:"Animal Farm", year:2026, genre:"Animation, Allegory",
+    poster:ang('v1776885397','2c66fb20-a9b3-4866-982a-42bd914adf0b'),
+    overview:"The animals of a farm rise up and overthrow their human master, dreaming of equality, until the pigs who lead the revolution become indistinguishable from the tyrants they replaced. A bold animated adaptation of Orwell's timeless allegory about power, propaganda, corruption, and the slogans that quietly change overnight." },
+  { slug:"hill", title:"The Hill", year:2023, genre:"Drama, Sports",
+    poster:ang('v1767817105','09747a7f-d206-46d4-846c-8446e8bcbebb'),
+    overview:"Born with a degenerative spine condition and told he would never play, a preacher's son in small-town Texas pursues an impossible baseball dream against his father's fears and his own failing body, swinging until the scouts finally watch. A true sports drama about pain, calling, stubborn hope, and a father and son finding peace." },
+  { slug:"thabo-and-the-rhino-case", title:"Thabo and the Rhino Case", year:2023, genre:"Family, Adventure",
+    poster:ang('v1744750754','5817a757-fd87-4db0-8095-34227dd50c97'),
+    overview:"A clever village boy in Africa who dreams of being a detective gets his first real case when poachers kill a rhino at the nearby reserve, and with his friends sets out to unmask the criminals. A spirited family mystery-adventure about wildlife conservation, courage, friendship, and kid sleuths outsmarting grown-ups." },
+  { slug:"wingfeather-saga-movie", title:"The Wingfeather Saga", year:2025, genre:"Animation, Fantasy",
+    poster:ang('v1761161540','3e00e231-96ee-476d-920f-eeb6817ff091'),
+    overview:"Three siblings in a storybook land discover their family hides a royal secret as the lizard-like forces of a nameless evil hunt them beyond the edges of their seaside town. An animated fantasy adventure of maps and legends, sea dragons and courage, and children learning who they truly are." },
+  { slug:"for-king-and-country-a-drummer-boy-christmas-live", title:"A Drummer Boy Christmas Live", year:2023, genre:"Music, Concert",
+    poster:ang('v1733726267','f2016371-c9eb-4dd3-8d1d-7db281c720f6'),
+    overview:"A cinematic concert film capturing a duo's spectacular arena Christmas tour: thundering drums, orchestral carols, falling snow, and stadium-scale staging built around the story of the little drummer boy. A musical celebration of the season for families who want the lights down, the volume up, and Christmas sung loud." },
+  { slug:"just-one-more", title:"Just One More", year:2026, genre:"Drama",
+    poster:ang('v1779125623','945dbf5a-2eab-48fa-8393-f4342c8b0a8d'),
+    overview:"A young woman trapped in the spiral of addiction collides with a dying man pouring his final days into a single mission: Jesus, save one more. As his clock runs out and her rock bottom approaches, an unlikely bond forms between the hopeless and the hope-filled. A drama about addiction, recovery, evangelism, and the worth of one soul." },
+  { slug:"hail-mary", title:"The Hail Mary", year:2026, genre:"Drama, Sports",
+    poster:ang('v1773421143','b5784746-849f-4db2-a7f2-0dbc76e17c9d'),
+    overview:"A man in desperate need of redemption steps up to coach a ragtag football team of struggling boys nobody else wants. Practice by practice, the discipline of the game becomes the discipline of a second chance, for the kids and for him. A gritty underdog sports drama about mentorship, failure, fatherlessness, and the long throw of grace." },
+  { slug:"still-hope", title:"Still Hope", year:2026, genre:"Drama",
+    poster:ang('v1770681996','47dfcb60-fa35-4fa8-abfa-8b5ae02be2c8'),
+    overview:"A young woman named Hope walks the long road of healing after life's darkest moments, learning that recovery is not a single act of courage but a thousand small ones. A tender drama about trauma, the slow work of restoration, the people who stay, and the stubborn persistence of hope when it would be easier to go numb." },
+  { slug:"parable", title:"Parable", year:2025, genre:"Mystery, Thriller",
+    poster:ang('v1764964566','4a514ea9-3f07-41ff-afe7-b5c0c5f4aa72'),
+    overview:"Six strangers wake trapped in a locked loft with no memory of how they arrived, racing against time to uncover the truth that connects them and the way out. Every clue cuts closer to who they really are. A contained mystery-thriller built like its namesake: a puzzle of guilt, secrets, judgment, and meaning hidden in plain sight." },
+  { slug:"i-was-a-stranger", title:"I Was a Stranger", year:2026, genre:"Drama, Thriller",
+    poster:ang('v1771355873','20520f4d-465d-4508-ac00-d2fd5283d90e'),
+    overview:"Five strangers are pulled together and collide on a single desperate night where survival is uncertain and every choice to help or to pass by carries a cost. A tense ensemble drama about hospitality to the stranger, the thin line between fear and compassion, and how one night of crossing paths can rewrite every life it touches." },
+  { slug:"hazels-heart", title:"Hazel's Heart", year:2025, genre:"Drama, True Story",
+    poster:ang('v1764185393','2f5c8544-85ad-4574-b761-d7b8209ec777'),
+    overview:"March 1920: three children are caught far from home when a prairie blizzard descends, and for the next twenty-five hours they fight whiteout cold, exhaustion, and fear to keep each other alive. A period survival drama drawn from a true story — sibling courage, a sister's sacrificial heart, and a family praying through the storm." },
+  { slug:"david-sing-along", title:"DAVID Sing-Along", year:2026, genre:"Animation, Music",
+    poster:ang('v1769545041','5fdf760b-bdd3-4c66-bf82-f65083c6ff66'),
+    overview:"The animated musical of the shepherd boy returns as a full sing-along edition: every anthem and lullaby with on-screen lyrics so the whole family can sing David's story out loud, from the pastures of Bethlehem to the showdown with the giant. A music-first family event of courage, faith, and songs meant to be shouted." },
+  { slug:"lords-prayer", title:"The Lord's Prayer", year:2025, genre:"Documentary",
+    poster:ang('v1762979403','441d7c5a-562d-493e-b0db-56d35790d188'),
+    overview:"A cinematic exploration of the Lord's Prayer, traveling line by line across the landscapes where it began: hillsides, deserts, Jerusalem stone. Scholarship, imagery, and meditation unpack the prayer Jesus taught — daily bread, forgiveness, deliverance — and what those ancient words ask of a modern life. A contemplative documentary of place and devotion." },
+  { slug:"secondhand-miracles", title:"Secondhand Miracles", year:2026, genre:"Family, Drama",
+    poster:ang('v1770938252','2ad632b4-f83b-41ae-b86b-50662a031b05'),
+    overview:"A discouraged teenage girl finds a worn jacket on a thrift store rack and, with it, the unlikely thread that begins to mend her unraveling life. Small kindnesses compound into something that looks a lot like providence. A gentle family drama about hand-me-down grace, hidden histories in ordinary objects, and hope rediscovered secondhand." },
+  { slug:"grow", title:"GROW", year:2025, genre:"Family, Comedy",
+    poster:ang('v1761672642','06eb65a6-9948-45ad-9557-cc80a5865dd7'),
+    overview:"A giant pumpkin contest brings a mismatched aunt and niece together in the dirt of a small-town growing season, where compost, patience, and county-fair rivalry slowly cultivate something neither expected: family. A warm, funny story of love, laughter, grief healing in a garden, and the absurd glory of a thousand-pound pumpkin." },
+  { slug:"luckiest-man-on-earth", title:"The Luckiest Man on Earth", year:2025, genre:"Documentary, Sports",
+    poster:ang('v1757368543','6159543d-54d5-4243-9ffa-4f0e19726265'),
+    overview:"A beloved football coach receives an ALS diagnosis and chooses to spend his remaining strength the way he spent his healthy years: pouring into his team, his family, and everyone watching how a man faces the unthinkable. A documentary about terminal illness met with love, faith, gratitude, and a locker room that becomes a congregation." },
+  { slug:"dot-conner-webtective", title:"Dot Conner: Webtective", year:2025, genre:"Kids, Mystery",
+    poster:ang('v1770754600','c13572c6-68b0-43c8-8678-c61f2209b45f'),
+    overview:"Kid detective Dot Conner takes her magnifying glass to the biggest questions, cracking each case with gadgets, friends, and curiosity in a bright mystery adventure made for young viewers. Clues, comedy, and kid-sized sleuthing where every investigation lands on something true worth knowing.", tier:'logline' },
+  { slug:"senior", title:"The Senior", year:2025, genre:"Sports, True Story",
+    poster:ang('v1753291423','b88429ff-3ba9-4b89-88ef-cec1ef3720a6'),
+    overview:"At fifty-nine, Mike Flynt returns to the college that expelled him decades earlier to finish what he started: one final season of football, taking hits alongside teammates a third his age. A true story about unfinished business, aging bodies and unaging resolve, fatherhood, and the difference between looking back and going back." },
+  { slug:"uprooted", title:"Uprooted", year:2025, genre:"Drama",
+    poster:ang('v1767030983','79daf02e-b31b-479a-a8da-70cadc295e09'),
+    overview:"A devoted couple crosses paths with a hurting, guarded teenager, and what begins as an act of kindness becomes a journey of love, healing, and unexpected grace for all three. A drama about foster care and chosen family, the patience required to love someone braced for abandonment, and roots that grow where they're planted." },
+  { slug:"rfk-legacy", title:"RFK: Legacy", year:2025, genre:"Documentary",
+    poster:ang('v1753294578','cfe146a6-7456-4aca-a2ca-7435924e86c2'),
+    overview:"A documentary tracing the Kennedy legacy: the speeches, the convictions, the assassination that froze a movement in time, and the family name that still carries political weight decades later. Archival footage and interviews examine what was promised, what was lost, and what that inheritance means now.", tier:'logline' },
+  { slug:"raising-the-bar", title:"Raising the Bar", year:2016, genre:"Family, Sports",
+    poster:ang('v1750965212','8de99f16-3d82-4aa8-945c-6add6bd6d0ca'),
+    overview:"A talented teenage gymnast walks away from the sport after a crushing competition, and a family move across the world offers her a fresh start — until a struggling local gym pulls her back toward the bars she swore off. A family sports story about burnout, perfectionism, friendship, and finding the joy in the routine again." },
+  { slug:"little-angels", title:"Little Angels", year:2024, genre:"Kids",
+    poster:ang('v1751925024','51505359-d609-428f-a697-7ea7a941f6bb'),
+    overview:"A sing-and-learn world for the youngest viewers, where songs, colors, and gentle bible stories introduce preschoolers to kindness, sharing, and faith's first words. Bright, musical, and made for little attention spans and big questions.", tier:'logline' },
+  { slug:"lightning-code", title:"The Lightning Code", year:2024, genre:"Family, Adventure",
+    poster:ang('v1747867500','df8a32b1-6629-49f1-bfff-51078307f31c'),
+    overview:"A family adventure from the Angel catalog: young protagonists, a mystery to decode, and storms both literal and personal on the way to the answer. Curiosity, courage, and family bonds tested by the unknown.", tier:'logline' },
+  { slug:"testify-a-vision-to-die-for", title:"Testify: A Vision to Die For", year:2025, genre:"Documentary",
+    poster:ang('v1741041573','5b0d38f7-d76d-488a-9815-d0022efd2d7b'),
+    overview:"A documentary testimony from the Angel catalog: a life remade by a vision worth dying for, told through interviews and firsthand witness. Conviction, calling, and the cost of carrying a message.", tier:'logline' },
+  { slug:"ride-above", title:"Ride Above", year:2022, genre:"Drama, Family",
+    poster:ang('v1744835396','5c9e603e-b7a4-4ec8-a341-bfdb8b7b79a8'),
+    overview:"Born into a family of horse trainers, a young woman who has loved racing since childhood is paralyzed in a devastating riding accident — and refuses to let the wheelchair end her bond with the thoroughbred she raised. A French-countryside drama of disability, grit, family stables, and a jockey's dream that adapts instead of dying." },
+  { slug:"sloth-story", title:"A Sloth Story", year:2024, genre:"Animation, Family",
+    poster:ang('v1752248525','a9711543-c580-46e6-99b5-1c6d60ed6a38'),
+    overview:"An animated family comedy about a sloth family taking life at their own speed in a world obsessed with going faster, where slowing down turns out to be the bravest move of all. Gentle humor, big eyes, and a moral the whole family can nap on.", tier:'logline' },
+  { slug:"mosaic-church", title:"Mosaic Church", year:2025, genre:"Documentary",
+    poster:ang('v1746827759','85b89846-a1f1-4946-bc23-346090d23755'),
+    overview:"A documentary portrait of a church community from the Angel catalog: many broken pieces assembled into one body, told through the people whose lives were rearranged by belonging. Congregation, calling, and the art of being put back together.", tier:'logline' },
+  { slug:"green-and-gold", title:"Green and Gold", year:2025, genre:"Drama",
+    poster:ang('v1749854927','54853108-fbd2-4792-b1b4-4563097c1a62'),
+    overview:"A fourth-generation Wisconsin dairy farmer facing foreclosure makes a desperate bet on the Packers' season to buy his farm one more year, while his granddaughter is torn between her own dreams and the land that raised her. A heartland drama of legacy, stubbornness, frozen mornings in the milking barn, and what's worth holding onto." },
+  { slug:"death-of-recess", title:"The Death of Recess", year:2026, genre:"Documentary",
+    poster:ang('v1769540673','6713047b-c76e-42ef-bdb9-62f40b9cba24'),
+    overview:"A documentary examining the quiet disappearance of recess and free play from American childhood — screens, schedules, and safety culture crowding out the unstructured hours where kids once learned risk, friendship, and imagination — and the parents and educators fighting to bring play back.", tier:'logline' },
+  { slug:"tails-of-christmas", title:"Tails of Christmas", year:2025, genre:"Family, Holiday",
+    poster:ang('v1764969079','22a045bd-b881-4dc1-a50f-7519271455c0'),
+    overview:"A holiday family film from the Angel catalog where the four-legged members of the family end up at the center of the season's chaos and its miracle. Pets, snow, mishaps, and a Christmas that comes together tail-first.", tier:'logline' },
+  { slug:"breaking-into-beautiful", title:"Breaking Into Beautiful", year:2024, genre:"Documentary, Drama",
+    poster:ang('v1735843921','3dd32416-e47c-479d-ae32-0db117f8134b'),
+    overview:"Kim White receives an aggressive cancer diagnosis and answers it with a courageous, unwavering will — not just to survive, but to spend the fight inspiring everyone watching her carry it. A story of illness met with defiant joy, faith under chemo lights, and beauty broken open rather than broken down." },
+  { slug:"for-the-one", title:"For the One", year:2024, genre:"Music, Concert",
+    poster:ang('v1744843111','eda60c43-9721-4ffe-b179-901dc8170475'),
+    overview:"Go backstage with Brandon Lake and Phil Wickham on the heart of Summer Worship Nights: stadiums of voices, green-room prayers, and the conviction that every anthem is sung for the one person who needs it. A concert documentary of modern worship — the songs, the sweat, and the why behind the tour." },
+  { slug:"vision", title:"Vision", year:2025, genre:"Drama",
+    poster:ang('v1759855854','981c6833-bf8e-47a9-9ee4-5b7918f06d1e'),
+    overview:"Louis crosses paths with a mysterious man who changes how he sees the world — and once his eyes are opened, the question becomes what he will do with his newfound vision. A parable-like drama about perception, calling, the people we walk past every day, and sight as responsibility." },
+  { slug:"truth-about-rfk-jr", title:"The Truth About RFK Jr.", year:2025, genre:"Documentary",
+    poster:ang('v1755725142','811dd5d8-2109-48bd-98c3-ca9d493a39bf'),
+    overview:"A documentary profile examining Robert F. Kennedy Jr. — the family name, the career, the controversies, and the claims — through interviews and archival record, inviting viewers to weigh the man against the myth for themselves.", tier:'logline' },
+  { slug:"identity-crisis", title:"Identity Crisis", year:2025, genre:"Documentary",
+    poster:ang('v1744917639','a25e6e70-c28e-44fc-8f8c-5ba06a452dfd'),
+    overview:"A documentary examining contested modern questions of identity through firsthand interviews and reporting, exploring how culture, medicine, and family collide in the lives at the center of the debate.", tier:'logline' },
+  { slug:"superspreader", title:"Superspreader", year:2022, genre:"Documentary",
+    poster:ang('v1770918900','70ddb13c-212b-46f3-9b4f-ebb5aac28609'),
+    overview:"When pandemic lockdowns shutter churches, worship leader Sean Feucht takes the music outside, leading open-air worship gatherings across America that draw crowds, headlines, and fury. A documentary about the Let Us Worship movement: civil liberties, contagion fears, revival tents on courthouse steps, and faith refusing to stay indoors." },
+  { slug:"camp-arrowhead", title:"Camp Arrowhead", year:2024, genre:"Family",
+    poster:ang('v1761583620','d5bf7ffe-174f-4ece-b269-9baee10f6ffd'),
+    overview:"A summer-camp family film from the Angel catalog: cabins, campfires, rivalries, and the kind of week in the woods that sends kids home different than they arrived. Friendship, mischief, and growing up under the pines.", tier:'logline' },
+  { slug:"world-we-make", title:"The World We Make", year:2019, genre:"Romance, Drama",
+    poster:ang('v1739294086','f4b0c9fc-4952-4961-90f0-13b109fa403f'),
+    overview:"A teenage equestrian and a college-bound football star fall for each other in a small Southern town, and their interracial romance collides with prejudices the town pretends it outgrew. A young-love drama about choosing each other against pressure, family loyalty, horses at dawn, and the world two people decide to make together." },
+  { slug:"indivisible", title:"Indivisible", year:2018, genre:"Drama, True Story",
+    poster:ang('v1761159986','43c0b90a-128f-4bd5-ab91-0b6ae9cadd58'),
+    overview:"Army chaplain Darren Turner deploys to Iraq with unshakable faith and comes home a year later carrying wounds no one can see, his marriage strained to breaking. A true story of war's invisible toll on the homefront, a couple fighting for their vows, and a ministry that had to be rebuilt from honesty instead of armor." },
+  { slug:"hope-springs-eternal", title:"Hope Springs Eternal", year:2018, genre:"Comedy, Drama",
+    poster:ang('v1770937102','f4c6d730-9913-4682-9e5d-b442e50bf01c'),
+    overview:"A teenager who built her entire identity — and her popularity — around being the dying girl gets the news no one prepared her for: remission. Now she has to figure out who she is with a future. A wry, tender dramedy about illness, identity, the strange grief of good news, and learning to live unscripted." },
+  { slug:"tortured-for-christ", title:"Tortured for Christ", year:2018, genre:"Drama, True Story",
+    poster:ang('v1741989136','25f4f5f6-6dbc-4993-a6fb-69d7a135fe8c'),
+    overview:"Romanian pastor Richard Wurmbrand refuses to praise the communist regime and pays with fourteen years in prison: solitary cells, beatings, and an underground faith that would not break. A stark true account of persecution behind the Iron Curtain, the church in chains, and a man who answered torture with forgiveness." },
+  { slug:"riot", title:"The Riot and the Dance: Water", year:2020, genre:"Documentary, Nature",
+    poster:ang('v1733475312','e536d1fb-09c2-4192-990f-674fea5cbce4'),
+    overview:"A nature documentary plunging into oceans, rivers, and reefs to marvel at the riot of life in the water — cuttlefish, crocodiles, leviathans — and to argue that what looks like chaos is choreography, intentionally designed by a divine creator. Wonder-first natural history with a theological lens." },
+  { slug:"rocket", title:"The Rocket", year:2018, genre:"Sports, Family",
+    poster:ang('v1768328569','bfe386e0-f4a1-4b42-8dc0-1765f531cc16'),
+    overview:"A high school football star's future collapses with a major injury, and the only team that will take him is the one he never respected: cross country. Mile by mile, the sport he settled for remakes him. A small-town sports story about loss, humility, second-choice dreams, and finding a new way to run." },
+  { slug:"let-there-be-light", title:"Let There Be Light", year:2017, genre:"Drama",
+    poster:ang('v1775685881','9f61c027-d7c4-4066-9000-f52206982b64'),
+    overview:"The world's most famous atheist, a celebrity author who debates believers for sport, clinically dies for four minutes in a car crash and comes back haunted by what he saw. A drama about a professional skeptic confronting his own near-death experience, his fractured family, his late son's last word, and the light he built a career denying." },
+  { slug:"stray", title:"The Stray", year:2017, genre:"Family, True Story",
+    poster:ang('v1744233127','b7be19d7-b4a5-492a-b07e-55abba691cfe'),
+    overview:"A stray dog wanders into the life of a stretched-thin, struggling family and becomes the unlikely glue holding a frazzled father, an overwhelmed mother, and a hurting son together — right up to a backcountry camping trip none of them will forget. A true-story family film about providence with four legs, and miracles that mend hearts and homes." },
+  { slug:"mully", title:"Mully", year:2015, genre:"Documentary, True Story",
+    poster:ang('v1752773987','b34a31df-17af-4197-83a6-5c73a8d91c44'),
+    overview:"Abandoned at six on the streets of Kenya, Charles Mully claws his way from beggar to self-made multimillionaire — then liquidates everything, against his family's protests, to become father to hundreds of orphaned street children. A staggering documentary about radical generosity, redeemed abandonment, and the largest family on earth." },
+  { slug:"music-of-silence", title:"The Music of Silence", year:2017, genre:"Biography, Music",
+    poster:ang('v1746052391','23dff70c-8c63-423d-b1d3-e468938177d6'),
+    overview:"A boy born in Tuscany with failing eyes loses his sight completely after a childhood accident, and finds in the dark the one thing that needs no vision: a once-in-a-generation voice. The Andrea Bocelli story — opera, doubt, vineyards, and the long apprenticeship of a blind tenor who would sing for the world." },
+  { slug:"love-kennedy", title:"Love, Kennedy", year:2017, genre:"Drama, True Story",
+    poster:ang('v1758123247','fdf51228-682a-44c4-a5d6-f0a6bd61bdd7'),
+    overview:"Kennedy Hansen is a radiant teenager whose mysterious symptoms are finally diagnosed as juvenile Batten disease — fatal, and fast. Instead of shrinking, she spends her remaining months loving everyone in reach. A true story told partly through those she touched: a dying girl's joy, a family's faith, and a short life that outlived itself." },
+  { slug:"a-cowgirls-story", title:"A Cowgirl's Story", year:2017, genre:"Family, Western",
+    poster:ang('v1753128786','0b0983e4-5f6b-47a6-8abe-01cb66aabd89'),
+    overview:"With both parents deployed in Afghanistan, seventeen-year-old Dusty moves in with her grandfather and starts an equestrian drill team with the unlikeliest kids at her new school — until war news from overseas tests everything the team has built. A family western about military kids, horses, grief, and riding in formation through it." },
+  { slug:"case-for-christ", title:"The Case for Christ", year:2017, genre:"Drama, True Story",
+    poster:ang('v1743629022','41b1e28b-066c-4d92-9753-43541399cba0'),
+    overview:"Award-winning investigative journalist Lee Strobel, a committed atheist, sets out to debunk Christianity with the same rigor he uses on courtroom exposés — to rescue his marriage from his wife's newfound faith. The evidence doesn't cooperate. A true story of journalism turned inward: cross-examining the resurrection and losing the case on purpose." },
+  { slug:"heaven-sent", title:"Heaven Sent", year:2016, genre:"Family, Holiday",
+    poster:ang('v1761601452','66eed063-f429-46d5-b86b-0e9fadb2c4a1'),
+    overview:"A family holiday film from the Angel catalog: a struggling couple, a child's impossible Christmas wish, and an unexpected visitor whose arrival starts mending what was quietly breaking. Seasonal warmth, second chances, and small miracles delivered on time.", tier:'logline' },
+  { slug:"im-not-ashamed", title:"I'm Not Ashamed", year:2016, genre:"Drama, True Story",
+    poster:ang('v1779205936','b2d38143-0540-4901-924f-8ff80a800508'),
+    overview:"Drawn from her own journals, the story of Rachel Joy Scott — an ordinary Colorado teenager wrestling with faith, friendship, and fitting in — who became the first victim at Columbine High School. A true account of adolescence interrupted, kindness as conviction, and a short life whose witness outlasted the tragedy that ended it." },
+  { slug:"love-finds-you-in-valentine", title:"Love Finds You in Valentine", year:2016, genre:"Romance",
+    poster:ang('v1769724533','e52ef6b3-289d-4ba1-9f34-ec5d53e4c949'),
+    overview:"A California law student inherits her family's ranch in Valentine, Nebraska, and arrives planning to sell — until the town, the land, and a steady-hearted ranch hand complicate the paperwork. A sweet small-town romance about inheritance, slowing down, old family wounds, and love showing up at the most literally named place possible." },
+  { slug:"just-let-go", title:"Just Let Go", year:2015, genre:"Drama, True Story",
+    poster:ang('v1744997822','a6de793c-ea7c-4786-be68-1ac5a77d0cc4'),
+    overview:"Chris Williams is driving his family home when a drunk nineteen-year-old crosses the line and kills his pregnant wife and two of his children. In the wreckage, he makes a decision almost no one could: to forgive completely. A devastating true story about grief, the impossible mechanics of mercy, and what letting go actually costs." },
+  { slug:"woodlawn", title:"Woodlawn", year:2015, genre:"Sports, True Story",
+    poster:ang('v1743536721','1f392a37-85e7-45f7-9c8c-a3d83d9f1136'),
+    overview:"In newly desegregated 1973 Birmingham, gifted running back Tony Nathan joins a Woodlawn High team boiling with racial tension — until a spiritual awakening sweeps the locker room and a divided team becomes a city's unlikely common ground. A true sports story of revival, race, and forty thousand people showing up to watch hate lose." },
+  { slug:"against-the-sun", title:"Against the Sun", year:2014, genre:"War, Survival",
+    poster:ang('v1762985632','606f9bcd-c4e9-4b4b-b1e2-b3ef8a04b4d1'),
+    overview:"A World War II torpedo bomber ditches in the Pacific, leaving its three-man crew — pilot, bombardier, radioman — adrift on a tiny raft with no food, no water, and no rescue coming. Thirty-four days of sharks, storms, salt, and starvation. A true survival ordeal about endurance, friction, faith, and the will to outlast the ocean." },
+  { slug:"hoovey", title:"Hoovey", year:2015, genre:"Sports, True Story",
+    poster:ang('v1737576077','3b0ae2c7-41a8-4aac-a2d7-ffab132065bd'),
+    overview:"Basketball-obsessed teenager Eric 'Hoovey' Elliott collapses on the court and is found to have a brain tumor; surgery saves his life but takes his sight, balance, and game. As medical bills bury the family farm, he fights his way back to the hardwood. A true story of a family that refuses to quit on the kid who refuses to quit." },
+  { slug:"paddington", title:"Paddington", year:2014, genre:"Family, Comedy",
+    poster:ang('v1773852412','607903b7-67ff-46c0-9c41-aa90eb40ceed'),
+    overview:"A small bear from darkest Peru arrives in London with a suitcase, impeccable manners, and a tag reading 'please look after this bear,' and turns the orderly Brown family household gloriously upside down while a sinister taxidermist circles. A marmalade-soaked family comedy about belonging, kindness to strangers, and home as the people who keep you." },
+  { slug:"love-finds-you-in-charm", title:"Love Finds You in Charm", year:2015, genre:"Romance, Drama",
+    poster:ang('v1770068331','f0e4eed1-d70e-4f23-878d-43c98cee4f63'),
+    overview:"A restless young Amish woman spends a summer in Charm, Ohio, where new friendships, a library job, and an outsider's attention make her question whether the plain life she inherited is the life she'd choose. A gentle romance about faith and freedom, community and individuality, and choosing your world with open eyes." },
+  { slug:"23-blast", title:"23 Blast", year:2014, genre:"Sports, True Story",
+    poster:ang('v1736216740','115066eb-4594-4740-8942-e73985710e4a'),
+    overview:"High school football standout Travis Freeman wakes up from a sudden infection permanently blind — and decides, with a stubborn coach and a loyal best friend, to return to the field anyway, playing center by feel and trust. A true story about darkness, the teammates who become your eyes, and refusing the small life everyone now expects." },
+  { slug:"love-finds-you-in-sugarcreek", title:"Love Finds You in Sugarcreek", year:2014, genre:"Romance, Mystery",
+    poster:ang('v1769454056','0efa4f6a-57d9-460a-bd53-dc2fa4dfbe8a'),
+    overview:"A drifter with a battered truck, a small son, and a guarded past arrives in the Amish country town of Sugarcreek, Ohio, where two elderly Amish sisters take him in and the local cop — a single, skeptical policewoman — starts digging into who he really is. A small-town romance wrapped around a mystery of trust and second chances." },
+  { slug:"redemption-of-henry-myers", title:"The Redemption of Henry Myers", year:2014, genre:"Western",
+    poster:ang('v1734115501','b2fb72e6-8ce6-4737-9247-c4c0cf993cfa'),
+    overview:"Outlaw Henry Myers is double-crossed and left for dead after a heist, and the widow and two children who nurse him back to health show him a kind of life he's only ever stolen from. When his old partners come looking, he must choose. A redemption western about grace extended to the undeserving and the gunfight with your own past." },
+  { slug:"dakotas-summer", title:"Dakota's Summer", year:2014, genre:"Family, Western",
+    poster:ang('v1752013905','c175e0f3-e3b4-414b-96fb-e9af43debafc'),
+    overview:"Teenage rodeo performer Dakota discovers she was adopted, and the news unseats everything she thought she knew about who she is. A summer at her grandfather's ranch — horses, dust, and hard conversations — slowly rebuilds her. A coming-of-age family western about identity, belonging, and the family that chooses you." },
+  { slug:"enders-game", title:"Ender's Game", year:2013, genre:"Sci-Fi, Action",
+    poster:ang('v1776271640','ecdd4300-f88a-4491-81be-3b738d29a875'),
+    overview:"Humanity, scarred by an alien invasion, drafts its most gifted children into orbital Battle School, and brilliant, isolated Ender Wiggin rises through brutal war games designed to forge the commander who will end the next war before it starts. A sci-fi epic about child soldiers, manipulation, the ethics of victory, and the game that was never a game." },
+  { slug:"angels-sing", title:"Angels Sing", year:2013, genre:"Family, Holiday",
+    poster:ang('v1751927448','ab31a852-9438-4dc1-b6f3-3361d54320ca'),
+    overview:"A man who lost his love of Christmas to a childhood tragedy has avoided the season his whole adult life — until a mysterious, music-filled stranger sells his family a house in an Austin neighborhood famous for going all-out on the holidays. A warm, song-stuffed Christmas film about grief thawing, neighbors, and joy relearned." },
+  { slug:"still-mine", title:"Still Mine", year:2012, genre:"Drama, True Story",
+    poster:ang('v1752868392','611a0c80-37c2-4daf-b615-bfdd98bb2db0'),
+    overview:"An eighty-nine-year-old New Brunswick farmer sets out to build a smaller, better house for his wife as her memory fades — and runs headlong into a bureaucracy of permits, inspections, and stop-work orders that treats a lifetime of craftsmanship as a code violation. A true late-life love story about dignity, devotion, and building anyway." },
+  { slug:"standing-up", title:"Standing Up", year:2013, genre:"Family, Drama",
+    poster:ang('v1741726753','53d96bbe-7176-4397-8ab2-d372b1eb11e4'),
+    overview:"Two kids are stripped and stranded on an island in the lake — the victims of a cruel summer-camp ritual — and instead of returning to face the humiliation, they run, beginning a days-long journey that turns two outcasts into allies. A tender story about bullying, shame, unexpected friendship, and the dignity of standing up." },
+  { slug:"mighty-macs", title:"The Mighty Macs", year:2009, genre:"Sports, True Story",
+    poster:ang('v1764891836','73fca2d6-ef22-4a23-abf8-8cbb63077055'),
+    overview:"In 1971, Cathy Rush takes a coaching job at tiny, broke, all-women's Immaculata College — no gym, no budget, nuns for assistant coaches — and drives her team all the way to the first national championship in women's college basketball. A true underdog story about ambition, faith, and the founding mothers of the women's game." },
+  { slug:"seven-days-in-utopia", title:"Seven Days in Utopia", year:2011, genre:"Sports, Drama",
+    poster:ang('v1734713772','88e3fd73-4fe9-4e9e-ad83-7d4fe88dde7b'),
+    overview:"A young pro golfer publicly melts down in his tournament debut and, fleeing the wreckage, breaks down in Utopia, Texas — population 375 — where an old rancher with a past offers him seven days of unconventional lessons that have little to do with golf. A quiet sports parable about failure, fathers, and finding your true scorecard." },
+  { slug:"lamp", title:"The Lamp", year:2011, genre:"Drama, Family",
+    poster:ang('v1766431465','e4ce173c-32ef-4507-a966-63514b3410c8'),
+    overview:"A couple hollowed out by the loss of their son receives a mysterious old lamp — and a visitor who offers not wishes but something harder: the challenge to believe again. A gentle drama about grief, foster love, and discovering that the power to restore a family was never going to come from magic.", tier:'logline' },
+  { slug:"the-way", title:"The Way", year:2010, genre:"Drama",
+    poster:ang('v1744320883','48960d1f-f10c-4a51-b58e-e5d8592c3dac'),
+    overview:"An American doctor flies to France to collect the body of his estranged son, who died in a storm on the first day of the Camino de Santiago — and instead of flying home, he carries his son's ashes and walks the entire five-hundred-mile pilgrimage himself. A grief-soaked road movie of strangers, blisters, wine, and unplanned communion." },
+  { slug:"amish-grace", title:"Amish Grace", year:2010, genre:"Drama, True Story",
+    poster:ang('v1760482475','2299e7e9-349e-4761-9372-4b4e8ee09fef'),
+    overview:"A gunman walks into a one-room Amish schoolhouse in Nickel Mines, Pennsylvania, and murders five girls — and within hours, the grieving community does the unthinkable: it forgives, attending the shooter's burial and embracing his widow. A true story told through a mother whose faith in forgiveness is tested by the loss of her daughter." },
+  { slug:"like-dandelion-dust", title:"Like Dandelion Dust", year:2009, genre:"Drama",
+    poster:ang('v1742323509','607f0814-4b15-4ad8-b3a0-0a6e88a0506c'),
+    overview:"Released from prison, a biological father learns the son he never knew was given up for adoption without his consent — and the law says he can take the boy back from the only loving home the child has ever known. A wrenching drama where two families, one broken and one privileged, both love the same little boy." },
+  { slug:"gifted-hands", title:"Gifted Hands: The Ben Carson Story", year:2009, genre:"Biography, True Story",
+    poster:ang('v1778194311','1724c682-3a55-4fef-9863-1cce8e8ca63b'),
+    overview:"A failing, angry kid in inner-city Detroit is turned around by a mother who can't read but makes her sons write book reports anyway — and grows up to become the pioneering pediatric neurosurgeon who separates twins conjoined at the head. The true Ben Carson story: poverty, temper, scripture, study, and impossibly steady hands." },
+  { slug:"fireproof", title:"Fireproof", year:2008, genre:"Drama, Romance",
+    poster:ang('v1778101589','c248c4b2-8e87-43c4-8419-beeafdcb1af7'),
+    overview:"A decorated firefighter who never leaves a partner behind in a burning building is quietly letting his marriage burn down, until his father challenges him to a forty-day experiment called the Love Dare. A drama about a husband relearning his wife one deliberate act at a time — respect, sacrifice, and rescuing what's at home." },
+  { slug:"great-debaters", title:"The Great Debaters", year:2007, genre:"Drama, True Story",
+    poster:ang('v1776965148','72f1fcb4-18cf-4e5e-8e0d-e7e3ea5bfdec'),
+    overview:"In Jim Crow Texas, 1935, professor Melvin Tolson forges the debate team of tiny all-Black Wiley College into a powerhouse that argues its way past lynch mobs and locked doors to face the reigning national champions. A true story of rhetoric as resistance — young voices sharpened into weapons, and an unjust nation made to listen." },
+  { slug:"saints-and-soldiers", title:"Saints and Soldiers", year:2003, genre:"War, Drama",
+    poster:ang('v1772745400','dc49b309-ffea-4faa-83de-4ba03a657555'),
+    overview:"After escaping the Malmedy massacre in the snowbound Ardennes, a handful of Allied soldiers trapped behind enemy lines must carry vital intelligence to safety through frozen forests crawling with German patrols. A WWII survival drama about conscience under fire, a sharpshooter haunted by faith, and mercy in the middle of a war." },
+  { slug:"to-end-all-wars", title:"To End All Wars", year:2001, genre:"War, True Story",
+    poster:ang('v1729714064','4e7b537c-700b-4cae-939b-5bcf46f54c49'),
+    overview:"Allied prisoners of war are worked, starved, and beaten building the Burma railway for their Japanese captors, and within the camp a secret 'jungle university' of philosophy and scripture becomes their resistance. A brutal true story asking the hardest question of the war: whether men can forgive the enemy breaking their bodies." }
+];
+
+/* ─── State ─── */
+let corpus = [];
+let candidates = [];
+let candidateMap = new Map();
+let currentResults = [];
+let currentIndex = 0;
+let currentQuery = '';
+let traceInterval = null;
+
+/* ─── DOM refs ─── */
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+
+const wall = $('#wall');
+const queryInput = $('#query');
+const searchForm = $('#searchForm');
+const goBtn = $('#go');
+const corpusLoadText = $('#corpusLoadText');
+const errorBanner = $('#errorBanner');
+const traceText = $('#traceText');
+const resolveStatus = $('#resolveStatus');
+const featureImg = $('#featureImg');
+const titleEl = $('#title');
+const metaEl = $('#meta');
+const scoreEl = $('#score');
+const overviewEl = $('#overview');
+const openSourceBtn = $('#openSource');
+const copyLinkBtn = $('#copyLink');
+const newSearchBtn = $('#newSearch');
+const resultQuery = $('#resultQuery');
+const resultSearchForm = $('#resultSearchForm');
+const resultGoBtn = $('#resultGo');
+const rankList = $('#rankList');
+const rankCount = $('#rankCount');
+const statusEl = $('#status');
+const corpusCountEl = $('#corpusCount');
+const toastEl = $('#toast');
+const featureEl = $('#feature');
+
+/* ─── Toast ─── */
+function showToast(msg, duration = 1800) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('show');
+  setTimeout(() => toastEl.classList.remove('show'), duration);
+}
+
+/* ─── Theme ─── */
+function initTheme() {
+  let saved = null;
+  try { saved = localStorage.getItem('resonance-theme'); } catch (e) {}
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.body.setAttribute('data-theme', 'dark');
+  }
+}
+initTheme();
+
+document.addEventListener('click', (e) => {
+  const sw = e.target.closest('[data-theme-switch]');
+  if (!sw) return;
+  const isDark = document.body.getAttribute('data-theme') === 'dark';
+  document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  try { localStorage.setItem('resonance-theme', isDark ? 'light' : 'dark'); } catch (e2) {}
+});
+
+/* ─── SVG poster fallback (offline-safe, no third-party placeholders) ─── */
+function fallbackPoster(title = '', year = '') {
+  const safeTitle = String(title || 'FILM').slice(0, 60);
+  const hue = [...safeTitle].reduce((a, c) => a + c.charCodeAt(0), 0) % 360;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="900" viewBox="0 0 600 900">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="hsl(${hue},16%,16%)"/>
+      <stop offset="1" stop-color="hsl(${(hue + 40) % 360},18%,6%)"/>
+    </linearGradient></defs>
+    <rect width="600" height="900" fill="url(#g)"/>
+    <rect x="36" y="36" width="528" height="828" fill="none" stroke="rgba(246,241,232,.18)" stroke-width="2"/>
+    <text x="56" y="110" font-family="Courier New,monospace" font-size="20" fill="rgba(246,241,232,.55)" letter-spacing="4">ANGEL.COM</text>
+    <foreignObject x="56" y="320" width="488" height="320">
+      <div xmlns="http://www.w3.org/1999/xhtml" style="font-family:Georgia,serif;font-size:52px;line-height:.94;font-weight:600;letter-spacing:-2px;color:rgb(246,241,232);word-wrap:break-word;">${escHtml(safeTitle)}</div>
+    </foreignObject>
+    <text x="56" y="820" font-family="Courier New,monospace" font-size="22" fill="rgba(246,241,232,.5)" letter-spacing="3">${escHtml(String(year || ''))}</text>
+  </svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
+/* ─── Corpus loading ───
+   Static, real catalog — no network needed to render the wall.
+   ARBITER candidates are precomputed once. */
+function loadCorpus() {
+  document.body.classList.add('corpus-loading');
+  document.body.classList.remove('corpus-ready');
+  corpusLoadText.textContent = 'indexing angel.com catalog';
+
+  corpus = ANGEL_CORPUS.map((m, i) => ({
+    id: i,
+    ...m,
+    url: `https://www.angel.com/watch/${m.slug}`
+  }));
+
+  candidateMap = new Map();
+  candidates = corpus.map((m) => {
+    const text = `${m.title}. ${m.year}. ${m.genre}. ${m.overview}`;
+    candidateMap.set(text, m);
+    return text;
+  });
+
+  document.body.classList.remove('corpus-loading');
+  document.body.classList.add('corpus-ready');
+  corpusLoadText.textContent = `${corpus.length} films indexed from angel.com`;
+  corpusCountEl.textContent = `${corpus.length} films indexed`;
+  statusEl.textContent = `${corpus.length} films ready`;
+  renderWall(corpus);
+}
+
+/* ─── Render Wall ─── */
+function renderWall(movies) {
+  const subset = shuffleArray([...movies]).slice(0, 72);
+  wall.innerHTML = subset.map(m => `
+    <div class="wall-cell" data-type="film" data-id="${m.id}">
+      <img src="${m.poster}" alt="${escHtml(m.title)}" loading="lazy" decoding="async" referrerpolicy="no-referrer"
+           data-title="${escHtml(m.title)}" data-year="${m.year}"
+           onerror="this.onerror=null;this.src=fallbackPoster(this.dataset.title,this.dataset.year)">
+    </div>
+  `).join('');
+}
+
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+/* ─── ARBITER — live semantic scoring ───
+   POST { query, candidates } → always read data.all: [{ text, score }].
+   Batched at 128 with cross-batch merge. */
+async function arbiterRank(query) {
+  const batches = [];
+  for (let i = 0; i < candidates.length; i += BATCH_SIZE) {
+    batches.push(candidates.slice(i, i + BATCH_SIZE));
+  }
+
+  const merged = [];
+  for (const batch of batches) {
+    const res = await fetch(ARBITER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, candidates: batch, use_freq: true, top_k: RETURN_COUNT })
+    });
+    if (!res.ok) throw new Error(`arbiter ${res.status}`);
+    const data = await res.json();
+    const rows = Array.isArray(data?.all) ? data.all : (Array.isArray(data?.top) ? data.top : []);
+    merged.push(...rows);
+  }
+
+  return merged
+    .map(r => {
+      const m = candidateMap.get(r.text);
+      return m ? { ...m, score: Number(r.score || 0) } : null;
+    })
+    .filter(Boolean)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, RETURN_COUNT);
+}
+
+/* ─── Query Traces (typing animation) ─── */
+const TRACE_PHRASES = [
+  'a family torn apart by a hidden betrayal',
+  'movie to make me feel better',
+  'something true that happened during the war',
+  'a kid who refuses to give up',
+  'animated adventure for family movie night',
+  'grief that slowly turns into hope'
+];
+let idleTraceTimer = null;
+let idleTraceIdx = 0;
+
+function typeIdleTrace(text, pos = 0) {
+  if (document.body.classList.contains('searching') || document.body.classList.contains('has-results')) return;
+  traceText.textContent = text.slice(0, pos);
+  if (pos <= text.length) {
+    idleTraceTimer = setTimeout(() => typeIdleTrace(text, pos + 1), pos === 0 ? 240 : 24 + Math.random() * 16);
+  } else {
+    idleTraceTimer = setTimeout(() => eraseIdleTrace(text, text.length), 2400);
+  }
+}
+function eraseIdleTrace(text, pos) {
+  if (document.body.classList.contains('searching') || document.body.classList.contains('has-results')) return;
+  traceText.textContent = text.slice(0, pos);
+  if (pos > 0) {
+    idleTraceTimer = setTimeout(() => eraseIdleTrace(text, pos - 1), 13 + Math.random() * 10);
+  } else {
+    idleTraceIdx = (idleTraceIdx + 1) % TRACE_PHRASES.length;
+    idleTraceTimer = setTimeout(() => typeIdleTrace(TRACE_PHRASES[idleTraceIdx]), 420);
+  }
+}
+function startIdleTraces() {
+  clearTimeout(idleTraceTimer);
+  if (document.body.classList.contains('has-results')) return;
+  typeIdleTrace(TRACE_PHRASES[idleTraceIdx]);
+}
+function stopIdleTraces() { clearTimeout(idleTraceTimer); }
+
+/* ─── Resolve animation ─── */
+const RESOLVE_STATES = ['locking archive', 'reading candidate field', 'measuring coherence', 'isolating strongest signal', 'preparing reveal'];
+let resolveTimer = null;
+
+function startResolveAnimation() {
+  clearInterval(resolveTimer);
+  let idx = 0;
+  resolveStatus.textContent = RESOLVE_STATES[0];
+  const rrs = $('#resultResolveStatus');
+  if (rrs) rrs.textContent = RESOLVE_STATES[0];
+  resolveTimer = setInterval(() => {
+    idx = Math.min(idx + 1, RESOLVE_STATES.length - 1);
+    resolveStatus.textContent = RESOLVE_STATES[idx];
+    if (rrs) rrs.textContent = RESOLVE_STATES[idx];
+    if (idx >= RESOLVE_STATES.length - 1) { clearInterval(resolveTimer); resolveTimer = null; }
+  }, 900);
+}
+function stopResolveAnimation() { clearInterval(resolveTimer); resolveTimer = null; }
+
+/* ─── Execute Search ─── */
+async function executeSearch(query) {
+  const q = (query || '').trim();
+  if (!q) return;
+
+  currentQuery = q;
+  stopIdleTraces();
+  traceText.textContent = `${q}  /  resolving`;
+  document.body.classList.add('searching');
+  startResolveAnimation();
+  errorBanner.classList.remove('visible');
+  statusEl.textContent = `ranking ${candidates.length} candidates`;
+
+  try {
+    /* Real ranking + a minimum beat so the resolve state reads */
+    const [results] = await Promise.all([arbiterRank(q), sleep(900)]);
+
+    currentResults = results;
+    currentIndex = 0;
+
+    if (!results.length) {
+      showToast('no response from engine');
+      return;
+    }
+
+    statusEl.textContent = `ranked ${candidates.length} candidates · live`;
+    document.body.classList.add('cutting');
+    await sleep(240);
+    showResults(results, q);
+    document.body.classList.remove('cutting');
+  } catch (err) {
+    console.error(err);
+    showToast('arbiter connection failed');
+    errorBanner.textContent = `arbiter unreachable (${err.message}). check network and retry.`;
+    errorBanner.classList.add('visible');
+  } finally {
+    stopResolveAnimation();
+    document.body.classList.remove('searching');
+    if (!document.body.classList.contains('has-results')) startIdleTraces();
+  }
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+/* ─── Show Results ─── */
+function showResults(results, query) {
+  document.body.classList.add('has-results');
+  resultQuery.value = query;
+  rankCount.textContent = `${results.length} returned`;
+
+  rankList.innerHTML = results.map((m, i) => `
+    <button class="rank-row${i === 0 ? ' active' : ''}" data-idx="${i}" type="button">
+      <span class="rank-num">${String(i + 1).padStart(2, '0')}</span>
+      <img class="rank-thumb" src="${m.poster}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"
+           data-title="${escHtml(m.title)}" data-year="${m.year}"
+           onerror="this.onerror=null;this.src=fallbackPoster(this.dataset.title,this.dataset.year)">
+      <div class="rank-copy">
+        <span class="rank-title">${escHtml(m.title)}</span>
+        <div class="rank-meta">
+          <span>${m.year}</span>
+          <span>${escHtml(m.genre)}</span>
+        </div>
+      </div>
+      <span class="rank-score">${Number(m.score).toFixed(3)}</span>
+    </button>
+  `).join('');
+
+  selectResult(0);
+
+  rankList.querySelectorAll('.rank-row').forEach(row => {
+    row.addEventListener('click', () => selectResult(parseInt(row.dataset.idx, 10)));
+  });
+
+  window.scrollTo(0, 0);
+}
+
+function selectResult(idx) {
+  if (idx < 0 || idx >= currentResults.length) return;
+  currentIndex = idx;
+  const m = currentResults[idx];
+
+  /* Hero: backdrop if the film has one, else poster (posterish framing) */
+  const heroSrc = m.backdrop || m.poster;
+  const isPoster = !m.backdrop;
+  featureImg.onerror = function () {
+    this.onerror = null;
+    this.src = fallbackPoster(m.title, m.year);
+  };
+  featureImg.src = heroSrc;
+  featureImg.alt = m.title;
+  featureEl.classList.toggle('posterish', isPoster);
+  featureImg.classList.toggle('is-posterish', isPoster);
+
+  titleEl.textContent = m.title;
+  metaEl.innerHTML = `<span>${m.year}</span><span>${escHtml(m.genre)}</span><span>angel.com</span>`;
+  scoreEl.textContent = Number(m.score).toFixed(3);
+  overviewEl.textContent = m.overview.length > 260 ? m.overview.slice(0, 257).trimEnd() + '…' : m.overview;
+
+  openSourceBtn.onclick = () => window.open(m.url, '_blank', 'noopener');
+
+  copyLinkBtn.onclick = () => {
+    const base = location.protocol === 'file:' ? '' : location.href.split('#')[0];
+    const link = base ? `${base}#${encodeURIComponent(currentQuery)}` : m.url;
+    navigator.clipboard.writeText(link)
+      .then(() => showToast('link copied'))
+      .catch(() => showToast('copy failed'));
+  };
+
+  rankList.querySelectorAll('.rank-row').forEach((row, i) => {
+    row.classList.toggle('active', i === idx);
+  });
+
+  const activeRow = rankList.querySelector('.rank-row.active');
+  if (activeRow && window.innerWidth <= 980) {
+    activeRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+/* ─── New Search ─── */
+function resetToHome() {
+  document.body.classList.remove('has-results', 'searching', 'cutting');
+  currentResults = [];
+  currentIndex = 0;
+  currentQuery = '';
+  queryInput.value = '';
+  resultQuery.value = '';
+  traceText.textContent = '';
+  window.scrollTo(0, 0);
+  queryInput.focus({ preventScroll: true });
+  startIdleTraces();
+}
+
+/* ─── Event Listeners ─── */
+searchForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  executeSearch(queryInput.value);
+});
+
+resultSearchForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const q = resultQuery.value;
+  if (!q.trim()) return;
+  document.body.classList.add('searching');
+  executeSearch(q);
+});
+
+resultQuery.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    resultSearchForm.requestSubmit();
+  }
+});
+
+newSearchBtn.addEventListener('click', resetToHome);
+goBtn.addEventListener('click', (e) => { e.preventDefault(); executeSearch(queryInput.value); });
+
+document.addEventListener('keydown', (e) => {
+  if (!currentResults.length || !document.body.classList.contains('has-results')) return;
+  if (e.key === 'ArrowRight' && currentIndex < currentResults.length - 1) selectResult(currentIndex + 1);
+  if (e.key === 'ArrowLeft' && currentIndex > 0) selectResult(currentIndex - 1);
+});
+
+$$('[data-action="shuffle-corpus"]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    renderWall(corpus);
+    showToast('films shuffled');
+  });
+});
+
+queryInput.addEventListener('focus', stopIdleTraces);
+queryInput.addEventListener('blur', () => setTimeout(() => {
+  if (!queryInput.value) startIdleTraces();
+}, 250));
+
+/* ─── Desktop wall drift animation ─── */
+function initWallDrift() {
+  if (window.innerWidth < 981) return;
+
+  let scrollPos = 0;
+  let speed = 0.3;
+  let targetSpeed = 0.3;
+  let lastTime = performance.now();
+
+  setInterval(() => { targetSpeed = 0.2 + Math.random() * 0.3; }, 4000);
+
+  function drift(now) {
+    if (document.body.classList.contains('has-results')) {
+      requestAnimationFrame(drift);
+      return;
+    }
+    const dt = (now - lastTime) / 16;
+    lastTime = now;
+    speed += (targetSpeed - speed) * 0.01;
+    scrollPos += speed * dt;
+
+    const maxScroll = wall.scrollHeight - wall.parentElement.clientHeight;
+    if (maxScroll > 0 && scrollPos > maxScroll) {
+      scrollPos = 0;
+      renderWall(corpus);
+    }
+
+    wall.parentElement.scrollTop = scrollPos;
+    requestAnimationFrame(drift);
+  }
+
+  requestAnimationFrame(drift);
+}
+
+/* ─── Init ─── */
+(function init() {
+  loadCorpus();
+  initWallDrift();
+  startIdleTraces();
+  const h = decodeURIComponent(location.hash.replace(/^#/, ''));
+  if (h) { queryInput.value = h; executeSearch(h); }
+  else queryInput.focus();
+})();
+
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(initWallDrift, 300);
+});
+</script>
+</body>
+</html>
