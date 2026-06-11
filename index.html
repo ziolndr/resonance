@@ -869,74 +869,6 @@ body:not(.has-results) .result-theme-switch{display:none !important}
     transition-duration: 0.01ms !important;
   }
 }
-
-
-/* ─── Final mobile fit pass: RESONANCE must stay inside viewport ─── */
-.brand{
-  display:block;
-  max-width:100%;
-  white-space:nowrap;
-  overflow:visible;
-  text-rendering:geometricPrecision;
-}
-.search-pane > div{min-width:0;max-width:100%}
-.top,.search-pane,.film-wall-pane,.results,.ranking{max-width:100vw}
-
-@media(max-width:980px){
-  body:not(.has-results) .results{display:none !important}
-  body:not(.has-results) .top{display:block !important}
-  .top{width:100%;overflow-x:clip}
-  .search-pane{
-    width:100%;max-width:100vw;
-    padding-left:max(18px,env(safe-area-inset-left)) !important;
-    padding-right:max(18px,env(safe-area-inset-right)) !important;
-  }
-  .brand{
-    width:100%;max-width:calc(100vw - 36px);
-    font-size:clamp(38px,11.3vw,58px) !important;
-    letter-spacing:-.092em !important;
-    line-height:.94 !important;
-  }
-  .search-form,.search-hint,.mode-row,.corpus-load-state,.query-traces,.resolve-state,.error-banner{
-    max-width:100% !important;
-  }
-  .lower-links{
-    width:100%;max-width:100%;
-    grid-template-columns:minmax(0,1fr) auto !important;
-  }
-  .site-signals{min-width:0}
-  #shuffleFilms{white-space:nowrap}
-}
-
-@media(max-width:560px){
-  .search-pane{
-    padding-left:max(16px,env(safe-area-inset-left)) !important;
-    padding-right:max(16px,env(safe-area-inset-right)) !important;
-  }
-  .brand{
-    max-width:calc(100vw - 32px);
-    font-size:clamp(30px,10.8vw,42px) !important;
-    letter-spacing:-.105em !important;
-    line-height:.96 !important;
-  }
-  .prompt-label{margin-top:24px !important}
-  .lower-links{
-    display:flex !important;
-    flex-direction:column !important;
-    align-items:flex-start !important;
-    gap:12px !important;
-  }
-  #shuffleFilms{font-size:10px}
-}
-
-@media(max-width:380px){
-  .brand{
-    max-width:calc(100vw - 30px);
-    font-size:clamp(28px,10.2vw,38px) !important;
-    letter-spacing:-.11em !important;
-  }
-}
-
 </style>
 </head>
 <body data-mode="film">
@@ -1871,41 +1803,6 @@ function initWallDrift() {
   requestAnimationFrame(drift);
 }
 
-
-
-/* Final mobile brand fit: measures the loaded display font and shrinks RESONANCE only when needed. */
-function fitBrandWord() {
-  const brand = document.querySelector('.brand');
-  if (!brand) return;
-  brand.style.removeProperty('font-size');
-  brand.style.removeProperty('letter-spacing');
-  const pane = brand.closest('.search-pane') || brand.parentElement;
-  const available = Math.max(0, (pane ? pane.clientWidth : window.innerWidth) - 2);
-  if (!available) return;
-  const computed = getComputedStyle(brand);
-  let size = parseFloat(computed.fontSize) || 42;
-  let tracking = parseFloat(computed.letterSpacing) || 0;
-  brand.style.setProperty('white-space', 'nowrap', 'important');
-  brand.style.setProperty('max-width', available + 'px', 'important');
-  let guard = 0;
-  while (brand.scrollWidth > available && size > 26 && guard < 40) {
-    size -= 1;
-    brand.style.setProperty('font-size', size + 'px', 'important');
-    guard += 1;
-  }
-  guard = 0;
-  while (brand.scrollWidth > available && guard < 12) {
-    tracking -= 0.5;
-    brand.style.setProperty('letter-spacing', tracking + 'px', 'important');
-    guard += 1;
-  }
-}
-
-window.addEventListener('DOMContentLoaded', fitBrandWord);
-window.addEventListener('resize', fitBrandWord);
-window.addEventListener('orientationchange', () => setTimeout(fitBrandWord, 150));
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitBrandWord);
-
 /* ─── Init ─── */
 (function init() {
   loadCorpus();
@@ -1919,7 +1816,7 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitBrandWo
 let resizeTimer;
 window.addEventListener('resize', () => {
   clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(() => { initWallDrift(); fitBrandWord(); }, 300);
+  resizeTimer = setTimeout(initWallDrift, 300);
 });
 </script>
 </body>
