@@ -1023,6 +1023,13 @@ body:not(.has-results) .result-theme-switch{display:none !important}
   }
 }
 
+
+@media(max-width:980px){
+  body.mobile-searching .film-wall-pane{
+    display:none !important;
+  }
+}
+
 </style>
 </head>
 <body data-mode="film">
@@ -1134,7 +1141,10 @@ body:not(.has-results) .result-theme-switch{display:none !important}
 
 const ARBITER_URL = 'https://api.arbiter.traut.ai/public/compare';
 const RETURN_COUNT = 10;
-const BATCH_SIZE = 128;
+const IS_MOBILE = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+const BATCH_SIZE = IS_MOBILE ? 48 : 128;
+const FETCH_TIMEOUT_MS = IS_MOBILE ? 18000 : 14000;
+const MAX_RETRIES = IS_MOBILE ? 2 : 1;
 const CDN = 'https://images.angelstudios.com/image/upload';
 
 /* Angel CDN helper — v = version segment, u = catalog uuid */
@@ -1741,10 +1751,10 @@ function loadCorpus() {
 
 /* ─── Render Wall ─── */
 function renderWall(movies) {
-  const subset = shuffleArray([...movies]).slice(0, 72);
+  const subset = shuffleArray([...movies]).slice(0, IS_MOBILE ? 28 : 72);
   wall.innerHTML = subset.map(m => `
     <div class="wall-cell" data-type="film" data-id="${m.id}">
-      <img src="${m.poster || m.fallback}" alt="${escHtml(m.title)}" loading="lazy" decoding="async" referrerpolicy="no-referrer"
+      <img src="${m.poster || m.fallback}" alt="${escHtml(m.title)}" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer"
            data-title="${escHtml(m.title)}" data-year="${m.year}" data-fallback="${m.fallback}" data-backup="${m.backdrop || ''}"
            onerror="if(this.dataset.backup && this.src!==this.dataset.backup){const next=this.dataset.backup;this.dataset.backup='';this.src=next;}else{this.onerror=null;this.src=this.dataset.fallback || fallbackPoster(this.dataset.title,this.dataset.year)}">
     </div>
@@ -1768,6 +1778,35 @@ function escHtml(s) {
 /* ─── ARBITER — live semantic scoring ───
    POST { query, candidates } → always read data.all: [{ text, score }].
    Batched at 128 with cross-batch merge. */
+async function fetchWithTimeout(url, options = {}, timeoutMs = FETCH_TIMEOUT_MS) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal, cache: 'no-store' });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function compareBatchWithRetry(query, batch, attempt = 0) {
+  try {
+    const res = await fetchWithTimeout(ARBITER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query, candidates: batch, use_freq: true, top_k: Math.min(RETURN_COUNT, batch.length) })
+    });
+    if (!res.ok) throw new Error(`arbiter ${res.status}`);
+    const data = await res.json();
+    return Array.isArray(data?.all) ? data.all : (Array.isArray(data?.top) ? data.top : []);
+  } catch (err) {
+    if (attempt < MAX_RETRIES) {
+      await sleep(500 + attempt * 900);
+      return compareBatchWithRetry(query, batch, attempt + 1);
+    }
+    throw err;
+  }
+}
+
 async function arbiterRank(query) {
   const batches = [];
   for (let i = 0; i < candidates.length; i += BATCH_SIZE) {
@@ -1775,16 +1814,14 @@ async function arbiterRank(query) {
   }
 
   const merged = [];
-  for (const batch of batches) {
-    const res = await fetch(ARBITER_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query, candidates: batch, use_freq: true, top_k: RETURN_COUNT })
-    });
-    if (!res.ok) throw new Error(`arbiter ${res.status}`);
-    const data = await res.json();
-    const rows = Array.isArray(data?.all) ? data.all : (Array.isArray(data?.top) ? data.top : []);
+  for (let i = 0; i < batches.length; i++) {
+    const rows = await compareBatchWithRetry(query, batches[i]);
     merged.push(...rows);
+
+    const progress = `batch ${i + 1}/${batches.length}`;
+    statusEl.textContent = `ranking ${candidates.length} candidates · ${progress}`;
+    const rrs = $('#resultResolveStatus');
+    if (rrs) rrs.textContent = `measuring coherence · ${progress}`;
   }
 
   return merged
@@ -1863,6 +1900,7 @@ async function executeSearch(query) {
   stopIdleTraces();
   traceText.textContent = `${q}  /  resolving`;
   document.body.classList.add('searching');
+  if (IS_MOBILE) document.body.classList.add('mobile-searching');
   startResolveAnimation();
   errorBanner.classList.remove('visible');
   statusEl.textContent = `ranking ${candidates.length} candidates`;
@@ -1892,6 +1930,7 @@ async function executeSearch(query) {
   } finally {
     stopResolveAnimation();
     document.body.classList.remove('searching');
+    document.body.classList.remove('mobile-searching');
     if (!document.body.classList.contains('has-results')) startIdleTraces();
   }
 }
@@ -1907,7 +1946,7 @@ function showResults(results, query) {
   rankList.innerHTML = results.map((m, i) => `
     <button class="rank-row${i === 0 ? ' active' : ''}" data-idx="${i}" type="button">
       <span class="rank-num">${String(i + 1).padStart(2, '0')}</span>
-      <img class="rank-thumb" src="${m.poster || m.fallback}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"
+      <img class="rank-thumb" src="${m.poster || m.fallback}" alt="" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer"
            data-title="${escHtml(m.title)}" data-year="${m.year}" data-fallback="${m.fallback}" data-backup="${m.backdrop || ''}"
            onerror="if(this.dataset.backup && this.src!==this.dataset.backup){const next=this.dataset.backup;this.dataset.backup='';this.src=next;}else{this.onerror=null;this.src=this.dataset.fallback || fallbackPoster(this.dataset.title,this.dataset.year)}">
       <div class="rank-copy">
