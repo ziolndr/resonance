@@ -1386,6 +1386,72 @@ body:not(.has-results) .result-theme-switch{display:none !important}
   }
 }
 
+
+/* ─── Reveal media correction ───
+   Landscape music and comedy should fill the reveal stage; only square albums
+   stay contained. */
+.feature-img.media-comedy,
+.feature-img.media-music-video{
+  width:100% !important;
+  height:100% !important;
+  inset:0 !important;
+  object-fit:cover !important;
+  object-position:center center !important;
+  transform:none !important;
+  filter:contrast(1.06) saturate(1.03) brightness(.92) !important;
+}
+
+.feature.media-comedy .feature-media,
+.feature.media-music-video .feature-media{
+  align-items:stretch !important;
+  justify-content:stretch !important;
+}
+
+/* Large, unmistakable in-browser playback control. */
+.hero-play{
+  position:absolute;
+  left:clamp(26px,4vw,58px);
+  top:50%;
+  z-index:4;
+  transform:translateY(-50%);
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  padding:13px 17px;
+  border:1px solid rgba(255,255,255,.62);
+  background:rgba(0,0,0,.56);
+  color:#fff;
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  box-shadow:0 14px 38px rgba(0,0,0,.28);
+}
+
+.hero-play[hidden]{display:none !important}
+.hero-play-icon{
+  font-size:14px;
+  line-height:1;
+}
+
+@media(max-width:980px){
+  .hero-play{
+    left:20px;
+    top:44%;
+  }
+}
+
+@media(max-width:560px){
+  .hero-play{
+    left:18px;
+    top:42%;
+    padding:11px 14px;
+    font-size:10px;
+  }
+}
+
 </style>
 </head>
 <body data-mode="film">
@@ -1445,6 +1511,10 @@ body:not(.has-results) .result-theme-switch{display:none !important}
   <div class="feature" id="feature">
     <div class="feature-media">
       <img class="feature-img" id="featureImg" alt="" decoding="async" loading="eager" fetchpriority="high" referrerpolicy="no-referrer">
+      <button class="hero-play" id="heroPlay" type="button" hidden aria-label="Play media">
+        <span class="hero-play-icon">▶</span>
+        <span id="heroPlayLabel">play trailer</span>
+      </button>
       <div class="inline-player" id="inlinePlayer" hidden>
         <iframe id="mediaFrame"
           title="Angel media player"
@@ -1564,10 +1634,10 @@ const ANGEL_CORPUS = [
     poster:`${CDN}/q_auto,f_webp,w_620/v1778692155/studio-app/catalog/b05c7fd8-a4e3-4551-9bd6-aa4bb3e9ca9b`,
     backdrop:`${CDN}/q_auto,f_webp,w_1400/v1778692136/studio-app/catalog/ba5f3810-52f1-4caa-9d51-f6833cbea6f4`,
     overview:"A respected family man's carefully built life unravels when a stranger at his door reveals a long-buried betrayal: a son he kept hidden for years. His wife and daughter grapple with fractured trust, the grown son carries the weight of feeling forgotten, and a family must choose between protecting its image and the painful, healing work of honesty, accountability, forgiveness, and restoration." },
-  { slug:"sound-of-freedom", title:"Sound of Freedom", year:2023, genre:"Thriller, True Story",
+  { slug:"sound-of-freedom", playable:{type:"youtube",id:"UwSBQWI-bek",label:"play trailer"}, title:"Sound of Freedom", year:2023, genre:"Thriller, True Story",
     poster:ang('v1745959809','0b6c1007-348a-4e01-876d-b936c2a49980'),
     overview:"A federal agent quits his job to descend into the jungles of Colombia on a dangerous rescue mission, infiltrating traffickers to free children stolen into exploitation. A tense true-story thriller about one man risking everything because God's children are not for sale — conviction, sacrifice, and the rescue of the innocent from darkness." },
-  { slug:"cabrini", title:"Cabrini", year:2024, genre:"Drama, True Story",
+  { slug:"cabrini", playable:{type:"youtube",id:"uuFkt3w-7kI",label:"play trailer"}, title:"Cabrini", year:2024, genre:"Drama, True Story",
     poster:ang('v1727921347','95aac1e1-8bcc-41b3-a315-f3b62c79052e'),
     overview:"An Italian immigrant nun arrives in the slums of New York and, against disease, poverty, hostile politicians, and a Church that tells her to stay in her place, builds an empire of hope: orphanages and hospitals for the abandoned. A sweeping true story of stubborn compassion, immigrant dignity, and a woman who refused every no." },
   { slug:"bonhoeffer", title:"Bonhoeffer", year:2024, genre:"Drama, True Story",
@@ -1579,7 +1649,7 @@ const ANGEL_CORPUS = [
   { slug:"unsinkable", title:"Unsinkable: Titanic Untold", year:2026, genre:"Drama, History",
     poster:ang('v1776184424','04f0b893-8f4c-4c85-8cde-cc1f5b41131f'),
     overview:"In the wake of the Titanic's shocking demise, a United States senator launches a groundbreaking investigation to uncover the truth behind the disaster. Joined by a fearless journalist, he confronts political pressure, corporate power, and a rushed inquiry determined to bury the facts — with haunting flashbacks to that fateful night and the hidden fight for accountability." },
-  { slug:"david", title:"David", year:2025, genre:"Animation, Musical",
+  { slug:"david", playable:{type:"youtube",id:"uv9V3dk98PM",label:"play trailer"}, title:"David", year:2025, genre:"Animation, Musical",
     poster:ang('v1770239652','3fa4f9fe-b043-4e77-89ba-ec88446ca2a7'),
     overview:"An animated musical of the shepherd boy of Bethlehem who sings to his sheep, is anointed in secret, and steps forward with a sling and unshakable faith when a giant terrorizes a nation. Pursued by a jealous king and driven by purpose, his journey tests loyalty, love, and courage in a battle for the soul of a kingdom." },
   { slug:"king-of-kings", title:"The King of Kings", year:2025, genre:"Animation, Family",
@@ -2062,7 +2132,7 @@ const ANGEL_CORPUS = [
   {"slug":"never-alone-belinda-carlisle-nicholas-hamilton","title":"Never Alone — Belinda Carlisle & Nicholas Hamilton","year":"Angel","genre":"Music Video, Angel Music","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_800%2Ch_450%2Cf_webp%2Cc_scale/v1755883304/angel-studios/music/music-videos/BTDMUSIC","url":"https://www.angel.com/music","overview":"Never Alone by Belinda Carlisle & Nicholas Hamilton, from the official Angel music catalog."},
   {"slug":"glory-jervis-campbell","title":"Glory — Jervis Campbell","year":"Angel","genre":"Music Video, Angel Music","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_800%2Ch_450%2Cf_webp%2Cc_scale/v1755879264/angel-studios/music/music-videos/jervis_campbell","url":"https://www.angel.com/music","overview":"Glory by Jervis Campbell, from the official Angel music catalog."},
   {"slug":"my-love-has-gone-across-the-sea-jodi-benson","title":"My Love Has Gone Across the Sea — Jodi Benson","year":"Angel","genre":"Music Video, Angel Music","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_800%2Ch_450%2Cf_webp%2Cc_scale/v1755892460/angel-studios/music/music-videos/jodi-benson","url":"https://www.angel.com/music","overview":"My Love Has Gone Across the Sea by Jodi Benson, from the official Angel music catalog."},
-  {"slug":"sound-of-freedom-justin-jesso","title":"Sound of Freedom — Justin Jesso","year":"Angel","genre":"Music Video, Angel Music","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_800%2Ch_450%2Cf_webp%2Cc_scale/v1756324210/angel-studios/music/music-videos/justin-jesso","url":"https://www.angel.com/music","overview":"Sound of Freedom by Justin Jesso, from the official Angel music catalog."},
+  {"slug":"sound-of-freedom-justin-jesso","playable":{"type":"youtube","id":"hDQCJnXU108","label":"play song"},"title":"Sound of Freedom — Justin Jesso","year":"Angel","genre":"Music Video, Angel Music","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_800%2Ch_450%2Cf_webp%2Cc_scale/v1756324210/angel-studios/music/music-videos/justin-jesso","url":"https://www.angel.com/music","overview":"Sound of Freedom by Justin Jesso, from the official Angel music catalog."},
   {"slug":"david-soundtrack-from-the-angel-original-film-angel","title":"DAVID (Soundtrack from the Angel Original Film) — Angel","year":"Angel","genre":"Soundtrack, Angel Music","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_400%2Ch_400%2Cf_webp%2Cc_scale/v1762354972/angel-studios/music/albums/DAV_KEY_AngelStudios_Soundtrack_SQ_3000x3000_052_F1_v3","url":"https://www.angel.com/music","overview":"DAVID (Soundtrack from the Angel Original Film) by Angel, from the official Angel music catalog."},
   {"slug":"david-score-from-the-angel-original-film-joseph-trapanese-angel","title":"DAVID (Score from the Angel Original Film) — Joseph Trapanese, Angel","year":"Angel","genre":"Soundtrack, Angel Music","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_400%2Ch_400%2Cf_webp%2Cc_scale/v1766165051/angel-studios/music/albums/DAVID_Score-Album-Cover","url":"https://www.angel.com/music","overview":"DAVID (Score from the Angel Original Film) by Joseph Trapanese, Angel, from the official Angel music catalog."},
   {"slug":"a-week-away-vol-1-music-from-the-angel-original-series-the-cast-of-angel-series-a-week-away","title":"A Week Away Vol. 1 (Music from the Angel Original Series) — The Cast of Angel Series A Week Away","year":"Angel","genre":"Soundtrack, Angel Music","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_400%2Ch_400%2Cf_webp%2Cc_scale/v1755804221/angel-studios/music/albums/a_week_away","url":"https://www.angel.com/music","overview":"A Week Away Vol. 1 (Music from the Angel Original Series) by The Cast of Angel Series A Week Away, from the official Angel music catalog."},
@@ -2074,7 +2144,7 @@ const ANGEL_CORPUS = [
   {"slug":"the-senior-soundtrack-from-the-angel-film-larry-group","title":"The Senior (Soundtrack from the Angel Film) — Larry Groupé","year":"Angel","genre":"Soundtrack, Angel Music","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_400%2Ch_400%2Cf_webp%2Cc_scale/v1758291251/angel-studios/music/albums/Senior_Soundtrack-Art_3000x3000_FINAL","url":"https://www.angel.com/music","overview":"The Senior (Soundtrack from the Angel Film) by Larry Groupé, from the official Angel music catalog."},
   {"slug":"cabrini-original-motion-picture-soundtrack-gene-back","title":"Cabrini (Original Motion Picture Soundtrack) — Gene Back","year":"Angel","genre":"Soundtrack, Angel Music","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_400%2Ch_400%2Cf_webp%2Cc_scale/v1755809526/angel-studios/music/albums/cabrini","url":"https://www.angel.com/music","overview":"Cabrini (Original Motion Picture Soundtrack) by Gene Back, from the official Angel music catalog."},
   {"slug":"truth-treason-soundtrack-from-the-angel-film-aaron-zigman","title":"Truth & Treason (Soundtrack from the Angel Film) — Aaron Zigman","year":"Angel","genre":"Soundtrack, Angel Music","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_400%2Ch_400%2Cf_webp%2Cc_scale/v1760714888/angel-studios/music/albums/T_T_Soundtrack_Cover_FINAL_1x1","url":"https://www.angel.com/music","overview":"Truth & Treason (Soundtrack from the Angel Film) by Aaron Zigman, from the official Angel music catalog."},
-  {"slug":"sound-of-freedom-original-motion-picture-soundtrack-javier-navarrete","title":"Sound of Freedom (Original Motion Picture Soundtrack) — Javier Navarrete","year":"Angel","genre":"Soundtrack, Angel Music","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_400%2Ch_400%2Cf_webp%2Cc_scale/v1755809621/angel-studios/music/albums/sound-of-freedom","url":"https://www.angel.com/music","overview":"Sound of Freedom (Original Motion Picture Soundtrack) by Javier Navarrete, from the official Angel music catalog."},
+  {"slug":"sound-of-freedom-original-motion-picture-soundtrack-javier-navarrete","playable":{"type":"youtube","id":"hDQCJnXU108","label":"play song"},"title":"Sound of Freedom (Original Motion Picture Soundtrack) — Javier Navarrete","year":"Angel","genre":"Soundtrack, Angel Music","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_400%2Ch_400%2Cf_webp%2Cc_scale/v1755809621/angel-studios/music/albums/sound-of-freedom","url":"https://www.angel.com/music","overview":"Sound of Freedom (Original Motion Picture Soundtrack) by Javier Navarrete, from the official Angel music catalog."},
   {"slug":"homestead-original-motion-picture-soundtrack-benjamin-backus","title":"Homestead (Original Motion Picture Soundtrack) — Benjamin Backus","year":"Angel","genre":"Soundtrack, Angel Music","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_400%2Ch_400%2Cf_webp%2Cc_scale/v1769183875/angel-studios/music/albums/Homestead_Soundtrack_Artwork","url":"https://www.angel.com/music","overview":"Homestead (Original Motion Picture Soundtrack) by Benjamin Backus, from the official Angel music catalog."},
   {"slug":"sight-original-motion-picture-soundtrack-sean-philip-johnson","title":"Sight (Original Motion Picture Soundtrack) — Sean Philip Johnson","year":"Angel","genre":"Soundtrack, Angel Music","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_400%2Ch_400%2Cf_webp%2Cc_scale/v1755809802/angel-studios/music/albums/sight","url":"https://www.angel.com/music","overview":"Sight (Original Motion Picture Soundtrack) by Sean Philip Johnson, from the official Angel music catalog."},
   {"slug":"sound-of-hope-the-story-of-possum-trot-original-motion-picture-soundtrack-sean-johnson","title":"Sound of Hope: The Story of Possum Trot (Original Motion Picture Soundtrack) — Sean Johnson","year":"Angel","genre":"Soundtrack, Angel Music","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_400%2Ch_400%2Cf_webp%2Cc_scale/v1755810193/angel-studios/music/albums/sound-of-hope","url":"https://www.angel.com/music","overview":"Sound of Hope: The Story of Possum Trot (Original Motion Picture Soundtrack) by Sean Johnson, from the official Angel music catalog."},
@@ -2174,6 +2244,8 @@ const scoreEl = $('#score');
 const overviewEl = $('#overview');
 const openSourceBtn = $('#openSource');
 const playMediaBtn = $('#playMedia');
+const heroPlayBtn = $('#heroPlay');
+const heroPlayLabel = $('#heroPlayLabel');
 const inlinePlayer = $('#inlinePlayer');
 const mediaFrame = $('#mediaFrame');
 const closePlayerBtn = $('#closePlayer');
@@ -2566,18 +2638,31 @@ function selectResult(idx) {
   featureImg.hidden = false;
 
   const playable = playableFor(m);
+  const playLabel = playable ? (playable.label || 'play') : 'play';
+
   playMediaBtn.hidden = !playable;
   playMediaBtn.style.display = playable ? 'inline-flex' : 'none';
   playMediaBtn.setAttribute('aria-hidden', playable ? 'false' : 'true');
-  playMediaBtn.textContent = playable ? (playable.label || 'play') : 'play';
-  playMediaBtn.onclick = () => {
+  playMediaBtn.textContent = playLabel;
+
+  heroPlayBtn.hidden = !playable;
+  heroPlayBtn.style.display = playable ? 'inline-flex' : 'none';
+  heroPlayBtn.setAttribute('aria-hidden', playable ? 'false' : 'true');
+  heroPlayLabel.textContent = playLabel;
+
+  const openPlayableMedia = () => {
     const src = embedUrlFor(playable);
     if (!src) return;
     mediaFrame.src = src;
     inlinePlayer.hidden = false;
     featureImg.hidden = true;
+    heroPlayBtn.hidden = true;
+    heroPlayBtn.style.display = 'none';
     playMediaBtn.textContent = 'playing';
   };
+
+  playMediaBtn.onclick = openPlayableMedia;
+  heroPlayBtn.onclick = openPlayableMedia;
 
   openSourceBtn.textContent = mediaKind(m) === 'product' ? 'open in Angel shop ↗' : 'open on angel.com ↗';
   openSourceBtn.onclick = () => window.open(m.url, '_blank', 'noopener');
@@ -2641,7 +2726,11 @@ closePlayerBtn.addEventListener('click', () => {
   featureImg.hidden = false;
   const current = currentResults[currentIndex];
   const playable = playableFor(current);
-  playMediaBtn.textContent = playable ? (playable.label || 'play') : 'play';
+  const playLabel = playable ? (playable.label || 'play') : 'play';
+  playMediaBtn.textContent = playLabel;
+  heroPlayBtn.hidden = !playable;
+  heroPlayBtn.style.display = playable ? 'inline-flex' : 'none';
+  heroPlayLabel.textContent = playLabel;
 });
 
 newSearchBtn.addEventListener('click', () => {
