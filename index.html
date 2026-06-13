@@ -8,9 +8,9 @@
 <link rel="icon" type="image/png" href="./resonance-favicon.png">
 <link rel="apple-touch-icon" href="./resonance-favicon.png">
 
-<meta name="description" content="Find Angel films, comedy, and music by meaning.">
+<meta name="description" content="Find Angel films, comedy, music, and products by meaning.">
 <meta property="og:title" content="RESONANCE — angel.com">
-<meta property="og:description" content="Find Angel films, comedy, and music by meaning.">
+<meta property="og:description" content="Find Angel films, comedy, music, and products by meaning.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RESONANCE">
 <meta property="og:image" content="./resonance-og-image.png">
@@ -20,7 +20,7 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="RESONANCE — angel.com">
-<meta name="twitter:description" content="Find Angel films, comedy, and music by meaning.">
+<meta name="twitter:description" content="Find Angel films, comedy, music, and products by meaning.">
 <meta name="twitter:image" content="./resonance-og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1030,6 +1030,362 @@ body:not(.has-results) .result-theme-switch{display:none !important}
   }
 }
 
+
+/* ─── Mixed catalog media geometry ───
+   Films keep the original poster treatment. Dry Bar and music assets preserve
+   their native landscape/square framing instead of being blown up to fill 2:3 tiles. */
+.wall-cell.media-comedy,
+.wall-cell.media-music-video,
+.wall-cell.media-album{
+  background:#090909 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+.wall-cell img.media-comedy,
+.wall-cell img.media-music-video{
+  object-fit:contain !important;
+  object-position:center !important;
+  width:100% !important;
+  height:100% !important;
+  transform:none !important;
+  filter:contrast(1.05) saturate(1.02) brightness(.98) !important;
+}
+
+.wall-cell img.media-album{
+  object-fit:contain !important;
+  object-position:center !important;
+  width:88% !important;
+  height:88% !important;
+  transform:none !important;
+  filter:contrast(1.04) saturate(1.02) brightness(.98) !important;
+  box-shadow:0 16px 36px rgba(0,0,0,.34) !important;
+}
+
+.wall-cell.media-comedy::before,
+.wall-cell.media-music-video::before,
+.wall-cell.media-album::before{
+  background:radial-gradient(circle at center,rgba(255,255,255,.025),rgba(0,0,0,.22) 82%) !important;
+  opacity:.62 !important;
+}
+
+.wall-cell.media-comedy::after,
+.wall-cell.media-music-video::after,
+.wall-cell.media-album::after{
+  opacity:.07 !important;
+}
+
+/* Result list thumbnails: preserve artwork rather than crop it. */
+.rank-thumb.media-comedy,
+.rank-thumb.media-music-video,
+.rank-thumb.media-album{
+  object-fit:contain !important;
+  object-position:center !important;
+  background:#090909 !important;
+  padding:3px !important;
+}
+
+/* Reveal hero: use a presentation stage for non-film media. */
+.feature.media-comedy .feature-media,
+.feature.media-music-video .feature-media,
+.feature.media-album .feature-media{
+  background:#070707 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+.feature-img.media-comedy,
+.feature-img.media-music-video{
+  object-fit:contain !important;
+  object-position:center !important;
+  width:100% !important;
+  height:100% !important;
+  transform:none !important;
+  filter:contrast(1.05) saturate(1.02) brightness(.94) !important;
+}
+
+.feature-img.media-album{
+  object-fit:contain !important;
+  object-position:center !important;
+  width:min(72%,720px) !important;
+  height:min(72%,720px) !important;
+  inset:50% auto auto 50% !important;
+  transform:translate(-50%,-50%) !important;
+  filter:contrast(1.04) saturate(1.02) brightness(.94) !important;
+  box-shadow:0 30px 80px rgba(0,0,0,.45) !important;
+}
+
+.feature.media-comedy::after,
+.feature.media-music-video::after,
+.feature.media-album::after{
+  background:
+    linear-gradient(to right,rgba(0,0,0,.72) 0%,rgba(0,0,0,.34) 42%,rgba(0,0,0,.10) 72%,rgba(0,0,0,.22) 100%),
+    linear-gradient(to bottom,rgba(0,0,0,.06) 0%,rgba(0,0,0,.04) 48%,rgba(0,0,0,.58) 100%) !important;
+}
+
+@media(max-width:980px){
+  .feature-img.media-album{
+    width:min(76vw,520px) !important;
+    height:min(76vw,520px) !important;
+  }
+}
+
+@media(max-width:560px){
+  .wall-cell img.media-album{
+    width:92% !important;
+    height:92% !important;
+  }
+  .feature-img.media-album{
+    width:min(82vw,430px) !important;
+    height:min(82vw,430px) !important;
+  }
+}
+
+
+/* ─── Angel shop product geometry ─── */
+.wall-cell.media-product{
+  background:#f4f1ea !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+.wall-cell img.media-product{
+  width:90% !important;
+  height:90% !important;
+  object-fit:contain !important;
+  object-position:center !important;
+  transform:none !important;
+  filter:contrast(1.02) saturate(1.01) brightness(1) !important;
+  mix-blend-mode:normal !important;
+}
+
+.wall-cell.media-product::before{
+  background:radial-gradient(circle at center,rgba(255,255,255,.22),rgba(0,0,0,.06) 86%) !important;
+  opacity:.45 !important;
+}
+
+.wall-cell.media-product::after{
+  opacity:.025 !important;
+}
+
+.rank-thumb.media-product{
+  object-fit:contain !important;
+  object-position:center !important;
+  background:#f4f1ea !important;
+  padding:4px !important;
+  filter:contrast(1.02) saturate(1.01) brightness(1) !important;
+}
+
+.feature.media-product .feature-media{
+  background:#f2efe8 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+.feature-img.media-product{
+  position:absolute !important;
+  inset:50% auto auto 50% !important;
+  width:min(70%,760px) !important;
+  height:min(70%,760px) !important;
+  object-fit:contain !important;
+  object-position:center !important;
+  transform:translate(-50%,-50%) !important;
+  filter:contrast(1.02) saturate(1.01) brightness(1) !important;
+  box-shadow:0 28px 70px rgba(0,0,0,.18) !important;
+}
+
+.feature.media-product::after{
+  background:
+    linear-gradient(to right,rgba(0,0,0,.58) 0%,rgba(0,0,0,.20) 42%,rgba(0,0,0,.02) 72%,rgba(0,0,0,.08) 100%),
+    linear-gradient(to bottom,rgba(0,0,0,.02) 0%,rgba(0,0,0,.02) 52%,rgba(0,0,0,.22) 100%) !important;
+}
+
+@media(max-width:980px){
+  .feature-img.media-product{
+    width:min(78vw,560px) !important;
+    height:min(78vw,560px) !important;
+  }
+}
+
+@media(max-width:560px){
+  .wall-cell img.media-product{
+    width:94% !important;
+    height:94% !important;
+  }
+  .feature-img.media-product{
+    width:min(84vw,440px) !important;
+    height:min(84vw,440px) !important;
+  }
+}
+
+
+/* ─── Reveal-page inline playback ─── */
+.inline-player{
+  position:absolute;
+  inset:0;
+  z-index:5;
+  background:#000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.inline-player[hidden]{display:none !important}
+.inline-player iframe{
+  width:100%;
+  height:100%;
+  border:0;
+  background:#000;
+}
+.player-close{
+  position:absolute;
+  top:18px;
+  right:18px;
+  z-index:6;
+  width:38px;
+  height:38px;
+  border:1px solid rgba(255,255,255,.48);
+  border-radius:999px;
+  background:rgba(0,0,0,.56);
+  color:#fff;
+  font-family:var(--mono);
+  font-size:24px;
+  line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+.play-action{
+  color:#fff !important;
+  text-decoration:none !important;
+  border:1px solid rgba(255,255,255,.46);
+  padding:9px 13px;
+  background:rgba(0,0,0,.34);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+.play-action[hidden]{display:none !important}
+@media(max-width:980px){
+  .inline-player,
+  .inline-player iframe{
+    min-height:68svh;
+  }
+}
+@media(max-width:560px){
+  .player-close{
+    top:12px;
+    right:12px;
+    width:34px;
+    height:34px;
+    font-size:21px;
+  }
+}
+
+
+/* ─── Mixed-media tile fit tune-up ───
+   Make Dry Bar and soundtrack art sit inside the poster grid more gracefully. */
+.wall-cell.media-comedy,
+.wall-cell.media-music-video,
+.wall-cell.media-album{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:10px !important;
+  background:
+    radial-gradient(circle at 50% 38%, rgba(255,255,255,.04), rgba(0,0,0,.10) 58%, rgba(0,0,0,.18) 100%),
+    #0a0a0a !important;
+}
+
+.wall-cell img.media-comedy,
+.wall-cell img.media-music-video{
+  width:auto !important;
+  height:auto !important;
+  max-width:100% !important;
+  max-height:100% !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+  transform:none !important;
+  margin:auto !important;
+  filter:contrast(1.04) saturate(1.02) brightness(.98) !important;
+}
+
+.wall-cell img.media-album{
+  width:auto !important;
+  height:auto !important;
+  max-width:84% !important;
+  max-height:84% !important;
+  object-fit:contain !important;
+  object-position:center center !important;
+  transform:none !important;
+  margin:auto !important;
+  border-radius:2px !important;
+  box-shadow:0 16px 34px rgba(0,0,0,.34) !important;
+  filter:contrast(1.02) saturate(1.01) brightness(.99) !important;
+}
+
+.wall-cell.media-comedy::before,
+.wall-cell.media-music-video::before,
+.wall-cell.media-album::before{
+  background:
+    linear-gradient(to bottom, rgba(255,255,255,.03), rgba(0,0,0,.02) 18%, rgba(0,0,0,.10) 100%) !important;
+  opacity:.8 !important;
+}
+
+.wall-cell.media-comedy::after,
+.wall-cell.media-music-video::after,
+.wall-cell.media-album::after{
+  opacity:.05 !important;
+}
+
+/* Ranked list thumbs */
+.rank-thumb.media-comedy,
+.rank-thumb.media-music-video{
+  width:100% !important;
+  height:100% !important;
+  object-fit:contain !important;
+  object-position:center !important;
+  background:#0b0b0b !important;
+  padding:5px !important;
+}
+
+.rank-thumb.media-album{
+  width:100% !important;
+  height:100% !important;
+  object-fit:contain !important;
+  object-position:center !important;
+  background:#0b0b0b !important;
+  padding:7px !important;
+}
+
+@media (max-width: 980px){
+  .wall-cell.media-comedy,
+  .wall-cell.media-music-video,
+  .wall-cell.media-album{
+    padding:8px !important;
+  }
+  .wall-cell img.media-album{
+    max-width:88% !important;
+    max-height:88% !important;
+  }
+}
+
+@media (max-width: 560px){
+  .wall-cell.media-comedy,
+  .wall-cell.media-music-video,
+  .wall-cell.media-album{
+    padding:6px !important;
+  }
+  .wall-cell img.media-album{
+    max-width:90% !important;
+    max-height:90% !important;
+  }
+}
+
 </style>
 </head>
 <body data-mode="film">
@@ -1043,7 +1399,7 @@ body:not(.has-results) .result-theme-switch{display:none !important}
         <button id="go" aria-label="Search">→</button>
       </form>
       <div class="search-hint">
-        <span id="modeHint">search films, comedy, and music by meaning</span>
+        <span id="modeHint">search films, comedy, music, and products by meaning</span>
       </div>
       <div class="mode-row">
         <div class="source-badge" aria-label="Source: angel.com">
@@ -1089,6 +1445,14 @@ body:not(.has-results) .result-theme-switch{display:none !important}
   <div class="feature" id="feature">
     <div class="feature-media">
       <img class="feature-img" id="featureImg" alt="" decoding="async" loading="eager" fetchpriority="high" referrerpolicy="no-referrer">
+      <div class="inline-player" id="inlinePlayer" hidden>
+        <iframe id="mediaFrame"
+          title="Angel media player"
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowfullscreen
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        <button class="player-close" id="closePlayer" type="button" aria-label="Close player">×</button>
+      </div>
     </div>
     <div class="feature-content">
       <button class="back" id="newSearch">← new search</button>
@@ -1098,6 +1462,7 @@ body:not(.has-results) .result-theme-switch{display:none !important}
         <div class="score-row"><span>coherence</span><span id="score">0.000</span></div>
         <p id="overview"></p>
         <div class="actions">
+          <button class="action play-action" id="playMedia" type="button" hidden>play trailer</button>
           <button class="action" id="openSource">open on angel.com ↗</button>
           <button class="action link" id="copyLink">copy link</button>
         </div>
@@ -1154,6 +1519,46 @@ function ang(v, u, w = 600) {
 /* ─── The Angel catalog ───
    Every entry is a real title currently on angel.com, with its real
    catalog art. `overview` doubles as the ARBITER candidate body. */
+
+/* Verified official browser-playable sources. */
+const PLAYABLE_MEDIA = {
+  "sound-of-freedom": { type:"youtube", id:"UwSBQWI-bek", label:"play trailer" },
+  "sound-of-freedom-justin-jesso": { type:"youtube", id:"hDQCJnXU108", label:"play song" },
+  "sound-of-freedom-original-motion-picture-soundtrack-javier-navarrete": { type:"youtube", id:"hDQCJnXU108", label:"play song" },
+  "cabrini": { type:"youtube", id:"uuFkt3w-7kI", label:"play trailer" },
+  "david": { type:"youtube", id:"uv9V3dk98PM", label:"play trailer" },
+  "live-like-that-kristin-chenoweth": { type:"youtube", id:"71uXyT5_VT4", label:"play song" }
+};
+
+function playableFor(item){
+  if(!item) return null;
+  if(item.playable) return item.playable;
+
+  const direct = PLAYABLE_MEDIA[item.slug];
+  if(direct) return direct;
+
+  // Defensive title fallback so playback survives corpus normalization or slug changes.
+  const title = String(item.title || '').toLowerCase();
+  const genre = String(item.genre || '').toLowerCase();
+
+  if(title.startsWith('sound of freedom')){
+    if(genre.includes('music') || genre.includes('soundtrack')){
+      return { type:"youtube", id:"hDQCJnXU108", label:"play song" };
+    }
+    return { type:"youtube", id:"UwSBQWI-bek", label:"play trailer" };
+  }
+
+  return null;
+}
+
+function embedUrlFor(playable){
+  if(!playable) return "";
+  if(playable.type === "youtube"){
+    return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(playable.id)}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+  }
+  return playable.url || "";
+}
+
 const ANGEL_CORPUS = [
   { slug:"secret-between-us", title:"The Secret Between Us", year:2026, genre:"Drama, Family",
     poster:`${CDN}/q_auto,f_webp,w_620/v1778692155/studio-app/catalog/b05c7fd8-a4e3-4551-9bd6-aa4bb3e9ca9b`,
@@ -1702,7 +2107,43 @@ const ANGEL_CORPUS = [
   {"slug":"the-day-i-met-you-phil-wickham","title":"The Day I Met You — Phil Wickham","year":"Angel","genre":"Music Video, Miracle","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_800%2Ch_450%2Cf_webp%2Cc_scale/v1779286687/angel-studios/music/music-videos/miracle-day-i-met-you","url":"https://www.angel.com/music","overview":"The Day I Met You by Phil Wickham, from the official Angel music catalog."},
   {"slug":"proof-rita-springer","title":"Proof — Rita Springer","year":"Angel","genre":"Music Video, Miracle","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_800%2Ch_450%2Cf_webp%2Cc_scale/v1779286775/angel-studios/music/music-videos/miracle-proof","url":"https://www.angel.com/music","overview":"Proof by Rita Springer, from the official Angel music catalog."},
   {"slug":"miracles-natalie-grant","title":"Miracles — Natalie Grant","year":"Angel","genre":"Music Video, Miracle","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_800%2Ch_450%2Cf_webp%2Cc_scale/v1779287051/angel-studios/music/music-videos/miracle-miracles","url":"https://www.angel.com/music","overview":"Miracles by Natalie Grant, from the official Angel music catalog."},
-  {"slug":"mercy-room-andrew-ripp","title":"Mercy Room — Andrew Ripp","year":"Angel","genre":"Music Video, Miracle","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_800%2Ch_450%2Cf_webp%2Cc_scale/v1779287226/angel-studios/music/music-videos/miracle-mercy-room","url":"https://www.angel.com/music","overview":"Mercy Room by Andrew Ripp, from the official Angel music catalog."}
+  {"slug":"mercy-room-andrew-ripp","title":"Mercy Room — Andrew Ripp","year":"Angel","genre":"Music Video, Miracle","poster":"https://images.angelstudios.com/image/upload/q_auto%2Cw_800%2Ch_450%2Cf_webp%2Cc_scale/v1779287226/angel-studios/music/music-videos/miracle-mercy-room","url":"https://www.angel.com/music","overview":"Mercy Room by Andrew Ripp, from the official Angel music catalog."},
+  { slug:"wingfeather-land-of-aerwiar-poster", title:"The Wingfeather Saga | Land of Aerwiar Poster", year:"$19.99", genre:"Merch, Poster, Wingfeather Saga",
+    poster:"https://shop.angel.com/cdn/shop/files/WFS-productimage-aerwiarposter.png?v=1780520189&width=533", url:"https://shop.angel.com/products/the-wingfeather-saga-land-of-aerwiar-poster",
+    overview:"An illustrated map poster of Aerwiar for fans of The Wingfeather Saga, designed as a display piece for readers and viewers who want the world of the series on their wall." },
+  { slug:"young-washington-surveyor-shirt", title:"Young Washington - Surveyor T-Shirt", year:"$29.99", genre:"Merch, T-Shirt, Young Washington",
+    poster:"https://shop.angel.com/cdn/shop/files/unisex-garment-dyed-heavyweight-t-shirt-graphite-front-6a21a02bd3efe.jpg?v=1780588599&width=533", url:"https://shop.angel.com/products/young-washington-surveyor-t-shirt",
+    overview:"A heavyweight Young Washington shirt featuring surveyor imagery tied to Washington's early life, frontier work, and the formation of a national identity." },
+  { slug:"young-washington-logo-shirt", title:"Young Washington - Logo T-Shirt", year:"$29.99", genre:"Merch, T-Shirt, Young Washington",
+    poster:"https://shop.angel.com/cdn/shop/files/YW-productimage-logoshirt-front_e170d822-9f63-47e4-862c-206a54dcbda3.png?v=1777064804&width=533", url:"https://shop.angel.com/products/young-washington-logo-t-shirt",
+    overview:"A navy Young Washington logo shirt celebrating the film's Revolutionary-era identity and the 250th anniversary of the United States." },
+  { slug:"young-washington-logo-hat", title:"Young Washington Logo Hat", year:"$24.99", genre:"Merch, Hat, Young Washington",
+    poster:"https://shop.angel.com/cdn/shop/files/YW-productimage-logohat-main_98791b37-41db-48a2-b97c-4fb4de28b9e8.png?v=1778013998&width=533", url:"https://shop.angel.com/products/young-washington-logo-hat",
+    overview:"A structured Young Washington cap with the film's rising-sun insignia, designed as a simple wearable emblem of the project's Revolutionary-era world." },
+  { slug:"homestead-season-one-bluray-dvd", title:"Homestead The Series Season 1 Blu-ray + DVD", year:"$24.99", genre:"Merch, Blu-ray + DVD, Homestead",
+    poster:"https://shop.angel.com/cdn/shop/files/homestead-the-series-season-1-blu-ray-dvd-preorder-combo-176.png?v=1772731164&width=533", url:"https://shop.angel.com/products/homestead-season-1-blu-ray-dvd",
+    overview:"The first season of Homestead in a physical Blu-ray and DVD combo edition, centered on survival, family, preparedness, and community after societal collapse." },
+  { slug:"animal-farm-bluray-dvd", title:"Animal Farm - Blu-ray + DVD", year:"$24.99", genre:"Merch, Blu-ray + DVD, Animal Farm",
+    poster:"https://shop.angel.com/cdn/shop/files/AF-productimage-DVDBDcombo-front.png?v=1778520458&width=533", url:"https://shop.angel.com/products/animal-farm-blu-ray-dvd-preorder",
+    overview:"A physical Blu-ray and DVD edition of Animal Farm, preserving the animated political satire about rebellion, equality, propaganda, and corrupted power." },
+  { slug:"standout-ben-kjar-bluray-dvd", title:"Standout: The Ben Kjar Story Blu-ray + DVD", year:"$24.99", genre:"Merch, Blu-ray + DVD, Standout",
+    poster:"https://shop.angel.com/cdn/shop/files/STND-productimage-DVDBDcombo-flat-front.png?v=1778172650&width=533", url:"https://shop.angel.com/products/standout-the-ben-kjar-story-blu-ray-dvd-combo-preorder",
+    overview:"The physical edition of Standout: The Ben Kjar Story, following perseverance, wrestling, identity, and a life built around refusing to be defined by limitation." },
+  { slug:"solo-mio-bluray-dvd", title:"SOLO MIO Blu-ray + DVD", year:"$22.99", genre:"Merch, Blu-ray + DVD, SOLO MIO",
+    poster:"https://shop.angel.com/cdn/shop/files/solo-mio-blu-ray-dvd-preorder-combo-973.png?v=1772730619&width=533", url:"https://shop.angel.com/products/solo-mio-blu-ray-dvd",
+    overview:"A physical Blu-ray and DVD edition of SOLO MIO, a romantic comedy about heartbreak, travel, embarrassment, reinvention, and unexpected connection." },
+  { slug:"animal-farm-logo-shirt", title:"Animal Farm - Logo T-Shirt", year:"$29.99", genre:"Merch, T-Shirt, Animal Farm",
+    poster:"https://shop.angel.com/cdn/shop/files/AF-productimage-logoshirt-front_36413864-fd9d-45b4-b2ef-ba9268050531.png?v=1777065185&width=533", url:"https://shop.angel.com/products/animal-farm-logo-t-shirt",
+    overview:"A black Animal Farm shirt with a restrained rosette logo, turning the film's political allegory into a subtle wearable signal." },
+  { slug:"animal-farm-more-equal-shirt", title:"Animal Farm - All Animals Are Equal T-Shirt", year:"$32.99", genre:"Merch, T-Shirt, Animal Farm",
+    poster:"https://shop.angel.com/cdn/shop/files/unisex-garment-dyed-heavyweight-t-shirt-ivory-front-69fa26ddd51d2.jpg?v=1778001636&width=533", url:"https://shop.angel.com/products/all-animals-are-equal-t-shirt",
+    overview:"An ivory Animal Farm shirt built around the story's most famous corrupted slogan, using crossed-out equality language as a warning about power, truth, and control." },
+  { slug:"animal-farm-laughterhouse-shirt", title:"Animal Farm - Laughterhouse T-Shirt", year:"$32.99", genre:"Merch, T-Shirt, Animal Farm",
+    poster:"https://shop.angel.com/cdn/shop/files/unisex-garment-dyed-heavyweight-t-shirt-black-front-69efdca70233d.jpg?v=1777327276&width=533", url:"https://shop.angel.com/products/animal-farm-laughterhouse-t-shirt",
+    overview:"A black Animal Farm shirt featuring a dark Laughterhouse transport graphic, leaning into the film's satirical industrial imagery and ominous political tone." },
+  { slug:"animal-farm-animal-vs-pig-sticker", title:"Animal Farm - Animal vs. Pig Sticker", year:"$9.99", genre:"Merch, Sticker, Animal Farm",
+    poster:"https://shop.angel.com/cdn/shop/files/die-cut-stickers-satin-4x4-front-69dfd15c06bc6.png?v=1776275817&width=533", url:"https://shop.angel.com/products/animal-farm-animal-vs-pig-sticker",
+    overview:"A die-cut Animal Farm sticker asking the story's central identity question: are you still an animal, or have you become a pig?" }
 ];
 
 /* ─── State ─── */
@@ -1732,6 +2173,10 @@ const metaEl = $('#meta');
 const scoreEl = $('#score');
 const overviewEl = $('#overview');
 const openSourceBtn = $('#openSource');
+const playMediaBtn = $('#playMedia');
+const inlinePlayer = $('#inlinePlayer');
+const mediaFrame = $('#mediaFrame');
+const closePlayerBtn = $('#closePlayer');
 const copyLinkBtn = $('#copyLink');
 const newSearchBtn = $('#newSearch');
 const resultQuery = $('#resultQuery');
@@ -1854,12 +2299,26 @@ function loadCorpus() {
   renderWall(corpus);
 }
 
+
+function mediaKind(item) {
+  const genre = String(item && item.genre || '').toLowerCase();
+  if (genre.includes('soundtrack')) return 'album';
+  if (genre.includes('music video')) return 'music-video';
+  if (genre.includes('dry bar')) return 'comedy';
+  if (genre.includes('merch')) return 'product';
+  return 'film';
+}
+
+function mediaClass(item) {
+  return `media-${mediaKind(item)}`;
+}
+
 /* ─── Render Wall ─── */
 function renderWall(movies) {
   const subset = shuffleArray([...movies]).slice(0, IS_MOBILE ? 28 : 72);
   wall.innerHTML = subset.map(m => `
-    <div class="wall-cell" data-type="film" data-id="${m.id}">
-      <img src="${m.poster || m.fallback}" alt="${escHtml(m.title)}" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer"
+    <div class="wall-cell ${mediaClass(m)}" data-type="${mediaKind(m)}" data-id="${m.id}">
+      <img class="${mediaClass(m)}" src="${m.poster || m.fallback}" alt="${escHtml(m.title)}" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer"
            data-title="${escHtml(m.title)}" data-year="${m.year}" data-fallback="${m.fallback}" data-backup="${m.backdrop || ''}"
            onerror="if(this.dataset.backup && this.src!==this.dataset.backup){const next=this.dataset.backup;this.dataset.backup='';this.src=next;}else{this.onerror=null;this.src=this.dataset.fallback || fallbackPoster(this.dataset.title,this.dataset.year)}">
     </div>
@@ -2042,7 +2501,7 @@ function showResults(results, query) {
   rankList.innerHTML = results.map((m, i) => `
     <button class="rank-row${i === 0 ? ' active' : ''}" data-idx="${i}" type="button">
       <span class="rank-num">${String(i + 1).padStart(2, '0')}</span>
-      <img class="rank-thumb" src="${m.poster || m.fallback}" alt="" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer"
+      <img class="rank-thumb ${mediaClass(m)}" src="${m.poster || m.fallback}" alt="" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer"
            data-title="${escHtml(m.title)}" data-year="${m.year}" data-fallback="${m.fallback}" data-backup="${m.backdrop || ''}"
            onerror="if(this.dataset.backup && this.src!==this.dataset.backup){const next=this.dataset.backup;this.dataset.backup='';this.src=next;}else{this.onerror=null;this.src=this.dataset.fallback || fallbackPoster(this.dataset.title,this.dataset.year)}">
       <div class="rank-copy">
@@ -2091,12 +2550,36 @@ function selectResult(idx) {
   featureImg.alt = m.title;
   featureEl.classList.toggle('posterish', isPoster);
   featureImg.classList.toggle('is-posterish', isPoster);
+  featureImg.classList.remove('media-film', 'media-comedy', 'media-album', 'media-music-video', 'media-product');
+  featureImg.classList.add(mediaClass(m));
+  featureEl.classList.remove('media-film', 'media-comedy', 'media-album', 'media-music-video', 'media-product');
+  featureEl.classList.add(mediaClass(m));
 
   titleEl.textContent = m.title;
   metaEl.innerHTML = `<span>${m.year}</span><span>${escHtml(m.genre)}</span><span>angel.com</span>`;
   scoreEl.textContent = Number(m.score).toFixed(3);
   overviewEl.textContent = m.overview.length > 260 ? m.overview.slice(0, 257).trimEnd() + '…' : m.overview;
 
+  // Reset playback whenever a different result is selected.
+  mediaFrame.src = '';
+  inlinePlayer.hidden = true;
+  featureImg.hidden = false;
+
+  const playable = playableFor(m);
+  playMediaBtn.hidden = !playable;
+  playMediaBtn.style.display = playable ? 'inline-flex' : 'none';
+  playMediaBtn.setAttribute('aria-hidden', playable ? 'false' : 'true');
+  playMediaBtn.textContent = playable ? (playable.label || 'play') : 'play';
+  playMediaBtn.onclick = () => {
+    const src = embedUrlFor(playable);
+    if (!src) return;
+    mediaFrame.src = src;
+    inlinePlayer.hidden = false;
+    featureImg.hidden = true;
+    playMediaBtn.textContent = 'playing';
+  };
+
+  openSourceBtn.textContent = mediaKind(m) === 'product' ? 'open in Angel shop ↗' : 'open on angel.com ↗';
   openSourceBtn.onclick = () => window.open(m.url, '_blank', 'noopener');
 
   copyLinkBtn.onclick = () => {
@@ -2152,7 +2635,21 @@ resultQuery.addEventListener('keydown', (e) => {
   }
 });
 
-newSearchBtn.addEventListener('click', resetToHome);
+closePlayerBtn.addEventListener('click', () => {
+  mediaFrame.src = '';
+  inlinePlayer.hidden = true;
+  featureImg.hidden = false;
+  const current = currentResults[currentIndex];
+  const playable = playableFor(current);
+  playMediaBtn.textContent = playable ? (playable.label || 'play') : 'play';
+});
+
+newSearchBtn.addEventListener('click', () => {
+  mediaFrame.src = '';
+  inlinePlayer.hidden = true;
+  featureImg.hidden = false;
+  resetToHome();
+});
 goBtn.addEventListener('click', (e) => { e.preventDefault(); executeSearch(queryInput.value); });
 
 document.addEventListener('keydown', (e) => {
