@@ -9,7 +9,7 @@
 <link rel="apple-touch-icon" href="./resonance-favicon.png">
 
 <meta name="description" content="Find Angel films, comedy, music, and products by meaning.">
-<meta property="og:title" content="RESONANCE — Find Angel films, comedy, music, and products by meaning.">
+<meta property="og:title" content="RESONANCE — angel.com">
 <meta property="og:description" content="Find Angel films, comedy, music, and products by meaning.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RESONANCE">
@@ -1574,6 +1574,82 @@ body:not(.has-results) .result-theme-switch{display:none !important}
   z-index:30 !important;
 }
 
+
+/* ─── Playback isolation ───
+   While media is playing, the left panel shows only the media itself and the
+   close control. No artwork, metadata, duplicated play buttons, overlays, or
+   theme control remain visible. */
+body.media-playing .result-theme-switch{
+  display:none !important;
+  visibility:hidden !important;
+  pointer-events:none !important;
+}
+
+body.media-playing .feature-content,
+body.media-playing .feature-img,
+body.media-playing .hero-play,
+body.media-playing .play-action{
+  display:none !important;
+  visibility:hidden !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+}
+
+body.media-playing .feature::before,
+body.media-playing .feature::after,
+body.media-playing .feature-media::before,
+body.media-playing .feature-media::after,
+body.media-playing .inline-player::before,
+body.media-playing .inline-player::after{
+  content:none !important;
+  display:none !important;
+  opacity:0 !important;
+}
+
+body.media-playing .feature,
+body.media-playing .feature-media,
+body.media-playing .inline-player{
+  background:#000 !important;
+}
+
+body.media-playing .inline-player{
+  position:absolute !important;
+  inset:0 !important;
+  z-index:50 !important;
+  overflow:hidden !important;
+  display:block !important;
+  padding:0 !important;
+}
+
+body.media-playing .inline-player iframe{
+  position:absolute !important;
+  top:50% !important;
+  left:50% !important;
+  min-width:100% !important;
+  min-height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+  transform:translate(-50%,-50%) !important;
+  border:0 !important;
+  background:#000 !important;
+  box-shadow:none !important;
+}
+
+body.media-playing .player-close{
+  display:flex !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  pointer-events:auto !important;
+  z-index:80 !important;
+}
+
+@media(max-width:980px){
+  body.media-playing .player-close{
+    top:12px !important;
+    right:12px !important;
+  }
+}
+
 </style>
 </head>
 <body data-mode="film">
@@ -1650,9 +1726,9 @@ body:not(.has-results) .result-theme-switch{display:none !important}
         <div class="score-row"><span>coherence</span><span id="score">0.000</span></div>
         <p id="overview"></p>
         <div class="actions">
-          <button class="action play-action" id="playMedia" type="button" hidden>play trailer</button>
+          <button id="playMedia" type="button" hidden aria-hidden="true"></button>
           <button class="action" id="openSource">open on angel.com ↗</button>
-          <button class="action link" id="copyLink">copy link</button>
+          <button class="action link" id="copyLink">share result</button>
         </div>
       </div>
     </div>
@@ -2410,6 +2486,7 @@ let candidateMap = new Map();
 let currentResults = [];
 let currentIndex = 0;
 let currentQuery = '';
+let pendingSharedSlug = '';
 let traceInterval = null;
 
 /* ─── DOM refs ─── */
@@ -2807,7 +2884,14 @@ function showResults(results, query) {
     </button>
   `).join('');
 
-  selectResult(0);
+  let initialResultIndex = 0;
+  if (pendingSharedSlug) {
+    const sharedIndex = currentResults.findIndex(item => item.slug === pendingSharedSlug);
+    if (sharedIndex >= 0) initialResultIndex = sharedIndex;
+    pendingSharedSlug = '';
+  }
+
+  selectResult(initialResultIndex);
 
   rankList.querySelectorAll('.rank-row').forEach(row => {
     row.addEventListener('click', () => selectResult(parseInt(row.dataset.idx, 10)));
@@ -2859,6 +2943,7 @@ function selectResult(idx) {
   inlinePlayer.hidden = true;
   featureImg.hidden = false;
   featureEl.classList.remove('is-playing', 'audio-playing');
+  document.body.classList.remove('media-playing');
 
   const playable = playableFor(m);
   const playLabel = playable ? (playable.label || 'play') : 'play';
@@ -2882,6 +2967,7 @@ function selectResult(idx) {
     featureImg.hidden = true;
     heroPlayBtn.hidden = true;
     heroPlayBtn.style.display = 'none';
+    document.body.classList.add('media-playing');
     featureEl.classList.add('is-playing');
     featureEl.classList.toggle('audio-playing', audioLike);
     requestAnimationFrame(sizePlayerToCover);
@@ -2895,12 +2981,46 @@ function selectResult(idx) {
   openSourceBtn.textContent = mediaKind(m) === 'product' ? 'open in Angel shop ↗' : 'open on angel.com ↗';
   openSourceBtn.onclick = () => window.open(m.url, '_blank', 'noopener');
 
-  copyLinkBtn.onclick = () => {
+  copyLinkBtn.onclick = async () => {
     const base = location.protocol === 'file:' ? '' : location.href.split('#')[0];
-    const link = base ? `${base}#${encodeURIComponent(currentQuery)}` : m.url;
-    navigator.clipboard.writeText(link)
-      .then(() => showToast('link copied'))
-      .catch(() => showToast('copy failed'));
+    const params = new URLSearchParams({
+      q: currentQuery,
+      result: m.slug
+    });
+    const link = base ? `${base}#${params.toString()}` : m.url;
+    const shareTitle = `${m.title} — RESONANCE`;
+
+    try {
+      if (navigator.share && base) {
+        await navigator.share({
+          title: shareTitle,
+          text: `See this RESONANCE result for “${currentQuery}”.`,
+          url: link
+        });
+        showToast('result shared');
+        return;
+      }
+
+      await navigator.clipboard.writeText(link);
+      showToast('result link copied');
+    } catch (error) {
+      if (error && error.name === 'AbortError') return;
+
+      try {
+        const field = document.createElement('textarea');
+        field.value = link;
+        field.setAttribute('readonly', '');
+        field.style.position = 'fixed';
+        field.style.opacity = '0';
+        document.body.appendChild(field);
+        field.select();
+        document.execCommand('copy');
+        field.remove();
+        showToast('result link copied');
+      } catch (_) {
+        showToast('copy failed');
+      }
+    }
   };
 
   rankList.querySelectorAll('.rank-row').forEach((row, i) => {
@@ -2917,6 +3037,7 @@ function selectResult(idx) {
 function resetToHome() {
   document.body.classList.remove('has-results', 'searching', 'cutting');
   featureEl.classList.remove('is-playing', 'audio-playing');
+  document.body.classList.remove('media-playing');
   currentResults = [];
   currentIndex = 0;
   currentQuery = '';
@@ -2953,6 +3074,7 @@ closePlayerBtn.addEventListener('click', () => {
   inlinePlayer.hidden = true;
   featureImg.hidden = false;
   featureEl.classList.remove('is-playing', 'audio-playing');
+  document.body.classList.remove('media-playing');
   const current = currentResults[currentIndex];
   const playable = playableFor(current);
   const playLabel = playable ? (playable.label || 'play') : 'play';
@@ -3094,9 +3216,29 @@ if ('ResizeObserver' in window) {
   loadCorpus();
   initWallDrift();
   startIdleTraces();
-  const h = decodeURIComponent(location.hash.replace(/^#/, ''));
-  if (h) { queryInput.value = h; executeSearch(h); }
-  else {
+  const rawHash = location.hash.replace(/^#/, '');
+  let initialQuery = '';
+
+  if (rawHash) {
+    const params = new URLSearchParams(rawHash);
+
+    if (params.has('q')) {
+      initialQuery = params.get('q') || '';
+      pendingSharedSlug = params.get('result') || '';
+    } else {
+      // Backward compatibility with older links that stored only the raw query.
+      try {
+        initialQuery = decodeURIComponent(rawHash);
+      } catch (_) {
+        initialQuery = rawHash;
+      }
+    }
+  }
+
+  if (initialQuery) {
+    queryInput.value = initialQuery;
+    executeSearch(initialQuery);
+  } else {
     queryInput.blur();
     queryInput.placeholder = '';
     startIdleTraces();
