@@ -8,9 +8,9 @@
 <link rel="icon" type="image/png" href="./resonance-favicon.png">
 <link rel="apple-touch-icon" href="./resonance-favicon.png">
 
-<meta name="description" content="Find angel.com movies by meaning.">
+<meta name="description" content="Find angel.com films and comedy by meaning.">
 <meta property="og:title" content="RESONANCE — angel.com">
-<meta property="og:description" content="Find angel.com movies by meaning.">
+<meta property="og:description" content="Find angel.com films and comedy by meaning.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RESONANCE">
 <meta property="og:image" content="./resonance-og-image.png">
@@ -20,7 +20,7 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="RESONANCE — angel.com">
-<meta name="twitter:description" content="Find angel.com movies by meaning.">
+<meta name="twitter:description" content="Find angel.com films and comedy by meaning.">
 <meta name="twitter:image" content="./resonance-og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1037,13 +1037,13 @@ body:not(.has-results) .result-theme-switch{display:none !important}
   <div class="search-pane">
     <div>
       <div class="brand" aria-label="RESONANCE">RESONANCE</div>
-      <div class="prompt-label" id="eyebrow">find a film on angel.com</div>
+      <div class="prompt-label" id="eyebrow">find something on angel.com</div>
       <form id="searchForm" class="search-form">
         <input id="query" autocomplete="off" spellcheck="false" inputmode="search" enterkeyhint="search" placeholder="describe the scene, mood, memory, or idea">
         <button id="go" aria-label="Search">→</button>
       </form>
       <div class="search-hint">
-        <span id="modeHint">search angel.com films by meaning</span>
+        <span id="modeHint">search angel.com by meaning</span>
       </div>
       <div class="mode-row">
         <div class="source-badge" aria-label="Source: angel.com">
@@ -1056,7 +1056,7 @@ body:not(.has-results) .result-theme-switch{display:none !important}
         <button type="button" class="theme-switch" data-theme-switch aria-label="Toggle theme"><span></span></button>
       </div>
       <div class="corpus-load-state" id="corpusLoadState" aria-live="polite">
-        <div class="corpus-load-copy"><span id="corpusLoadText">loading angel.com corpus</span></div>
+        <div class="corpus-load-copy"><span id="corpusLoadText">loading angel.com catalog</span></div>
         <div class="corpus-load-bar"><span id="corpusLoadBar"></span></div>
       </div>
       <div class="error-banner" id="errorBanner"></div>
@@ -1074,9 +1074,9 @@ body:not(.has-results) .result-theme-switch{display:none !important}
       <div class="site-signals">
         <span class="site-signal site-signal-primary">© 2026 Actual General Intelligence Inc.</span>
         <span class="site-signal">ARBITER COHERENCE ENGINE</span>
-        <span class="site-signal" id="corpusCount">0 films indexed</span>
+        <span class="site-signal" id="corpusCount">0 titles indexed</span>
       </div>
-      <button id="shuffleFilms" type="button" data-action="shuffle-corpus">shuffle films</button>
+      <button id="shuffleFilms" type="button" data-action="shuffle-corpus">shuffle titles</button>
     </div>
   </div>
   <div class="film-wall-pane">
@@ -1106,7 +1106,7 @@ body:not(.has-results) .result-theme-switch{display:none !important}
   </div>
   <div class="ranking">
     <div class="result-query-shell">
-      <div class="result-mode" id="resultMode">angel.com film corpus · arbiter live</div>
+      <div class="result-mode" id="resultMode">angel.com catalog · arbiter live</div>
       <form id="resultSearchForm" class="result-query-form">
         <textarea id="resultQuery" autocomplete="off" spellcheck="false" rows="2" placeholder="edit the search"></textarea>
         <button id="resultGo" type="submit" aria-label="Search">→</button>
@@ -1122,7 +1122,7 @@ body:not(.has-results) .result-theme-switch{display:none !important}
     </div>
     <div id="rankList" class="rank-list"></div>
     <div class="rank-actions">
-      <button id="shuffleFilmsResult" type="button" data-action="shuffle-corpus">shuffle films</button>
+      <button id="shuffleFilmsResult" type="button" data-action="shuffle-corpus">shuffle titles</button>
       <span id="status">ready</span>
     </div>
   </div>
@@ -1596,7 +1596,58 @@ const ANGEL_CORPUS = [
     overview:"A man returns to a small town and finds himself drawn into old wounds, new love, and a quieter kind of faith. A romantic drama about homecoming, grace, forgiveness, and the life waiting beyond ambition." },
   { slug:"gifted-hands", title:"Gifted Hands", year:2009, genre:"Biography, Drama",
     poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_384%2Cq_auto%2Cf_webp/v1778194311/studio-app/catalog/1724c682-3a55-4fef-9863-1cce8e8ca63b",
-    overview:"A young man rises from hardship to become a world-renowned surgeon through discipline, faith, and the belief that his mind can become a gift to others. A biographical drama about perseverance, learning, and purpose." }
+    overview:"A young man rises from hardship to become a world-renowned surgeon through discipline, faith, and the belief that his mind can become a gift to others. A biographical drama about perseverance, learning, and purpose." },
+{ slug:"shayne-smith-kangaroo-killer", title:"Shayne Smith - Kangaroo Killer", year:2025, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1763147383/studio-app/catalog/7525e69d-8db9-4940-b6df-53a6be2f125a.webp",
+    overview:"Shayne Smith returns with a wild story involving Australia, government trouble, FBI mix-ups, exploding cars, kangaroo fights, and an increasingly ridiculous effort to clear his name and secure a work visa for a sold-out tour." },
+  { slug:"nazareth-american-by-choice", title:"Nazareth - American By Choice", year:2025, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1772746751/studio-app/catalog/597cba68-643f-47ce-8a6a-eeea500c59c8.webp",
+    overview:"Nazareth turns immigration, American culture, family expectations, language, and belonging into an affectionate clean-comedy set about becoming American by choice while never losing the perspective of where he came from." },
+  { slug:"raj-sharma-raj-to-roger", title:"Raj Sharma - Raj to Roger", year:2025, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1745966936/studio-app/catalog/623f93e1-a878-4a6a-95dc-013d011e4dea.webp",
+    overview:"Raj Sharma mines the strange distance between Raj and Roger, finding comedy in identity, accents, cultural translation, family, work, and the everyday misunderstandings that come with trying to fit into American life." },
+  { slug:"leland-klassen-more-true", title:"Leland Klassen - More True", year:2025, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1753121942/studio-app/catalog/3409fcd6-ae80-4371-a366-7394e454eb23.webp",
+    overview:"Leland Klassen delivers observational clean comedy about marriage, parenting, aging, awkward honesty, and the parts of ordinary life that become funnier the more accurately they are told." },
+  { slug:"mick-thomas-one-of-you", title:"Mick Thomas - One of You.", year:2025, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1753312024/studio-app/catalog/828ed97b-6e2a-4857-9815-07ce8543f513.webp",
+    overview:"Mick Thomas brings an outsider's eye to American habits, relationships, travel, language, and the absurd social rituals that reveal he may be more like the audience than either side expected." },
+  { slug:"dave-nihill-documented", title:"Dave Nihill - Documented", year:2025, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1761149732/studio-app/catalog/904dfd94-8806-41c7-8df3-4b8ded327c3f.webp",
+    overview:"Irish comedian Dave Nihill turns immigration, travel, paperwork, cultural confusion, and his adopted life in America into a quick, story-driven special about being documented without ever feeling entirely settled." },
+  { slug:"richard-villa-trick-or-treat", title:"Richard Villa - Trick or Treat", year:2025, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1752615039/studio-app/catalog/ce69522e-543c-4235-a241-b567e957b049.webp",
+    overview:"Richard Villa delivers clean comedy about family, holidays, neighborhood life, culture, and the strange choices adults make while trying to manage children, traditions, and one another." },
+  { slug:"jim-tavare-promising-young-comedian", title:"Jim Tavare - Promising Young Comedian", year:2025, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1752513707/studio-app/catalog/d3968664-cb31-48c6-9788-95e737c58e02.webp",
+    overview:"Jim Tavare pairs dry British delivery, physical comedy, music, aging, and the indignities of a long career into a special whose title is itself a joke about remaining promising after decades onstage." },
+  { slug:"moody-molavi-remove-before-flight", title:"Moody Molavi - Remove Before Flight", year:2025, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1753895701/studio-app/catalog/651d3252-f235-4d4a-b38b-c28453ef278f.webp",
+    overview:"Moody Molavi finds clean comedy in flying, family, travel anxiety, cultural expectations, airport logic, and the many ways a simple trip can expose the irrational machinery of modern life." },
+  { slug:"ali-sultan-third-world-energy", title:"Ali Sultan - Third World Energy", year:2025, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1751306143/studio-app/catalog/0e57272e-a8a2-4004-93f4-aababc733bda.webp",
+    overview:"Ali Sultan brings high-energy comedy to immigration, family, language, American assumptions, and the collision between first-world convenience and the perspective formed by growing up elsewhere." },
+  { slug:"trixx-cheers", title:"TRIXX - Cheers", year:2025, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1761668793/studio-app/catalog/4f9b1a58-644d-4f71-b12c-ea161c825f49.webp",
+    overview:"TRIXX turns relationships, everyday frustration, social expectations, and audience interaction into an animated clean-comedy set built around the energy of raising a glass to surviving ordinary life." },
+  { slug:"vien-phommachanh-open-up-and-say-hah", title:"Vien Phommachanh - Open up and say, “HAH!!!”", year:2025, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1744837656/studio-app/catalog/41e08c7d-50b7-4ee9-a58c-cb0761f3ec5e.webp",
+    overview:"Physician-comedian Vien Phommachanh examines medicine, patients, family, cultural identity, and the absurd things people say in an exam room, translating clinical experience into clean observational comedy." },
+  { slug:"debi-gutierrez-happily-ever-after-mostly", title:"Debi Gutierrez - Happily Ever After...Mostly!", year:2024, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1732642329/studio-app/catalog/b37c2773-8e44-4c8c-a2d7-c558e6eb891e.webp",
+    overview:"Debi Gutierrez finds the comedy hiding inside marriage, domestic compromise, parenting, aging, and the gap between the fairy-tale promise of happily ever after and the mostly happy reality." },
+  { slug:"fred-klett-one-of-ten", title:"Fred Klett - One of Ten", year:2025, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1757710947/studio-app/catalog/7a00d154-9f50-4dd1-8c1a-4f9865812b86.webp",
+    overview:"Fred Klett draws on growing up as one of ten children, turning crowded family life, sibling survival, marriage, parenthood, and generational differences into warm, rapid-fire clean comedy." },
+  { slug:"kenn-kington-enjoying-chaos", title:"Kenn Kington - Enjoying Chaos", year:2025, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1755291023/studio-app/catalog/7162b2b2-96b6-4282-83c7-c754b2cb383c.webp",
+    overview:"Kenn Kington embraces the chaos of marriage, children, work, travel, and middle age, finding clean comedy in the decision to stop demanding control and start enjoying the disorder." },
+  { slug:"mark-poolos-one-wife-two-daughters-zero-influence", title:"Mark Poolos - One Wife, Two Daughters, Zero Influence", year:2025, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1753205781/studio-app/catalog/23c10cf7-d7c8-4a0a-8b63-2469bc0054ed.webp",
+    overview:"Mark Poolos explores life as the lone man in a household with a wife and two daughters, where fatherhood, marriage, fashion, communication, and authority all prove that he has exactly zero influence." },
+  { slug:"leanne-morgan-so-yummy", title:"Leanne Morgan - So Yummy", year:2025, genre:"Special, Comedy, Dry Bar",
+    poster:"https://images.angelstudios.com/image/upload/c_limit%2Cw_640%2Cq_auto%2Cf_webp/ar_16%3A9%2Cc_thumb%2Cq_auto%2Cg_north%2Cw_640%2Ch_360/v1750879492/studio-app/catalog/907767b2-6ef3-4c77-93aa-b7043475e7c2.webp",
+    overview:"Leanne Morgan brings her Southern storytelling to marriage, motherhood, food, aging, family, and the bodily indignities of ordinary life in a warm clean-comedy special built from instantly recognizable domestic moments." }
 ];
 
 /* ─── State ─── */
@@ -1742,8 +1793,8 @@ function loadCorpus() {
 
   document.body.classList.remove('corpus-loading');
   document.body.classList.add('corpus-ready');
-  corpusLoadText.textContent = `${corpus.length} films indexed from angel.com`;
-  corpusCountEl.textContent = `${corpus.length} films indexed`;
+  corpusLoadText.textContent = `${corpus.length} titles indexed from angel.com`;
+  corpusCountEl.textContent = `${corpus.length} titles indexed`;
   statusEl.textContent = `${corpus.length} films ready`;
   renderWall(corpus);
 }
