@@ -1143,7 +1143,6 @@ const ARBITER_URL = 'https://api.arbiter.traut.ai/public/compare';
 const RETURN_COUNT = 10;
 const IS_MOBILE = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
 const BATCH_SIZE = IS_MOBILE ? 48 : 128;
-const FETCH_TIMEOUT_MS = IS_MOBILE ? 18000 : 14000;
 const MAX_RETRIES = IS_MOBILE ? 2 : 1;
 const CDN = 'https://images.angelstudios.com/image/upload';
 
@@ -1778,21 +1777,12 @@ function escHtml(s) {
 /* ─── ARBITER — live semantic scoring ───
    POST { query, candidates } → always read data.all: [{ text, score }].
    Batched at 128 with cross-batch merge. */
-async function fetchWithTimeout(url, options = {}, timeoutMs = FETCH_TIMEOUT_MS) {
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    return await fetch(url, { ...options, signal: controller.signal, cache: 'no-store' });
-  } finally {
-    clearTimeout(timer);
-  }
-}
-
 async function compareBatchWithRetry(query, batch, attempt = 0) {
   try {
-    const res = await fetchWithTimeout(ARBITER_URL, {
+    const res = await fetch(ARBITER_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
       body: JSON.stringify({ query, candidates: batch, use_freq: true, top_k: Math.min(RETURN_COUNT, batch.length) })
     });
     if (!res.ok) throw new Error(`arbiter ${res.status}`);
