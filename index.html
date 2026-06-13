@@ -1240,6 +1240,50 @@ body:not(.has-results) .result-theme-switch{display:none !important}
   border:0;
   background:#000;
 }
+.feature.is-playing .feature-content{
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(12px);
+  transition:opacity .22s ease, transform .22s ease;
+}
+.feature.is-playing .feature-media::before,
+.feature.is-playing .feature-media::after,
+.feature.is-playing::after,
+.feature.is-playing .hero-play{
+  opacity:0 !important;
+  pointer-events:none !important;
+}
+.feature.is-playing .inline-player{
+  align-items:center;
+  justify-content:center;
+}
+.feature.is-playing .inline-player iframe{
+  width:100%;
+  max-width:100%;
+  height:auto;
+  max-height:100%;
+  aspect-ratio:16 / 9;
+}
+.feature.is-playing .feature-media{
+  background:#000;
+}
+.feature.audio-playing .inline-player::after{
+  content:"now playing";
+  position:absolute;
+  left:18px;
+  bottom:18px;
+  z-index:6;
+  padding:8px 10px;
+  border:1px solid rgba(255,255,255,.26);
+  background:rgba(0,0,0,.46);
+  color:#fff;
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
 .player-close{
   position:absolute;
   top:18px;
@@ -1597,7 +1641,22 @@ const PLAYABLE_MEDIA = {
   "sound-of-freedom-original-motion-picture-soundtrack-javier-navarrete": { type:"youtube", id:"hDQCJnXU108", label:"play song" },
   "cabrini": { type:"youtube", id:"uuFkt3w-7kI", label:"play trailer" },
   "david": { type:"youtube", id:"uv9V3dk98PM", label:"play trailer" },
-  "live-like-that-kristin-chenoweth": { type:"youtube", id:"71uXyT5_VT4", label:"play song" }
+  "bonhoeffer": { type:"youtube", id:"WZM90izJ8sI", label:"play trailer" },
+  "homestead": { type:"youtube", id:"XURLw2XXHWA", label:"play trailer" },
+  "rule-breakers": { type:"youtube", id:"CW_P4zT6i9A", label:"play trailer" },
+  "sound-of-hope-the-story-of-possum-trot": { type:"youtube", id:"-nyh9tcGFcI", label:"play trailer" },
+  "the-shift": { type:"youtube", id:"0jho0ThcyyM", label:"play trailer" },
+  "his-only-son": { type:"youtube", id:"s8uluiH4-m8", label:"play trailer" },
+  "king-of-kings": { type:"youtube", id:"HDhet3EVRac", label:"play trailer" },
+  "the-king-of-kings": { type:"youtube", id:"HDhet3EVRac", label:"play trailer" },
+  "for-the-one": { type:"youtube", id:"Y51EN4bM-CI", label:"play trailer" },
+  "a-week-away-the-series": { type:"youtube", id:"TaMHPEZLHdc", label:"play trailer" },
+  "live-like-that-kristin-chenoweth": { type:"youtube", id:"71uXyT5_VT4", label:"play song" },
+  "then-i-will-lauren-daigle": { type:"youtube", id:"kKBQrWWX570", label:"play song" },
+  "dare-to-be-andrea-bocelli-virginia-bocelli": { type:"youtube", id:"ECVWAIjD5lY", label:"play song" },
+  "rest-of-my-life-colton-dixon": { type:"youtube", id:"vTYvy9eaUXE", label:"play song" },
+  "glory-jervis-campbell": { type:"youtube", id:"Szi37gTLFNM", label:"play song" },
+  "follow-the-light-phil-wickham-brandon-engman": { type:"youtube", id:"O_HYdZ-Jq3Q", label:"play song" }
 };
 
 function playableFor(item){
@@ -1617,6 +1676,36 @@ function playableFor(item){
     }
     return { type:"youtube", id:"UwSBQWI-bek", label:"play trailer" };
   }
+  if(title.includes('cabrini')){
+    if(genre.includes('music') || genre.includes('soundtrack')) return { type:"youtube", id:"ECVWAIjD5lY", label:"play song" };
+    return { type:"youtube", id:"uuFkt3w-7kI", label:"play trailer" };
+  }
+  if(title.includes('david')){
+    if(title.includes('follow the light')) return { type:"youtube", id:"O_HYdZ-Jq3Q", label:"play song" };
+    return { type:"youtube", id:"uv9V3dk98PM", label:"play trailer" };
+  }
+  if(title.includes('bonhoeffer')){
+    if(genre.includes('music') || genre.includes('soundtrack') || title.includes('then i will')) return { type:"youtube", id:"kKBQrWWX570", label:"play song" };
+    return { type:"youtube", id:"WZM90izJ8sI", label:"play trailer" };
+  }
+  if(title.includes('rule breakers')) return { type:"youtube", id:"CW_P4zT6i9A", label:"play trailer" };
+  if(title.includes('homestead')) return { type:"youtube", id:"XURLw2XXHWA", label:"play trailer" };
+  if(title.includes('the shift')) return { type:"youtube", id:"0jho0ThcyyM", label:"play trailer" };
+  if(title.includes('his only son')) return { type:"youtube", id:"s8uluiH4-m8", label:"play trailer" };
+  if(title.includes('king of kings')){
+    if(title.includes('live like that')) return { type:"youtube", id:"71uXyT5_VT4", label:"play song" };
+    return { type:"youtube", id:"HDhet3EVRac", label:"play trailer" };
+  }
+  if(title.includes('for the one')) return { type:"youtube", id:"Y51EN4bM-CI", label:"play trailer" };
+  if(title.includes('a week away')) return { type:"youtube", id:"TaMHPEZLHdc", label:"play trailer" };
+  if(title.includes('sound of hope') || title.includes('possum trot')){
+    if(title.includes('glory')) return { type:"youtube", id:"Szi37gTLFNM", label:"play song" };
+    return { type:"youtube", id:"-nyh9tcGFcI", label:"play trailer" };
+  }
+  if(title.includes('rest of my life')) return { type:"youtube", id:"vTYvy9eaUXE", label:"play song" };
+  if(title.includes('dare to be')) return { type:"youtube", id:"ECVWAIjD5lY", label:"play song" };
+  if(title.includes('then i will')) return { type:"youtube", id:"kKBQrWWX570", label:"play song" };
+  if(title.includes('live like that')) return { type:"youtube", id:"71uXyT5_VT4", label:"play song" };
 
   return null;
 }
@@ -2636,6 +2725,7 @@ function selectResult(idx) {
   mediaFrame.src = '';
   inlinePlayer.hidden = true;
   featureImg.hidden = false;
+  featureEl.classList.remove('is-playing', 'audio-playing');
 
   const playable = playableFor(m);
   const playLabel = playable ? (playable.label || 'play') : 'play';
@@ -2653,11 +2743,14 @@ function selectResult(idx) {
   const openPlayableMedia = () => {
     const src = embedUrlFor(playable);
     if (!src) return;
+    const audioLike = /song|audio/i.test(playLabel) || /(music|soundtrack)/i.test(String(m.genre || ''));
     mediaFrame.src = src;
     inlinePlayer.hidden = false;
     featureImg.hidden = true;
     heroPlayBtn.hidden = true;
     heroPlayBtn.style.display = 'none';
+    featureEl.classList.add('is-playing');
+    featureEl.classList.toggle('audio-playing', audioLike);
     playMediaBtn.textContent = 'playing';
   };
 
@@ -2688,6 +2781,7 @@ function selectResult(idx) {
 /* ─── New Search ─── */
 function resetToHome() {
   document.body.classList.remove('has-results', 'searching', 'cutting');
+  featureEl.classList.remove('is-playing', 'audio-playing');
   currentResults = [];
   currentIndex = 0;
   currentQuery = '';
@@ -2724,6 +2818,7 @@ closePlayerBtn.addEventListener('click', () => {
   mediaFrame.src = '';
   inlinePlayer.hidden = true;
   featureImg.hidden = false;
+  featureEl.classList.remove('is-playing', 'audio-playing');
   const current = currentResults[currentIndex];
   const playable = playableFor(current);
   const playLabel = playable ? (playable.label || 'play') : 'play';
