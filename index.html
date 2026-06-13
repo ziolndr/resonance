@@ -1650,6 +1650,16 @@ body.media-playing .player-close{
   }
 }
 
+
+.hero-play,
+.hero-play-icon,
+#heroPlay,
+#heroPlayLabel{
+  display:none !important;
+  visibility:hidden !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+}
 </style>
 </head>
 <body data-mode="film">
@@ -1705,10 +1715,6 @@ body.media-playing .player-close{
   <div class="feature" id="feature">
     <div class="feature-media">
       <img class="feature-img" id="featureImg" alt="" decoding="async" loading="eager" fetchpriority="high" referrerpolicy="no-referrer">
-      <button class="hero-play" id="heroPlay" type="button" hidden aria-label="Play media">
-        <span class="hero-play-icon">▶</span>
-        <span id="heroPlayLabel">play trailer</span>
-      </button>
       <div class="inline-player" id="inlinePlayer" hidden>
         <iframe id="mediaFrame"
           title="Angel media player"
@@ -1726,7 +1732,7 @@ body.media-playing .player-close{
         <div class="score-row"><span>coherence</span><span id="score">0.000</span></div>
         <p id="overview"></p>
         <div class="actions">
-          <button id="playMedia" type="button" hidden aria-hidden="true"></button>
+          <button class="action play-action" id="playMedia" type="button" hidden>play trailer</button>
           <button class="action" id="openSource">open on angel.com ↗</button>
           <button class="action link" id="copyLink">share result</button>
         </div>
@@ -2507,8 +2513,6 @@ const scoreEl = $('#score');
 const overviewEl = $('#overview');
 const openSourceBtn = $('#openSource');
 const playMediaBtn = $('#playMedia');
-const heroPlayBtn = $('#heroPlay');
-const heroPlayLabel = $('#heroPlayLabel');
 const inlinePlayer = $('#inlinePlayer');
 const mediaFrame = $('#mediaFrame');
 const closePlayerBtn = $('#closePlayer');
@@ -2953,11 +2957,6 @@ function selectResult(idx) {
   playMediaBtn.setAttribute('aria-hidden', playable ? 'false' : 'true');
   playMediaBtn.textContent = playLabel;
 
-  heroPlayBtn.hidden = !playable;
-  heroPlayBtn.style.display = playable ? 'inline-flex' : 'none';
-  heroPlayBtn.setAttribute('aria-hidden', playable ? 'false' : 'true');
-  heroPlayLabel.textContent = playLabel;
-
   const openPlayableMedia = () => {
     const src = embedUrlFor(playable);
     if (!src) return;
@@ -2965,8 +2964,6 @@ function selectResult(idx) {
     mediaFrame.src = src;
     inlinePlayer.hidden = false;
     featureImg.hidden = true;
-    heroPlayBtn.hidden = true;
-    heroPlayBtn.style.display = 'none';
     document.body.classList.add('media-playing');
     featureEl.classList.add('is-playing');
     featureEl.classList.toggle('audio-playing', audioLike);
@@ -2976,7 +2973,6 @@ function selectResult(idx) {
   };
 
   playMediaBtn.onclick = openPlayableMedia;
-  heroPlayBtn.onclick = openPlayableMedia;
 
   openSourceBtn.textContent = mediaKind(m) === 'product' ? 'open in Angel shop ↗' : 'open on angel.com ↗';
   openSourceBtn.onclick = () => window.open(m.url, '_blank', 'noopener');
@@ -3079,9 +3075,6 @@ closePlayerBtn.addEventListener('click', () => {
   const playable = playableFor(current);
   const playLabel = playable ? (playable.label || 'play') : 'play';
   playMediaBtn.textContent = playLabel;
-  heroPlayBtn.hidden = !playable;
-  heroPlayBtn.style.display = playable ? 'inline-flex' : 'none';
-  heroPlayLabel.textContent = playLabel;
 });
 
 newSearchBtn.addEventListener('click', () => {
