@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#ffffff">
-<title>RESONANCE — angel.com</title>
+<title>RESONANCE — Find Angel films, comedy, music, and products by meaning.</title>
 <link rel="icon" type="image/png" href="./resonance-favicon.png">
 <link rel="apple-touch-icon" href="./resonance-favicon.png">
 
 <meta name="description" content="Find Angel films, comedy, music, and products by meaning.">
-<meta property="og:title" content="RESONANCE — angel.com">
+<meta property="og:title" content="RESONANCE — Find Angel films, comedy, music, and products by meaning.">
 <meta property="og:description" content="Find Angel films, comedy, music, and products by meaning.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="RESONANCE">
@@ -1574,106 +1574,6 @@ body:not(.has-results) .result-theme-switch{display:none !important}
   z-index:30 !important;
 }
 
-
-/* ─── Spotify-style playback stage ───
-   Use the selected item's artwork as a blurred full-panel backdrop, with the
-   actual 16:9 trailer or song video centered cleanly above it. */
-.feature.is-playing .feature-media{
-  position:absolute !important;
-  inset:0 !important;
-  overflow:hidden !important;
-  background:#050505 !important;
-}
-
-.feature.is-playing .feature-img{
-  display:block !important;
-  visibility:visible !important;
-  opacity:.58 !important;
-  width:112% !important;
-  height:112% !important;
-  inset:-6% !important;
-  object-fit:cover !important;
-  object-position:center center !important;
-  transform:scale(1.08) !important;
-  filter:blur(34px) saturate(.86) brightness(.48) !important;
-}
-
-.feature.is-playing .feature-media::before{
-  content:'' !important;
-  position:absolute !important;
-  inset:0 !important;
-  z-index:2 !important;
-  opacity:1 !important;
-  background:
-    radial-gradient(circle at center, rgba(0,0,0,.02) 0%, rgba(0,0,0,.18) 58%, rgba(0,0,0,.46) 100%),
-    linear-gradient(to bottom, rgba(0,0,0,.16), rgba(0,0,0,.34)) !important;
-  pointer-events:none !important;
-}
-
-.feature.is-playing .feature-media::after,
-.feature.is-playing::after{
-  opacity:0 !important;
-}
-
-.feature.is-playing .inline-player{
-  position:absolute !important;
-  inset:0 !important;
-  z-index:8 !important;
-  overflow:hidden !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-  padding:clamp(18px,3vw,42px) !important;
-  background:transparent !important;
-}
-
-.feature.is-playing .inline-player iframe{
-  position:relative !important;
-  top:auto !important;
-  left:auto !important;
-  width:100% !important;
-  height:auto !important;
-  max-width:100% !important;
-  max-height:100% !important;
-  min-width:0 !important;
-  min-height:0 !important;
-  aspect-ratio:16 / 9 !important;
-  transform:none !important;
-  border:0 !important;
-  background:#000 !important;
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,.10),
-    0 26px 80px rgba(0,0,0,.52) !important;
-}
-
-.feature.is-playing .player-close{
-  position:absolute !important;
-  top:18px !important;
-  right:18px !important;
-  z-index:20 !important;
-}
-
-@media(max-width:980px){
-  .feature.is-playing .inline-player{
-    padding:18px !important;
-  }
-  .feature.is-playing .inline-player iframe{
-    width:100% !important;
-    height:auto !important;
-    max-height:calc(68svh - 36px) !important;
-  }
-}
-
-@media(max-width:560px){
-  .feature.is-playing .inline-player{
-    padding:12px !important;
-  }
-  .feature.is-playing .player-close{
-    top:12px !important;
-    right:12px !important;
-  }
-}
-
 </style>
 </head>
 <body data-mode="film">
@@ -1893,7 +1793,27 @@ function embedUrlFor(playable){
 }
 
 function sizePlayerToCover() {
-  // Spotify-style presentation uses a centered 16:9 player over blurred artwork.
+  if (!inlinePlayer || !mediaFrame || inlinePlayer.hidden) return;
+
+  const rect = inlinePlayer.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+
+  const mediaRatio = 16 / 9;
+  const panelRatio = rect.width / rect.height;
+
+  let width;
+  let height;
+
+  if (panelRatio > mediaRatio) {
+    width = rect.width;
+    height = width / mediaRatio;
+  } else {
+    height = rect.height;
+    width = height * mediaRatio;
+  }
+
+  mediaFrame.style.width = `${Math.ceil(width)}px`;
+  mediaFrame.style.height = `${Math.ceil(height)}px`;
 }
 
 const ANGEL_CORPUS = [
@@ -2959,7 +2879,7 @@ function selectResult(idx) {
     const audioLike = /song|audio/i.test(playLabel) || /(music|soundtrack)/i.test(String(m.genre || ''));
     mediaFrame.src = src;
     inlinePlayer.hidden = false;
-    featureImg.hidden = false;
+    featureImg.hidden = true;
     heroPlayBtn.hidden = true;
     heroPlayBtn.style.display = 'none';
     featureEl.classList.add('is-playing');
