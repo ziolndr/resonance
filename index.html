@@ -1496,6 +1496,52 @@ body:not(.has-results) .result-theme-switch{display:none !important}
   }
 }
 
+
+/* ─── Final cinema-player positioning ───
+   Keep playback inside the left reveal panel, full width, true 16:9,
+   and vertically centered in the black field. */
+.feature.is-playing .inline-player{
+  position:absolute !important;
+  inset:0 !important;
+  display:block !important;
+  background:#000 !important;
+}
+
+.feature.is-playing .inline-player iframe{
+  position:absolute !important;
+  top:50% !important;
+  left:50% !important;
+  width:100% !important;
+  height:auto !important;
+  max-width:100% !important;
+  max-height:100% !important;
+  aspect-ratio:16 / 9 !important;
+  transform:translate(-50%,-50%) !important;
+  border:0 !important;
+  background:#000 !important;
+}
+
+.feature.is-playing .player-close{
+  position:absolute !important;
+  top:18px !important;
+  right:18px !important;
+  z-index:20 !important;
+}
+
+@media(max-width:980px){
+  .feature.is-playing .inline-player,
+  .feature.is-playing .inline-player iframe{
+    min-height:0 !important;
+  }
+}
+
+@media(max-width:560px){
+  .feature.is-playing .player-close{
+    top:12px !important;
+    right:12px !important;
+  }
+}
+
 </style>
 </head>
 <body data-mode="film">
