@@ -1542,6 +1542,38 @@ body:not(.has-results) .result-theme-switch{display:none !important}
   }
 }
 
+
+.query-traces{display:none !important}
+
+/* ─── True full-panel playback cover ───
+   Trailer and song videos now cover the entire vertical left reveal panel.
+   Outer edges crop intentionally so no black letterbox field remains. */
+.feature.is-playing .inline-player{
+  position:absolute !important;
+  inset:0 !important;
+  overflow:hidden !important;
+  display:block !important;
+  background:#000 !important;
+}
+
+.feature.is-playing .inline-player iframe{
+  position:absolute !important;
+  top:50% !important;
+  left:50% !important;
+  min-width:100% !important;
+  min-height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+  aspect-ratio:16 / 9 !important;
+  transform:translate(-50%,-50%) !important;
+  border:0 !important;
+  background:#000 !important;
+}
+
+.feature.is-playing .player-close{
+  z-index:30 !important;
+}
+
 </style>
 </head>
 <body data-mode="film">
@@ -1551,7 +1583,7 @@ body:not(.has-results) .result-theme-switch{display:none !important}
       <div class="brand" aria-label="RESONANCE">RESONANCE</div>
       <div class="prompt-label" id="eyebrow">search the Angel catalog</div>
       <form id="searchForm" class="search-form">
-        <input id="query" autocomplete="off" spellcheck="false" inputmode="search" enterkeyhint="search" placeholder="describe the scene, mood, memory, or idea">
+        <input id="query" autocomplete="off" spellcheck="false" inputmode="search" enterkeyhint="search" placeholder="find something for family movie night">
         <button id="go" aria-label="Search">→</button>
       </form>
       <div class="search-hint">
@@ -1572,10 +1604,6 @@ body:not(.has-results) .result-theme-switch{display:none !important}
         <div class="corpus-load-bar"><span id="corpusLoadBar"></span></div>
       </div>
       <div class="error-banner" id="errorBanner"></div>
-      <div class="query-traces" id="queryTraces" aria-hidden="true">
-        <div class="trace-label">query traces</div>
-        <div class="trace-line"><span class="trace-prefix">›</span><span id="traceText"></span><span class="trace-cursor"></span></div>
-      </div>
       <div class="resolve-state" id="resolveState" aria-hidden="true">
         <div class="resolve-kicker">resolving</div>
         <div class="resolve-status" id="resolveStatus">locking archive</div>
@@ -1762,6 +1790,30 @@ function embedUrlFor(playable){
     return `https://www.youtube-nocookie.com/embed/${encodeURIComponent(playable.id)}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
   }
   return playable.url || "";
+}
+
+function sizePlayerToCover() {
+  if (!inlinePlayer || !mediaFrame || inlinePlayer.hidden) return;
+
+  const rect = inlinePlayer.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+
+  const mediaRatio = 16 / 9;
+  const panelRatio = rect.width / rect.height;
+
+  let width;
+  let height;
+
+  if (panelRatio > mediaRatio) {
+    width = rect.width;
+    height = width / mediaRatio;
+  } else {
+    height = rect.height;
+    width = height * mediaRatio;
+  }
+
+  mediaFrame.style.width = `${Math.ceil(width)}px`;
+  mediaFrame.style.height = `${Math.ceil(height)}px`;
 }
 
 const ANGEL_CORPUS = [
@@ -2370,7 +2422,6 @@ const searchForm = $('#searchForm');
 const goBtn = $('#go');
 const corpusLoadText = $('#corpusLoadText');
 const errorBanner = $('#errorBanner');
-const traceText = $('#traceText');
 const resolveStatus = $('#resolveStatus');
 const featureImg = $('#featureImg');
 const titleEl = $('#title');
@@ -2596,43 +2647,78 @@ async function arbiterRank(query) {
     .slice(0, RETURN_COUNT);
 }
 
-/* ─── Query Traces (typing animation) ─── */
-const TRACE_PHRASES = [
-  'a family torn apart by a hidden betrayal',
-  'movie to make me feel better',
-  'something true that happened during the war',
-  'a kid who refuses to give up',
-  'animated adventure for family movie night',
-  'grief that slowly turns into hope'
+/* ─── Animated search examples ─── */
+const SEARCH_EXAMPLES = [
+  'find something for family movie night',
+  'a true story about courage under pressure',
+  'music that feels hopeful after a hard season',
+  'clean comedy about marriage and family',
+  'a gift for someone who loves DAVID',
+  'something about freedom, sacrifice, and hope'
 ];
-let idleTraceTimer = null;
-let idleTraceIdx = 0;
 
-function typeIdleTrace(text, pos = 0) {
-  if (document.body.classList.contains('searching') || document.body.classList.contains('has-results')) return;
-  traceText.textContent = text.slice(0, pos);
-  if (pos <= text.length) {
-    idleTraceTimer = setTimeout(() => typeIdleTrace(text, pos + 1), pos === 0 ? 240 : 24 + Math.random() * 16);
-  } else {
-    idleTraceTimer = setTimeout(() => eraseIdleTrace(text, text.length), 2400);
+let placeholderTimer = null;
+let placeholderIndex = 0;
+let placeholderPosition = 0;
+let placeholderDeleting = false;
+
+function animateSearchPlaceholder() {
+  clearTimeout(placeholderTimer);
+
+  if (
+    document.body.classList.contains('searching') ||
+    document.body.classList.contains('has-results') ||
+    document.activeElement === queryInput ||
+    queryInput.value
+  ) {
+    return;
   }
-}
-function eraseIdleTrace(text, pos) {
-  if (document.body.classList.contains('searching') || document.body.classList.contains('has-results')) return;
-  traceText.textContent = text.slice(0, pos);
-  if (pos > 0) {
-    idleTraceTimer = setTimeout(() => eraseIdleTrace(text, pos - 1), 13 + Math.random() * 10);
-  } else {
-    idleTraceIdx = (idleTraceIdx + 1) % TRACE_PHRASES.length;
-    idleTraceTimer = setTimeout(() => typeIdleTrace(TRACE_PHRASES[idleTraceIdx]), 420);
+
+  const phrase = SEARCH_EXAMPLES[placeholderIndex];
+
+  if (!placeholderDeleting) {
+    placeholderPosition += 1;
+    queryInput.placeholder = phrase.slice(0, placeholderPosition);
+
+    if (placeholderPosition >= phrase.length) {
+      placeholderDeleting = true;
+      placeholderTimer = setTimeout(animateSearchPlaceholder, 2200);
+      return;
+    }
+
+    placeholderTimer = setTimeout(animateSearchPlaceholder, 34 + Math.random() * 24);
+    return;
   }
+
+  placeholderPosition -= 1;
+  queryInput.placeholder = phrase.slice(0, Math.max(0, placeholderPosition));
+
+  if (placeholderPosition <= 0) {
+    placeholderDeleting = false;
+    placeholderIndex = (placeholderIndex + 1) % SEARCH_EXAMPLES.length;
+    placeholderTimer = setTimeout(animateSearchPlaceholder, 420);
+    return;
+  }
+
+  placeholderTimer = setTimeout(animateSearchPlaceholder, 18 + Math.random() * 14);
 }
+
 function startIdleTraces() {
-  clearTimeout(idleTraceTimer);
-  if (document.body.classList.contains('has-results')) return;
-  typeIdleTrace(TRACE_PHRASES[idleTraceIdx]);
+  clearTimeout(placeholderTimer);
+  if (
+    document.body.classList.contains('has-results') ||
+    document.body.classList.contains('searching') ||
+    document.activeElement === queryInput ||
+    queryInput.value
+  ) {
+    return;
+  }
+  animateSearchPlaceholder();
 }
-function stopIdleTraces() { clearTimeout(idleTraceTimer); }
+
+function stopIdleTraces() {
+  clearTimeout(placeholderTimer);
+}
 
 /* ─── Resolve animation ─── */
 const RESOLVE_STATES = ['locking archive', 'reading candidate field', 'measuring coherence', 'isolating strongest signal', 'preparing reveal'];
@@ -2660,7 +2746,6 @@ async function executeSearch(query) {
 
   currentQuery = q;
   stopIdleTraces();
-  traceText.textContent = `${q}  /  resolving`;
   document.body.classList.add('searching');
   if (IS_MOBILE) document.body.classList.add('mobile-searching');
   startResolveAnimation();
@@ -2769,6 +2854,8 @@ function selectResult(idx) {
 
   // Reset playback whenever a different result is selected.
   mediaFrame.src = '';
+  mediaFrame.style.width = '';
+  mediaFrame.style.height = '';
   inlinePlayer.hidden = true;
   featureImg.hidden = false;
   featureEl.classList.remove('is-playing', 'audio-playing');
@@ -2797,6 +2884,8 @@ function selectResult(idx) {
     heroPlayBtn.style.display = 'none';
     featureEl.classList.add('is-playing');
     featureEl.classList.toggle('audio-playing', audioLike);
+    requestAnimationFrame(sizePlayerToCover);
+    setTimeout(sizePlayerToCover, 120);
     playMediaBtn.textContent = 'playing';
   };
 
@@ -2833,7 +2922,6 @@ function resetToHome() {
   currentQuery = '';
   queryInput.value = '';
   resultQuery.value = '';
-  traceText.textContent = '';
   window.scrollTo(0, 0);
   queryInput.focus({ preventScroll: true });
   startIdleTraces();
@@ -2895,9 +2983,22 @@ $$('[data-action="shuffle-corpus"]').forEach(btn => {
   });
 });
 
-queryInput.addEventListener('focus', stopIdleTraces);
+queryInput.addEventListener('focus', () => {
+  stopIdleTraces();
+  if (!queryInput.value) queryInput.placeholder = 'search the Angel catalog';
+});
+
+queryInput.addEventListener('input', () => {
+  if (queryInput.value) stopIdleTraces();
+});
+
 queryInput.addEventListener('blur', () => setTimeout(() => {
-  if (!queryInput.value) startIdleTraces();
+  if (!queryInput.value) {
+    placeholderPosition = 0;
+    placeholderDeleting = false;
+    queryInput.placeholder = '';
+    startIdleTraces();
+  }
 }, 250));
 
 /* ─── Desktop wall drift animation ─── */
@@ -2995,11 +3096,18 @@ if ('ResizeObserver' in window) {
   startIdleTraces();
   const h = decodeURIComponent(location.hash.replace(/^#/, ''));
   if (h) { queryInput.value = h; executeSearch(h); }
-  else queryInput.focus();
+  else {
+    queryInput.blur();
+    queryInput.placeholder = '';
+    startIdleTraces();
+  }
 })();
 
 let resizeTimer;
 window.addEventListener('resize', () => {
+  if (featureEl.classList.contains('is-playing')) {
+    requestAnimationFrame(sizePlayerToCover);
+  }
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => { initWallDrift(); fitBrandWord(); }, 300);
 });
