@@ -27,7 +27,7 @@
 <meta name="twitter:image" content="https://www.getresonance.org/resonance-og-image.png">
 
 <script id="resonance-site-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"RESONANCE","url":"https://www.getresonance.org/","description":"Search the Angel Studios and Hidden Gem catalogues by feeling, conflict, character, situation, or spiritual tension. Ranked by resonance.","about":[{"@type":"Thing","name":"Angel Studios catalogue"},{"@type":"Thing","name":"Hidden Gem catalogue"}],"potentialAction":{"@type":"SearchAction","target":"https://www.getresonance.org/#{search_term_string}","query-input":"required name=search_term_string"}}</script>
-<meta name="resonance-build" content="resonance-homepage-artwork-fit-20260721T210924Z">
+<meta name="resonance-build" content="resonance-home-cinematic-20260721T211743Z">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -776,72 +776,28 @@ body.searching .send {
 }
 </style>
 
-<style id="resonance-homepage-artwork-fit-v1">
+
+<style id="resonance-cinematic-landing-v1">
+/* Landing only: use cinematic stills / backdrops, not noisy poster-sheet presentation. */
 #landing .canvas {
-  background:
-    radial-gradient(
-      circle at 50% 42%,
-      rgba(255,255,255,.055),
-      rgba(0,0,0,0) 54%
-    ),
-    #050505 !important;
-  overflow: hidden !important;
+  background: #070707 !important;
 }
 
+#landing .canvas img,
 #landing #coverA,
-#landing #coverB,
-#coverA,
-#coverB {
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
-  margin: auto !important;
-
-  object-fit: contain !important;
+#landing #coverB {
+  object-fit: cover !important;
   object-position: center center !important;
-
+  animation: none !important;
   transform: none !important;
   scale: 1 !important;
-  animation: none !important;
-
-  transition:
-    opacity 900ms cubic-bezier(.22,.61,.36,1)
-    !important;
+  filter: saturate(1.03) contrast(1.02) brightness(.97) !important;
 }
 
 #landing .canvas::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  pointer-events: none;
   background:
-    linear-gradient(
-      180deg,
-      rgba(0,0,0,.14) 0%,
-      rgba(0,0,0,.02) 42%,
-      rgba(0,0,0,.52) 100%
-    ),
-    linear-gradient(
-      90deg,
-      rgba(0,0,0,.18) 0%,
-      rgba(0,0,0,0) 34%,
-      rgba(0,0,0,.08) 100%
-    );
-}
-
-@media (max-width: 700px) {
-  #landing #coverA,
-  #landing #coverB,
-  #coverA,
-  #coverB {
-    object-fit: contain !important;
-    object-position: center center !important;
-    transform: none !important;
-  }
+    linear-gradient(180deg, rgba(10,10,9,.18) 0%, rgba(10,10,9,0) 26%, rgba(10,10,9,.08) 54%, rgba(10,10,9,.92) 100%),
+    linear-gradient(90deg, rgba(10,10,9,.78) 0%, rgba(10,10,9,.16) 30%, rgba(10,10,9,.02) 60%, rgba(10,10,9,.24) 100%) !important;
 }
 </style>
 
@@ -1087,6 +1043,23 @@ function itemPoster(item) {
   );
 }
 
+function landingArt(item) {
+  return (
+    item?.backdrop ||
+    item?.background ||
+    item?.hero ||
+    item?.still ||
+    item?.imageUrl ||
+    item?.card ||
+    ""
+  );
+}
+
+function hasLandingArt(item) {
+  return Boolean(landingArt(item));
+}
+
+
 function itemGenre(item) {
   if (Array.isArray(item?.genres)) return item.genres.join(", ");
   if (Array.isArray(item?.categories)) return item.categories.join(", ");
@@ -1252,7 +1225,7 @@ function setImagePair(firstSelector, secondSelector, item, flip) {
 
   const incoming = $(flip ? secondSelector : firstSelector);
   const outgoing = $(flip ? firstSelector : secondSelector);
-  const source = itemArt(item) || itemPoster(item);
+  const source = landingArt(item) || itemArt(item) || itemPoster(item);
 
   const preload = new Image();
   preload.onload = () => {
@@ -1280,9 +1253,24 @@ function rotateCover() {
 
 function startCoverRotation() {
   coverList = uniqueCatalogue(
-    shuffle(CORPUS.filter(item => itemArt(item) || itemPoster(item))),
+    shuffle(CORPUS.filter(item => hasLandingArt(item))),
     80,
   );
+
+  if (!coverList.length) {
+    coverList = uniqueCatalogue(
+      shuffle(
+        CORPUS.filter(item =>
+          (item?.backdrop || item?.background || item?.imageUrl || item?.card)
+        ),
+      ),
+      80,
+    );
+  }
+
+  if (!coverList.length) return;
+
+  coverIndex = 0;
   rotateCover();
   clearInterval(coverTimer);
   coverTimer = setInterval(rotateCover, 7200);
