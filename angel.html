@@ -429,7 +429,7 @@ body.playing #projector{display:block}
 }
 
 </style>
-<meta name="resonance-build" content="resonance-live-lightcast-20260721T205124Z">
+<meta name="resonance-build" content="resonance-homepage-artwork-fit-20260721T210924Z">
 
 <style id="resonance-deck-viewport-lock-v1">
 /* Keep the horizontal result deck from changing the reveal viewport width. */
@@ -774,6 +774,76 @@ body.searching .send {
 <link rel="icon" href="https://www.getresonance.org/resonance-favicon.png" type="image/png">
 <link rel="apple-touch-icon" href="https://www.getresonance.org/resonance-favicon.png">
 <script id="resonance-site-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"RESONANCE","url":"https://www.getresonance.org/","description":"Search the Angel Studios and Hidden Gem catalogues by feeling, conflict, character, situation, or spiritual tension. Ranked by resonance.","about":[{"@type":"Thing","name":"Angel Studios catalogue"},{"@type":"Thing","name":"Hidden Gem catalogue"}],"potentialAction":{"@type":"SearchAction","target":"https://www.getresonance.org/#{search_term_string}","query-input":"required name=search_term_string"}}</script>
+
+<style id="resonance-homepage-artwork-fit-v1">
+#landing .canvas {
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(255,255,255,.055),
+      rgba(0,0,0,0) 54%
+    ),
+    #050505 !important;
+  overflow: hidden !important;
+}
+
+#landing #coverA,
+#landing #coverB,
+#coverA,
+#coverB {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  margin: auto !important;
+
+  object-fit: contain !important;
+  object-position: center center !important;
+
+  transform: none !important;
+  scale: 1 !important;
+  animation: none !important;
+
+  transition:
+    opacity 900ms cubic-bezier(.22,.61,.36,1)
+    !important;
+}
+
+#landing .canvas::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0,0,0,.14) 0%,
+      rgba(0,0,0,.02) 42%,
+      rgba(0,0,0,.52) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,.18) 0%,
+      rgba(0,0,0,0) 34%,
+      rgba(0,0,0,.08) 100%
+    );
+}
+
+@media (max-width: 700px) {
+  #landing #coverA,
+  #landing #coverB,
+  #coverA,
+  #coverB {
+    object-fit: contain !important;
+    object-position: center center !important;
+    transform: none !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <!-- resonance-unified-catalogue-v2 -->
