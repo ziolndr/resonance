@@ -4,24 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0A0A09">
-<title>RESONANCE — Hidden Gem + Angel</title>
-<meta name="description" content="Search the complete Hidden Gem and Angel catalogue by resonance.">
-<link rel="icon" href="./summon-favicon.svg" type="image/svg+xml">
-<link rel="icon" href="./summon-favicon.ico" sizes="any">
-<link rel="icon" href="./summon-favicon-32.png" sizes="32x32" type="image/png">
-<link rel="icon" href="./summon-favicon-192.png" sizes="192x192" type="image/png">
-<link rel="apple-touch-icon" href="./summon-apple-touch-icon.png">
+<title>RESONANCE — Search Angel Studios &amp; Hidden Gem by Meaning</title>
+<meta name="description" content="Search the Angel Studios and Hidden Gem catalogues by feeling, conflict, character, situation, or spiritual tension. Ranked by resonance.">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="SUMMON">
-<meta property="og:title" content="SUMMON — summon anything by resonance">
-<meta property="og:description" content="A universal intent engine for entertainment. Films, series, podcasts, shorts, games, and live — ranked by resonance.">
-<meta property="og:image" content="./summon-og.png">
+<meta property="og:description" content="Search the Angel Studios and Hidden Gem catalogues by feeling, conflict, character, situation, or spiritual tension. Ranked by resonance.">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="SUMMON — summon anything by resonance">
-<meta name="twitter:description" content="A universal intent engine for entertainment, ranked by resonance.">
-<meta name="twitter:image" content="./summon-og.png">
+<meta name="twitter:description" content="Search the Angel Studios and Hidden Gem catalogues by feeling, conflict, character, situation, or spiritual tension. Ranked by resonance.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -439,7 +429,7 @@ body.playing #projector{display:block}
 }
 
 </style>
-<meta name="resonance-build" content="resonance-deck-lock-20260721T195644Z">
+<meta name="resonance-build" content="resonance-meta-20260721T201110Z">
 
 <style id="resonance-deck-viewport-lock-v1">
 /* Keep the horizontal result deck from changing the reveal viewport width. */
@@ -511,6 +501,279 @@ body {
 }
 </style>
 
+
+<style id="resonance-mobile-instant-reveal-v1">
+#leader {
+  display: none !important;
+}
+
+body.searching .send {
+  pointer-events: none;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --pad: 14px;
+  }
+
+  html,
+  body,
+  .plate,
+  #landing,
+  #reveal {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden !important;
+  }
+
+  #landing .head {
+    left: var(--pad) !important;
+    right: var(--pad) !important;
+    top: auto !important;
+    bottom: calc(18px + env(safe-area-inset-bottom)) !important;
+    width: auto !important;
+    height: auto !important;
+    display: grid !important;
+    grid-template-rows: auto 92px auto;
+    align-content: end;
+    gap: 14px;
+  }
+
+  #landing .title {
+    position: static !important;
+    margin: 0;
+    max-width: 10ch;
+    font-size: clamp(42px, 13vw, 68px) !important;
+    line-height: .88;
+  }
+
+  #searchForm {
+    position: static !important;
+    height: 92px;
+    min-height: 92px;
+  }
+
+  #landing .line {
+    height: 92px;
+    min-height: 92px;
+    align-items: flex-end;
+    gap: 10px;
+    padding-bottom: 9px;
+  }
+
+  #query {
+    height: 3.3em !important;
+    min-height: 3.3em !important;
+    max-height: 3.3em !important;
+    font-size: clamp(21px, 6.4vw, 29px) !important;
+    line-height: 1.1;
+    overflow: hidden !important;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: normal;
+  }
+
+  #query::placeholder {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  #landing .formats {
+    position: static !important;
+    margin: 0;
+    line-height: 1.45;
+  }
+
+  #landing .icon,
+  #landing .send {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+  }
+
+  #revealFrame {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0 !important;
+    padding:
+      max(12px, env(safe-area-inset-top))
+      var(--pad)
+      calc(18px + env(safe-area-inset-bottom)) !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  #revealFrame .bar {
+    position: sticky !important;
+    top: 0;
+    z-index: 40;
+    flex: 0 0 auto;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding: 4px 0 14px;
+    background: linear-gradient(
+      180deg,
+      rgba(10,10,9,.94) 0%,
+      rgba(10,10,9,.76) 72%,
+      rgba(10,10,9,0) 100%
+    );
+    backdrop-filter: blur(10px);
+  }
+
+  #revealFrame .summon-bar,
+  #revealFrame .summon-bar form,
+  #revealQuery {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  #revealQuery {
+    font-size: 16px !important;
+    line-height: 1.25;
+    max-height: 3.75em !important;
+  }
+
+  #revealFrame .stage {
+    display: block !important;
+    flex: 0 0 auto;
+    width: 100% !important;
+    min-width: 0 !important;
+    padding-top: clamp(150px, 29vh, 260px);
+  }
+
+  #revealFrame .info {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+  }
+
+  #title {
+    max-width: 100%;
+    font-size: clamp(38px, 12vw, 58px) !important;
+    line-height: .9;
+  }
+
+  .meta {
+    margin-top: 13px;
+  }
+
+  .synopsis {
+    max-width: 36ch !important;
+    font-size: 17px !important;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 6;
+    overflow: hidden;
+    max-height: 8.4em;
+  }
+
+  .actions {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px !important;
+    margin-top: 18px !important;
+  }
+
+  .actions #play {
+    grid-column: 1 / -1;
+  }
+
+  .actions button {
+    min-width: 0;
+    min-height: 46px;
+    width: 100%;
+    padding-inline: 10px !important;
+  }
+
+  .deck {
+    flex: 0 0 auto;
+    width: 100% !important;
+    min-width: 0 !important;
+    margin-top: 24px !important;
+    overflow: hidden !important;
+  }
+
+  .deck-head {
+    gap: 12px;
+  }
+
+  .deck-strip,
+  #deck {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding-right: 16px !important;
+    scroll-padding-inline: 0 16px;
+    overscroll-behavior-x: contain;
+    touch-action: pan-x;
+  }
+
+  .tile {
+    width: 82px !important;
+    scroll-snap-align: start;
+  }
+
+  #revealCanvas::after {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(8,8,7,.58) 0%,
+        rgba(8,8,7,.04) 25%,
+        rgba(8,8,7,.36) 55%,
+        rgba(8,8,7,.98) 100%
+      ),
+      linear-gradient(
+        90deg,
+        rgba(8,8,7,.70) 0%,
+        rgba(8,8,7,.08) 64%,
+        rgba(8,8,7,.28) 100%
+      ) !important;
+  }
+}
+
+@media (max-width: 380px) {
+  #landing .head {
+    grid-template-rows: auto 88px auto;
+    gap: 12px;
+  }
+
+  #searchForm,
+  #landing .line {
+    height: 88px;
+    min-height: 88px;
+  }
+
+  #query {
+    font-size: 20px !important;
+  }
+
+  .actions {
+    grid-template-columns: 1fr;
+  }
+
+  .actions #play {
+    grid-column: auto;
+  }
+}
+</style>
+
+<meta name="keywords" content="Angel Studios, Hidden Gem, films, documentaries, faith, family, resonance search">
+<meta name="application-name" content="RESONANCE">
+<meta name="apple-mobile-web-app-title" content="RESONANCE">
+<meta name="twitter:title" content="RESONANCE — Search Angel Studios &amp; Hidden Gem by Meaning">
+<meta name="twitter:image" content="https://www.getresonance.org/resonance-og-image.png">
+<meta property="og:site_name" content="RESONANCE">
+<meta property="og:title" content="RESONANCE — Search Angel Studios &amp; Hidden Gem by Meaning">
+<meta property="og:url" content="https://www.getresonance.org/">
+<meta property="og:image" content="https://www.getresonance.org/resonance-og-image.png">
+<meta property="og:image:alt" content="RESONANCE — search the Angel Studios and Hidden Gem catalogues by meaning">
+<link rel="canonical" href="https://www.getresonance.org/">
+<link rel="icon" href="https://www.getresonance.org/resonance-favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="https://www.getresonance.org/resonance-favicon.png">
+<script id="resonance-site-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"RESONANCE","url":"https://www.getresonance.org/","description":"Search the Angel Studios and Hidden Gem catalogues by feeling, conflict, character, situation, or spiritual tension. Ranked by resonance.","about":[{"@type":"Thing","name":"Angel Studios catalogue"},{"@type":"Thing","name":"Hidden Gem catalogue"}],"potentialAction":{"@type":"SearchAction","target":"https://www.getresonance.org/#{search_term_string}","query-input":"required name=search_term_string"}}</script>
 </head>
 <body>
 <!-- resonance-unified-catalogue-v2 -->
@@ -1041,16 +1304,7 @@ async function search(rawQuery) {
   currentQuery = query;
   $("#query").value = query;
   $("#revealQuery").value = query;
-  $("#workQuery").textContent = query;
-  $("#stateText").textContent = `measuring ${CORPUS.length} titles`;
-
-  const ambient = coverList[
-    Math.floor(Math.random() * Math.max(1, coverList.length))
-  ];
-  setImagePair("#ambA", "#ambB", ambient, false);
-
-  show("leader");
-  startElapsed();
+  document.body.classList.add("searching");
 
   try {
     const queryVector = await embedQuery(query);
@@ -1062,9 +1316,27 @@ async function search(rawQuery) {
       throw new Error("No catalogue results were returned.");
     }
 
-    stopElapsed();
+    const first = results[0];
+    const hero = itemArt(first) || itemPoster(first);
+
+    if (hero) {
+      const preload = new Image();
+      preload.src = hero;
+
+      try {
+        if (typeof preload.decode === "function") {
+          await Promise.race([
+            preload.decode(),
+            new Promise(resolve => setTimeout(resolve, 500)),
+          ]);
+        }
+      } catch {
+      }
+    }
+
     render({centerSelected: true});
     show("reveal");
+
     history.replaceState(
       null,
       "",
@@ -1072,9 +1344,9 @@ async function search(rawQuery) {
     );
   } catch (error) {
     console.error(error);
-    stopElapsed();
-    $("#stateText").textContent = "search unavailable";
-    setTimeout(() => show("landing"), 900);
+    toast("search unavailable");
+  } finally {
+    document.body.classList.remove("searching");
   }
 }
 
@@ -1329,11 +1601,22 @@ function autoResize(element) {
   if (!element) return;
   if (element.offsetParent === null && element.offsetHeight === 0) return;
 
+  if (
+    element.id === "query" &&
+    window.matchMedia("(max-width: 700px)").matches
+  ) {
+    element.style.height = "";
+    return;
+  }
+
   element.style.height = "auto";
+
   const maximum = parseFloat(
     getComputedStyle(element).maxHeight,
   ) || Infinity;
-  element.style.height = `${Math.min(maximum, element.scrollHeight)}px`;
+
+  element.style.height =
+    `${Math.min(maximum, element.scrollHeight)}px`;
 }
 
 function bindInput(element, callback) {
