@@ -429,7 +429,7 @@ body.playing #projector{display:block}
 }
 
 </style>
-<meta name="resonance-build" content="resonance-home-cinematic-20260721T211743Z">
+<meta name="resonance-build" content="resonance-landscape-only-20260721T212947Z">
 
 <style id="resonance-deck-viewport-lock-v1">
 /* Keep the horizontal result deck from changing the reveal viewport width. */
@@ -776,27 +776,62 @@ body.searching .send {
 <script id="resonance-site-schema" type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"RESONANCE","url":"https://www.getresonance.org/","description":"Search the Angel Studios and Hidden Gem catalogues by feeling, conflict, character, situation, or spiritual tension. Ranked by resonance.","about":[{"@type":"Thing","name":"Angel Studios catalogue"},{"@type":"Thing","name":"Hidden Gem catalogue"}],"potentialAction":{"@type":"SearchAction","target":"https://www.getresonance.org/#{search_term_string}","query-input":"required name=search_term_string"}}</script>
 
 
-<style id="resonance-cinematic-landing-v1">
-/* Landing only: use cinematic stills / backdrops, not noisy poster-sheet presentation. */
+
+<style id="resonance-landscape-only-landing-v1">
 #landing .canvas {
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100svh !important;
+  overflow: hidden !important;
   background: #070707 !important;
 }
 
-#landing .canvas img,
 #landing #coverA,
-#landing #coverB {
+#landing #coverB,
+#landing .canvas > img {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100vw !important;
+  height: 100svh !important;
+  max-width: none !important;
+  max-height: none !important;
   object-fit: cover !important;
   object-position: center center !important;
-  animation: none !important;
   transform: none !important;
   scale: 1 !important;
-  filter: saturate(1.03) contrast(1.02) brightness(.97) !important;
+  animation: none !important;
+  filter: saturate(1.03) contrast(1.03) brightness(.96) !important;
+  transition: opacity 900ms cubic-bezier(.22,.61,.36,1) !important;
 }
 
 #landing .canvas::after {
   background:
-    linear-gradient(180deg, rgba(10,10,9,.18) 0%, rgba(10,10,9,0) 26%, rgba(10,10,9,.08) 54%, rgba(10,10,9,.92) 100%),
-    linear-gradient(90deg, rgba(10,10,9,.78) 0%, rgba(10,10,9,.16) 30%, rgba(10,10,9,.02) 60%, rgba(10,10,9,.24) 100%) !important;
+    linear-gradient(
+      180deg,
+      rgba(10,10,9,.17) 0%,
+      rgba(10,10,9,0) 27%,
+      rgba(10,10,9,.07) 56%,
+      rgba(10,10,9,.92) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(10,10,9,.78) 0%,
+      rgba(10,10,9,.18) 31%,
+      rgba(10,10,9,.02) 62%,
+      rgba(10,10,9,.20) 100%
+    )
+    !important;
+}
+
+@media (max-width: 700px) {
+  #landing #coverA,
+  #landing #coverB,
+  #landing .canvas > img {
+    width: 100vw !important;
+    height: 100svh !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+  }
 }
 </style>
 
@@ -1042,21 +1077,9 @@ function itemPoster(item) {
   );
 }
 
-function landingArt(item) {
-  return (
-    item?.backdrop ||
-    item?.background ||
-    item?.hero ||
-    item?.still ||
-    item?.imageUrl ||
-    item?.card ||
-    ""
-  );
-}
 
-function hasLandingArt(item) {
-  return Boolean(landingArt(item));
-}
+
+
 
 
 function itemGenre(item) {
@@ -1219,58 +1242,218 @@ function uniqueCatalogue(items, limit = Infinity) {
   return output;
 }
 
-function setImagePair(firstSelector, secondSelector, item, flip) {
+const LANDING_MIN_ASPECT = 1.48;
+const landingRejectedItems = new Set();
+let landingImageRequest = 0;
+
+function normalizedImageUrl(value) {
+  return String(value || "")
+    .trim()
+    .replace(/&amp;/g, "&");
+}
+
+function sameLandingImage(first, second) {
+  const a = normalizedImageUrl(first).split("?")[0];
+  const b = normalizedImageUrl(second).split("?")[0];
+  return Boolean(a && b && a === b);
+}
+
+function youtubeIdForLanding(item) {
+  const values = [
+    item?.youtubeId,
+    item?.youtube,
+    item?.trailer,
+    item?.trailerUrl,
+    item?.videoId,
+  ];
+
+  const playable = (
+    item?.playable ||
+    (typeof PLAYABLE_MEDIA !== "undefined"
+      ? PLAYABLE_MEDIA[itemId(item)] || PLAYABLE_MEDIA[item?.slug]
+      : null)
+  );
+
+  if (playable?.type === "youtube" && playable?.id) {
+    values.unshift(playable.id);
+  }
+
+  if (playable?.youtubeId) {
+    values.unshift(playable.youtubeId);
+  }
+
+  if (playable?.url) {
+    values.unshift(playable.url);
+  }
+
+  for (const value of values) {
+    const raw = String(value || "").trim();
+
+    if (/^[A-Za-z0-9_-]{8,16}$/.test(raw) && !/^\d+$/.test(raw)) {
+      return raw;
+    }
+
+    const match = raw.match(
+      /(?:youtube\.com\/(?:watch\?.*?v=|embed\/)|youtu\.be\/|i\.ytimg\.com\/vi\/)([A-Za-z0-9_-]{8,16})/i,
+    );
+
+    if (match) return match[1];
+  }
+
+  return "";
+}
+
+function landingImageCandidates(item) {
+  const poster = normalizedImageUrl(
+    item?.poster ||
+    item?.card ||
+    "",
+  );
+
+  const candidates = [
+    item?.hero,
+    item?.heroImage,
+    item?.hero_image,
+    item?.landscape,
+    item?.landscapeImage,
+    item?.landscape_image,
+    item?.banner,
+    item?.bannerImage,
+    item?.banner_image,
+    item?.wide,
+    item?.wideImage,
+    item?.wide_image,
+    item?.still,
+    item?.stillImage,
+    item?.still_image,
+    item?.background,
+    item?.backgroundImage,
+    item?.background_image,
+    item?.backdrop,
+    item?.imageUrl,
+  ]
+    .map(normalizedImageUrl)
+    .filter(Boolean)
+    .filter(url => !sameLandingImage(url, poster));
+
+  const youtubeId = youtubeIdForLanding(item);
+
+  if (youtubeId) {
+    candidates.unshift(
+      `https://i.ytimg.com/vi/${youtubeId}/maxresdefault.jpg`,
+    );
+  }
+
+  return [...new Set(candidates)];
+}
+
+function hasLandingImageCandidate(item) {
+  return landingImageCandidates(item).length > 0;
+}
+
+function verifyLandscapeImage(url) {
+  return new Promise(resolve => {
+    const image = new Image();
+
+    image.onload = () => {
+      const width = Number(image.naturalWidth || 0);
+      const height = Number(image.naturalHeight || 0);
+      const aspect = height ? width / height : 0;
+
+      resolve({
+        ok:
+          width >= 900 &&
+          height >= 450 &&
+          aspect >= LANDING_MIN_ASPECT,
+        url,
+      });
+    };
+
+    image.onerror = () => {
+      resolve({
+        ok: false,
+        url,
+      });
+    };
+
+    image.referrerPolicy = "no-referrer";
+    image.src = url;
+  });
+}
+
+async function resolveLandscapeLandingImage(item) {
+  for (const url of landingImageCandidates(item)) {
+    const result = await verifyLandscapeImage(url);
+    if (result.ok) return result.url;
+  }
+
+  return "";
+}
+
+async function setImagePair(firstSelector, secondSelector, item, flip) {
   if (!item) return;
+
+  const request = ++landingImageRequest;
+  const source = await resolveLandscapeLandingImage(item);
+
+  if (request !== landingImageRequest) return;
+
+  if (!source) {
+    landingRejectedItems.add(itemId(item));
+
+    window.setTimeout(() => {
+      rotateCover();
+    }, 0);
+
+    return;
+  }
 
   const incoming = $(flip ? secondSelector : firstSelector);
   const outgoing = $(flip ? firstSelector : secondSelector);
-  const source = landingArt(item) || itemArt(item) || itemPoster(item);
 
-  const preload = new Image();
-  preload.onload = () => {
-    incoming.src = source;
-    incoming.alt = item?.title || "";
-    incoming.classList.add("on");
-    outgoing.classList.remove("on");
-  };
-  preload.onerror = () => {
-    if (coverList.length) {
-      coverIndex = (coverIndex + 1) % coverList.length;
-      rotateCover();
-    }
-  };
-  preload.src = source;
+  incoming.src = source;
+  incoming.alt = item?.title || "";
+  incoming.classList.add("on");
+  outgoing.classList.remove("on");
 }
 
 function rotateCover() {
   if (!coverList.length) return;
-  const item = coverList[coverIndex % coverList.length];
-  coverIndex += 1;
-  setImagePair("#coverA", "#coverB", item, coverFlip);
-  coverFlip = !coverFlip;
+
+  let checked = 0;
+
+  while (checked < coverList.length) {
+    const item = coverList[coverIndex % coverList.length];
+    coverIndex += 1;
+    checked += 1;
+
+    if (landingRejectedItems.has(itemId(item))) {
+      continue;
+    }
+
+    setImagePair("#coverA", "#coverB", item, coverFlip);
+    coverFlip = !coverFlip;
+    return;
+  }
 }
 
 function startCoverRotation() {
-  coverList = uniqueCatalogue(
-    shuffle(CORPUS.filter(item => hasLandingArt(item))),
-    80,
-  );
+  landingRejectedItems.clear();
 
-  if (!coverList.length) {
-    coverList = uniqueCatalogue(
-      shuffle(
-        CORPUS.filter(item =>
-          (item?.backdrop || item?.background || item?.imageUrl || item?.card)
-        ),
+  coverList = uniqueCatalogue(
+    shuffle(
+      CORPUS.filter(item =>
+        hasLandingImageCandidate(item)
       ),
-      80,
-    );
-  }
+    ),
+    120,
+  );
 
   if (!coverList.length) return;
 
   coverIndex = 0;
   rotateCover();
+
   clearInterval(coverTimer);
   coverTimer = setInterval(rotateCover, 7200);
 }
