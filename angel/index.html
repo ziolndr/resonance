@@ -439,7 +439,78 @@ body.playing #projector{display:block}
 }
 
 </style>
-<meta name="resonance-build" content="resonance-production-20260721T194422Z">
+<meta name="resonance-build" content="resonance-deck-lock-20260721T195644Z">
+
+<style id="resonance-deck-viewport-lock-v1">
+/* Keep the horizontal result deck from changing the reveal viewport width. */
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+.plate,
+#reveal,
+#revealFrame,
+.bar,
+.stage,
+.info,
+.deck,
+.deck-head {
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+#revealFrame,
+.bar,
+.stage,
+.deck {
+  width: 100% !important;
+}
+
+#revealFrame {
+  overflow-x: hidden !important;
+}
+
+.deck {
+  position: relative;
+  overflow: hidden !important;
+  contain: inline-size;
+}
+
+.deck-strip,
+#deck {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  overscroll-behavior-x: contain !important;
+  overscroll-behavior-y: none !important;
+  touch-action: pan-x !important;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.deck-strip::-webkit-scrollbar,
+#deck::-webkit-scrollbar {
+  display: none;
+}
+
+.deck-strip > *,
+#deck > * {
+  flex: 0 0 auto;
+}
+
+.bar {
+  position: relative;
+  z-index: 20;
+  transform: translateZ(0);
+}
+</style>
+
 </head>
 <body>
 <!-- resonance-unified-catalogue-v2 -->
@@ -1156,9 +1227,33 @@ function renderDeck(options = {}) {
 
 function loadNextDeckPage() {
   if (deckLoading || renderedCount >= results.length) return;
+
   deckLoading = true;
-  renderedCount = Math.min(results.length, renderedCount + PAGE_SIZE);
-  renderDeck({preserveScroll: true, centerSelected: false});
+
+  const start = renderedCount;
+  renderedCount = Math.min(
+    results.length,
+    renderedCount + PAGE_SIZE,
+  );
+
+  const deck = $("#deck");
+  const additions = results
+    .slice(start, renderedCount)
+    .map((item, offset) => tileMarkup(item, start + offset))
+    .join("");
+
+  if (additions) {
+    deck.insertAdjacentHTML("beforeend", additions);
+    bindDeckTiles();
+  }
+
+  $("#total").textContent = String(renderedCount).padStart(2, "0");
+  $("#deckCount").textContent =
+    `${renderedCount} of ${results.length} ranked titles`;
+
+  requestAnimationFrame(() => {
+    deckLoading = false;
+  });
 }
 
 function step(direction, options = {}) {
