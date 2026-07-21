@@ -8,6 +8,7 @@ import urllib.request
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, Response
 
 ROOT = Path(
@@ -42,6 +43,20 @@ app = FastAPI(
     docs_url=None,
     redoc_url=None,
     openapi_url=None,
+)
+
+# resonance-cors-v1
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://getresonance.org",
+        "https://www.getresonance.org",
+        "http://127.0.0.1:8792",
+        "http://localhost:8792",
+    ],
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"],
 )
 
 
