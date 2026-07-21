@@ -2906,6 +2906,458 @@ body:not(.has-results) .wall-cell img.wall-poster{
 }
 
 </style>
+
+
+<style id="resonance-overhaul-v1">
+/* RESONANCE OVERHAUL V1 — cinematic full-bleed discovery */
+:root{
+  --res-cream:#f4efe7;
+  --res-white:#fffdf8;
+  --res-black:#050505;
+  --res-glass:rgba(8,8,8,.56);
+  --res-line:rgba(255,255,255,.22);
+  --res-soft:rgba(255,255,255,.66);
+  --res-faint:rgba(255,255,255,.42);
+}
+
+body:not(.has-results){
+  background:var(--res-black)!important;
+  color:var(--res-white)!important;
+}
+body:not(.has-results)::after{
+  opacity:.045!important;
+  mix-blend-mode:screen!important;
+}
+body:not(.has-results) .top{
+  display:block!important;
+  position:relative!important;
+  min-height:100svh!important;
+  height:100svh!important;
+  overflow:hidden!important;
+  border:0!important;
+  background:var(--res-black)!important;
+}
+body:not(.has-results) .film-wall-pane{
+  position:absolute!important;
+  inset:0!important;
+  z-index:0!important;
+  width:100%!important;
+  height:100svh!important;
+  min-height:100svh!important;
+  overflow:hidden!important;
+  background:#070707!important;
+}
+body:not(.has-results) .film-wall-pane::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:3;
+  pointer-events:none;
+  background:
+    linear-gradient(90deg,rgba(3,3,3,.98) 0%,rgba(3,3,3,.88) 22%,rgba(3,3,3,.46) 48%,rgba(3,3,3,.09) 74%,rgba(3,3,3,.18) 100%),
+    linear-gradient(180deg,rgba(3,3,3,.48) 0%,rgba(3,3,3,.03) 27%,rgba(3,3,3,.05) 66%,rgba(3,3,3,.82) 100%);
+}
+body:not(.has-results) .film-wall-pane::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  box-shadow:inset 0 0 180px rgba(0,0,0,.45);
+}
+body:not(.has-results) .film-wall{
+  display:grid!important;
+  grid-template-columns:repeat(12,minmax(0,1fr))!important;
+  grid-auto-rows:12.5vh!important;
+  grid-auto-flow:dense!important;
+  gap:3px!important;
+  width:112vw!important;
+  min-height:118svh!important;
+  height:auto!important;
+  padding:0!important;
+  background:#070707!important;
+  transform:translate3d(0,-8svh,0) scale(1.018)!important;
+  transform-origin:center!important;
+  animation:resMosaicDrift 26s ease-in-out infinite alternate!important;
+}
+body.searching:not(.has-results) .film-wall{animation-play-state:paused!important}
+body:not(.has-results) .wall-cell{
+  display:block!important;
+  position:relative!important;
+  min-width:0!important;
+  min-height:0!important;
+  aspect-ratio:auto!important;
+  overflow:hidden!important;
+  border:0!important;
+  box-shadow:none!important;
+  background:#111!important;
+  isolation:isolate;
+}
+body:not(.has-results) .wall-cell::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:2!important;
+  pointer-events:none!important;
+  background:linear-gradient(180deg,transparent 44%,rgba(0,0,0,.68) 100%)!important;
+  opacity:.54!important;
+}
+body:not(.has-results) .wall-cell::after{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:3!important;
+  pointer-events:none!important;
+  border:1px solid rgba(255,255,255,.045)!important;
+  background:none!important;
+  opacity:1!important;
+}
+body:not(.has-results) .wall-cell img,
+body:not(.has-results) .wall-cell img.wall-poster{
+  position:absolute!important;
+  inset:0!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  object-fit:cover!important;
+  object-position:center 38%!important;
+  opacity:.94!important;
+  filter:saturate(.96) contrast(1.04) brightness(.82)!important;
+  transform:scale(1.015)!important;
+  transition:transform .65s cubic-bezier(.2,.7,.2,1),filter .4s ease,opacity .4s ease!important;
+}
+body:not(.has-results) .wall-cell:hover img{
+  transform:scale(1.07)!important;
+  filter:saturate(1.08) contrast(1.03) brightness(.98)!important;
+  opacity:1!important;
+}
+.wall-caption{
+  position:absolute;
+  left:14px;
+  right:14px;
+  bottom:12px;
+  z-index:4;
+  color:#fff;
+  font-family:var(--mono);
+  font-size:9px;
+  line-height:1.25;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  opacity:0;
+  transform:translateY(5px);
+  transition:opacity .22s ease,transform .22s ease;
+  text-shadow:0 2px 18px rgba(0,0,0,.9);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.wall-cell:hover .wall-caption{opacity:.88;transform:none}
+
+body:not(.has-results) .search-pane{
+  position:relative!important;
+  z-index:5!important;
+  width:min(760px,58vw)!important;
+  min-height:100svh!important;
+  height:100svh!important;
+  padding:clamp(26px,4.6vw,76px)!important;
+  padding-top:clamp(30px,5vw,72px)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-end!important;
+  background:transparent!important;
+  color:var(--res-white)!important;
+}
+body:not(.has-results) .search-pane > div:first-child{
+  width:min(100%,690px)!important;
+  margin:auto 0 11vh!important;
+}
+.resonance-home-nav{
+  position:absolute;
+  top:clamp(24px,3.2vw,48px);
+  left:clamp(26px,4.6vw,76px);
+  right:clamp(26px,4.6vw,76px);
+  z-index:7;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  color:#fff;
+}
+.resonance-home-nav__mark{
+  color:#fff;
+  text-decoration:none;
+  font-family:var(--brand);
+  font-size:12px;
+  line-height:1;
+  font-weight:700;
+  letter-spacing:-.045em;
+  text-transform:uppercase;
+}
+.resonance-home-nav__routes{
+  display:flex;
+  align-items:center;
+  gap:4px;
+  padding:4px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(5,5,5,.28);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+.resonance-home-nav__routes a{
+  color:rgba(255,255,255,.55);
+  text-decoration:none;
+  padding:8px 12px;
+  font-family:var(--mono);
+  font-size:9px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  transition:background .2s ease,color .2s ease;
+}
+.resonance-home-nav__routes a:hover{color:#fff}
+.resonance-home-nav__routes a.active{
+  color:#090909;
+  background:var(--res-cream);
+}
+body:not(.has-results) .brand{
+  color:#fff!important;
+  font-size:clamp(48px,6.4vw,98px)!important;
+  line-height:.84!important;
+  letter-spacing:-.08em!important;
+  text-shadow:0 8px 40px rgba(0,0,0,.38)!important;
+}
+.resonance-hero-kicker{
+  margin-bottom:17px;
+  color:rgba(255,255,255,.58);
+  font-family:var(--mono);
+  font-size:10px;
+  line-height:1;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+}
+.resonance-hero-statement{
+  margin-top:24px;
+  max-width:620px;
+  color:rgba(255,255,255,.9);
+  font-family:var(--sans);
+  font-size:clamp(18px,1.65vw,26px);
+  line-height:1.22;
+  letter-spacing:-.025em;
+  font-weight:500;
+}
+.resonance-hero-copy{
+  margin-top:10px;
+  max-width:560px;
+  color:rgba(255,255,255,.52);
+  font-family:var(--sans);
+  font-size:13px;
+  line-height:1.55;
+}
+body:not(.has-results) .prompt-label{
+  margin-top:30px!important;
+  color:rgba(255,255,255,.5)!important;
+  font-size:9px!important;
+  letter-spacing:.18em!important;
+}
+body:not(.has-results) .search-form{
+  margin-top:12px!important;
+  max-width:680px!important;
+  min-height:64px!important;
+  padding:9px 10px 9px 20px!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 44px!important;
+  gap:10px!important;
+  align-items:center!important;
+  border:1px solid rgba(255,255,255,.26)!important;
+  border-bottom-color:rgba(255,255,255,.44)!important;
+  background:rgba(8,8,8,.48)!important;
+  box-shadow:0 20px 70px rgba(0,0,0,.28)!important;
+  backdrop-filter:blur(22px) saturate(1.08)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(1.08)!important;
+}
+body:not(.has-results) #query{
+  color:#fff!important;
+  font-family:var(--sans)!important;
+  font-size:clamp(16px,1.4vw,20px)!important;
+  line-height:1.3!important;
+  letter-spacing:-.015em!important;
+}
+body:not(.has-results) #query::placeholder{color:rgba(255,255,255,.48)!important}
+body:not(.has-results) #go{
+  width:44px!important;
+  height:44px!important;
+  display:grid!important;
+  place-items:center!important;
+  color:#090909!important;
+  background:var(--res-cream)!important;
+  font-size:21px!important;
+  transition:transform .18s ease,background .18s ease!important;
+}
+body:not(.has-results) #go:hover{transform:translateX(2px)!important;background:#fff!important}
+body:not(.has-results) .search-hint{display:none!important}
+.resonance-prompts{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:12px;
+  max-width:680px;
+}
+.resonance-prompt{
+  padding:8px 11px;
+  color:rgba(255,255,255,.66);
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(5,5,5,.24);
+  font-family:var(--mono);
+  font-size:9px;
+  line-height:1.2;
+  letter-spacing:.04em;
+  text-align:left;
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  transition:color .2s ease,border-color .2s ease,background .2s ease;
+}
+.resonance-prompt:hover{
+  color:#fff;
+  border-color:rgba(255,255,255,.36);
+  background:rgba(5,5,5,.48);
+}
+body:not(.has-results) .mode-row{
+  margin-top:16px!important;
+  gap:8px!important;
+}
+body:not(.has-results) .source-badge{
+  color:rgba(255,255,255,.54)!important;
+  border-color:rgba(255,255,255,.16)!important;
+  background:rgba(5,5,5,.18)!important;
+  padding:6px 10px!important;
+  backdrop-filter:blur(10px)!important;
+}
+body:not(.has-results) .source-badge .dot{box-shadow:0 0 0 4px rgba(178,75,54,.13)!important}
+body:not(.has-results) .theme-switch{display:none!important}
+body:not(.has-results) .corpus-load-state{
+  margin-top:10px!important;
+  color:rgba(255,255,255,.42)!important;
+}
+body:not(.has-results) .corpus-load-copy{
+  color:rgba(255,255,255,.42)!important;
+  font-size:9px!important;
+}
+body:not(.has-results) .corpus-load-bar{display:none!important}
+body:not(.has-results) .resolve-state{
+  max-width:680px!important;
+  padding:12px 0 0!important;
+  color:#fff!important;
+}
+body:not(.has-results) .resolve-kicker,
+body:not(.has-results) .resolve-status{color:rgba(255,255,255,.58)!important}
+body:not(.has-results) .resolve-bar{background:rgba(255,255,255,.14)!important}
+body:not(.has-results) .resolve-bar span{background:#fff!important}
+body:not(.has-results) .error-banner{color:#fff!important;background:rgba(120,20,20,.65)!important}
+body:not(.has-results) .lower-links{
+  position:absolute!important;
+  left:clamp(26px,4.6vw,76px)!important;
+  right:clamp(26px,4.6vw,76px)!important;
+  bottom:clamp(22px,3vw,42px)!important;
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:space-between!important;
+  gap:20px!important;
+  color:rgba(255,255,255,.42)!important;
+}
+body:not(.has-results) .site-signals{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  gap:9px 18px!important;
+}
+body:not(.has-results) .site-signal{
+  color:rgba(255,255,255,.38)!important;
+  font-size:8px!important;
+}
+body:not(.has-results) #shuffleFilms{
+  color:rgba(255,255,255,.52)!important;
+  border-bottom:1px solid rgba(255,255,255,.24)!important;
+  padding-bottom:3px!important;
+  font-size:9px!important;
+  letter-spacing:.1em!important;
+}
+
+/* Results polish without changing the proven interaction model. */
+body.has-results .results{background:#070707!important;color:#f6f1e8!important}
+body.has-results .feature-content{background:#0a0a0a!important}
+body.has-results .feature-main h1{letter-spacing:-.055em!important}
+body.has-results .ranking{background:#f2eee7!important;color:#0b0b0b!important}
+body.has-results .rank-row{border-color:rgba(0,0,0,.14)!important}
+body.has-results .rank-row:hover{background:rgba(0,0,0,.035)!important}
+body.has-results .result-query-shell{border-color:rgba(0,0,0,.16)!important}
+
+@keyframes resMosaicDrift{
+  from{transform:translate3d(0,-8svh,0) scale(1.018)}
+  to{transform:translate3d(-1.8vw,-13svh,0) scale(1.035)}
+}
+
+@media (max-width:980px){
+  body:not(.has-results) .search-pane{width:min(780px,76vw)!important}
+  body:not(.has-results) .film-wall-pane::before{
+    background:
+      linear-gradient(90deg,rgba(3,3,3,.96) 0%,rgba(3,3,3,.72) 42%,rgba(3,3,3,.16) 82%,rgba(3,3,3,.24) 100%),
+      linear-gradient(180deg,rgba(3,3,3,.45),transparent 28%,rgba(3,3,3,.08) 62%,rgba(3,3,3,.84));
+  }
+  body:not(.has-results) .film-wall{grid-template-columns:repeat(8,minmax(0,1fr))!important;width:118vw!important}
+}
+
+@media (max-width:760px){
+  body:not(.has-results) .top{height:100svh!important;min-height:100svh!important}
+  body:not(.has-results) .film-wall-pane{height:100svh!important}
+  body:not(.has-results) .film-wall-pane::before{
+    background:
+      linear-gradient(180deg,rgba(3,3,3,.35) 0%,rgba(3,3,3,.06) 28%,rgba(3,3,3,.48) 58%,rgba(3,3,3,.97) 100%),
+      linear-gradient(90deg,rgba(3,3,3,.44),rgba(3,3,3,.08) 72%);
+  }
+  body:not(.has-results) .film-wall{
+    grid-template-columns:repeat(6,minmax(0,1fr))!important;
+    grid-auto-rows:11.5vh!important;
+    width:132vw!important;
+    min-height:112svh!important;
+    transform:translate3d(-12vw,-4svh,0) scale(1.02)!important;
+    animation:none!important;
+  }
+  body:not(.has-results) .search-pane{
+    width:100%!important;
+    height:100svh!important;
+    min-height:100svh!important;
+    padding:24px!important;
+    justify-content:flex-end!important;
+  }
+  body:not(.has-results) .search-pane > div:first-child{
+    width:100%!important;
+    margin:auto 0 88px!important;
+  }
+  .resonance-home-nav{top:22px;left:24px;right:24px}
+  .resonance-home-nav__routes a{padding:7px 9px;font-size:8px}
+  body:not(.has-results) .brand{font-size:clamp(44px,14vw,66px)!important}
+  .resonance-hero-statement{font-size:18px;max-width:92%}
+  .resonance-hero-copy{font-size:12px;max-width:94%}
+  body:not(.has-results) .prompt-label{margin-top:23px!important}
+  body:not(.has-results) .search-form{min-height:58px!important;padding-left:15px!important}
+  body:not(.has-results) #query{font-size:16px!important}
+  .resonance-prompts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .resonance-prompt{font-size:8px;padding:7px 8px}
+  body:not(.has-results) .mode-row{display:none!important}
+  body:not(.has-results) .corpus-load-state{margin-top:9px!important}
+  body:not(.has-results) .lower-links{
+    left:24px!important;right:24px!important;bottom:20px!important;
+  }
+  body:not(.has-results) .site-signal:not(#corpusCount){display:none!important}
+  body:not(.has-results) #shuffleFilms{font-size:8px!important}
+  .wall-caption{display:none}
+}
+
+@media (prefers-reduced-motion:reduce){
+  body:not(.has-results) .film-wall{animation:none!important}
+  body:not(.has-results) .wall-cell img{transition:none!important}
+}
+
+</style>
 </head>
 <body data-mode="film">
 <section class="top">
@@ -3053,7 +3505,7 @@ body:not(.has-results) .wall-cell img.wall-poster{
    Scoring: one ARBITER query embed against a precomputed 72D catalogue field.
    ═══════════════════════════════════════════════════════════ */
 
-const ARBITER_EMBED_URL = "/v1/embed";
+const ARBITER_EMBED_URL = '/v1/embed';
 const RETURN_COUNT = 10;
 const IS_MOBILE = window.matchMedia('(max-width: 760px), (pointer: coarse)').matches;
 const CDN = 'https://images.angelstudios.com/image/upload';
@@ -4393,5 +4845,237 @@ body.media-playing .inline-player{
 }
 </style>
 
+
+
+<script id="resonance-overhaul-v1-script">
+/* RESONANCE OVERHAUL V1 */
+(() => {
+  const isAngel = /angel/i.test(document.title) || /angel/i.test(document.querySelector('#eyebrow')?.textContent || '') || location.pathname.startsWith('/angel');
+  const pageName = isAngel ? 'Angel' : 'Hidden Gem';
+
+  const cleanText = value => String(value || '')
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/&/g, ' and ')
+    .replace(/\b(official|full length|full movie|complete|colorized|remastered|restored|the movie|motion picture|film|trailer|teaser)\b/g, ' ')
+    .replace(/\(\s*(19|20)\d{2}\s*\)/g, ' ')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  const familyKey = value => {
+    let text = cleanText(value)
+      .replace(/^the\s+/, '')
+      .replace(/\b(s(?:eason)?\s*\d+\s*e(?:pisode)?\s*\d+|season\s*\d+(?:\s*(?:episode|ep)\s*\d+)?|episode\s*\d+|ep\s*\d+|chapter\s*\d+|part\s*\d+|volume\s*\d+|vol\s*\d+|book\s*\d+|disc\s*\d+)\b.*$/i, '')
+      .replace(/\b(?:episode|chapter|part|volume|vol)\s*(?:one|two|three|four|five|six|seven|eight|nine|ten)\b.*$/i, '')
+      .replace(/\b\d+\s*(?:of|\/|-)\s*\d+\b.*$/i, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    const franchiseRules = [
+      [/\bbatman\b/, 'batman'],
+      [/\bflash gordon\b/, 'flash-gordon'],
+      [/\bcosby show\b/, 'cosby-show'],
+      [/\blucy show\b/, 'lucy-show'],
+      [/\bpopeye\b/, 'popeye'],
+      [/\bthree stooges\b/, 'three-stooges'],
+      [/\bsherlock holmes\b/, 'sherlock-holmes'],
+      [/\blone ranger\b/, 'lone-ranger']
+    ];
+    for (const [rule, key] of franchiseRules) if (rule.test(text)) return key;
+
+    const words = text.split(' ').filter(Boolean);
+    return words.slice(0, Math.min(words.length, 7)).join('-');
+  };
+
+  const imageKey = value => {
+    const raw = String(value || '').trim();
+    if (!raw) return '';
+    const yt = raw.match(/(?:i\.ytimg\.com\/vi\/|youtube\.com\/.*[?&]v=|youtu\.be\/)([A-Za-z0-9_-]{6,})/i);
+    if (yt) return `yt:${yt[1].toLowerCase()}`;
+    try {
+      const url = new URL(raw, location.href);
+      let path = decodeURIComponent(url.pathname).toLowerCase();
+      path = path
+        .replace(/\/(maxresdefault|sddefault|hqdefault|mqdefault|default)\.(jpg|jpeg|webp|png)$/i, '/youtube-thumb')
+        .replace(/(__|_|-)(?:00)?\d+[a-z]?\.(jpg|jpeg|webp|png)$/i, '.$2')
+        .replace(/\/q_auto[^/]*\//i, '/')
+        .replace(/\/w_\d+[^/]*\//i, '/');
+      return `${url.hostname.toLowerCase()}${path}`;
+    } catch (_) {
+      return raw.split('?')[0].split('#')[0].toLowerCase();
+    }
+  };
+
+  const uniqueItems = (items, limit = Infinity) => {
+    const seenTitle = new Set();
+    const seenImage = new Set();
+    const seenFamily = new Set();
+    const output = [];
+
+    for (const item of items || []) {
+      const title = cleanText(item?.title);
+      const family = familyKey(item?.title);
+      const image = imageKey(item?.poster || item?.backdrop || '');
+      if (!title) continue;
+      if (seenTitle.has(title)) continue;
+      if (image && seenImage.has(image)) continue;
+      if (family && seenFamily.has(family)) continue;
+
+      seenTitle.add(title);
+      if (image) seenImage.add(image);
+      if (family) seenFamily.add(family);
+      output.push(item);
+      if (output.length >= limit) break;
+    }
+    return output;
+  };
+
+  window.resonanceUniqueItems = uniqueItems;
+
+  const pattern = [
+    [3,2],[2,2],[2,1],[3,1],[2,2],
+    [2,1],[3,2],[2,2],[2,1],[3,1],
+    [2,2],[2,1],[3,1],[2,2],[3,2],
+    [3,1],[2,2],[2,1],[3,2],[2,1],
+    [2,1],[2,2],[3,1],[2,1],[3,2],
+    [2,2],[3,1],[2,1],[2,2],[3,1],
+    [3,2],[2,1],[2,2],[3,1],[2,1],
+    [2,2],[2,1],[3,2],[2,1],[3,1]
+  ];
+
+  window.renderWall = function renderWallOverhaul(movies) {
+    const wallNode = document.querySelector('#wall');
+    if (!wallNode) return;
+    const pool = [...(movies || [])];
+    if (typeof window.shuffleArray === 'function') window.shuffleArray(pool);
+    const count = window.IS_MOBILE ? 30 : 44;
+    const subset = uniqueItems(pool, count);
+
+    wallNode.innerHTML = subset.map((item, index) => {
+      const [w, h] = pattern[index % pattern.length];
+      const fallback = item.fallback || (typeof window.fallbackPoster === 'function' ? fallbackPoster(item.title, item.year) : '');
+      const primary = item.poster && item.poster !== fallback ? item.poster : '';
+      const backup = item.backdrop && item.backdrop !== primary && item.backdrop !== fallback ? item.backdrop : '';
+      const kindClass = typeof window.mediaClass === 'function' ? mediaClass(item) : '';
+      const kind = typeof window.mediaKind === 'function' ? mediaKind(item) : 'film';
+      const src = fallback || primary || backup;
+      return `
+        <div class="wall-cell ${kindClass}" data-type="${kind}" data-id="${item.id}" style="grid-column:span ${w};grid-row:span ${h}">
+          <img class="${kindClass} wall-poster"
+               src="${src}"
+               alt="${escHtml(item.title)}"
+               decoding="async"
+               fetchpriority="low"
+               referrerpolicy="no-referrer"
+               data-src="${escHtml(primary)}"
+               data-backup="${escHtml(backup)}"
+               data-fallback="${src}">
+          <span class="wall-caption">${escHtml(item.title)}</span>
+        </div>`;
+    }).join('');
+
+    if (typeof hydrateWallPosters === 'function') requestAnimationFrame(hydrateWallPosters);
+  };
+
+  if (typeof window.arbiterRank === 'function') {
+    window.arbiterRank = async function arbiterRankWithoutDuplicates(query) {
+      const vectors = await ensureCandidateVectors();
+      statusEl.textContent = 'embedding query';
+      const [queryVector] = await embedTexts([query]);
+      statusEl.textContent = `measuring ${vectors.length} embedded candidates`;
+      const ranked = vectors
+        .map((vector, index) => ({ ...corpus[index], score: arbiterMeasure(queryVector, vector) }))
+        .sort((a, b) => b.score - a.score);
+      return uniqueItems(ranked, RETURN_COUNT);
+    };
+  }
+
+  const pane = document.querySelector('.search-pane');
+  const brand = pane?.querySelector('.brand');
+  const eyebrow = pane?.querySelector('#eyebrow');
+  const form = pane?.querySelector('#searchForm');
+  const modeRow = pane?.querySelector('.mode-row');
+
+  if (pane && !pane.querySelector('.resonance-home-nav')) {
+    const nav = document.createElement('nav');
+    nav.className = 'resonance-home-nav';
+    nav.setAttribute('aria-label', 'Catalogues');
+    nav.innerHTML = `
+      <a class="resonance-home-nav__mark" href="/">Actual General Intelligence</a>
+      <div class="resonance-home-nav__routes">
+        <a href="/" class="${isAngel ? '' : 'active'}">Hidden Gem</a>
+        <a href="/angel/" class="${isAngel ? 'active' : ''}">Angel</a>
+      </div>`;
+    pane.prepend(nav);
+  }
+
+  if (brand && !pane.querySelector('.resonance-hero-kicker')) {
+    const kicker = document.createElement('div');
+    kicker.className = 'resonance-hero-kicker';
+    kicker.textContent = `${pageName} catalogue × ARBITER`;
+    brand.before(kicker);
+
+    const statement = document.createElement('div');
+    statement.className = 'resonance-hero-statement';
+    statement.textContent = isAngel
+      ? 'Find the film that meets the moment.'
+      : 'Find the story that matches the moment.';
+    brand.after(statement);
+
+    const copy = document.createElement('div');
+    copy.className = 'resonance-hero-copy';
+    copy.textContent = 'Describe a feeling, conflict, character, situation, or spiritual tension. The entire catalogue is ranked by meaning.';
+    statement.after(copy);
+  }
+
+  if (eyebrow) eyebrow.textContent = 'What do you want to watch?';
+
+  if (form && !pane.querySelector('.resonance-prompts')) {
+    const prompts = document.createElement('div');
+    prompts.className = 'resonance-prompts';
+    const examples = isAngel
+      ? [
+          'faith tested under pressure',
+          'a family fighting for freedom',
+          'moral courage in a true story',
+          'hope after devastating loss'
+        ]
+      : [
+          'a love story with a dangerous secret',
+          'something funny but not shallow',
+          'a family rebuilding trust',
+          'justice in a lawless town'
+        ];
+    prompts.innerHTML = examples.map(text => `<button class="resonance-prompt" type="button" data-resonance-query="${escHtml(text)}">${escHtml(text)}</button>`).join('');
+    form.after(prompts);
+  }
+
+  if (modeRow) {
+    const engineBadge = modeRow.querySelectorAll('.source-badge')[1];
+    if (engineBadge) engineBadge.querySelector('span')?.replaceChildren(document.createTextNode('ARBITER · query-only embed'));
+  }
+
+  document.addEventListener('click', event => {
+    const prompt = event.target.closest('[data-resonance-query]');
+    if (!prompt) return;
+    const query = prompt.getAttribute('data-resonance-query') || '';
+    const input = document.querySelector('#query');
+    if (!input) return;
+    input.value = query;
+    input.focus();
+    document.querySelector('#searchForm')?.requestSubmit();
+  });
+
+  const repaint = () => {
+    if (typeof corpus !== 'undefined' && Array.isArray(corpus) && corpus.length) window.renderWall(corpus);
+  };
+  repaint();
+  setTimeout(repaint, 80);
+  setTimeout(repaint, 500);
+})();
+
+</script>
 </body>
 </html>
