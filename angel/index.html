@@ -429,7 +429,7 @@ body.playing #projector{display:block}
 }
 
 </style>
-<meta name="resonance-build" content="resonance-tmdb-backdrops-20260721T221858Z">
+<meta name="resonance-build" content="resonance-live-reveal-search-20260721T231738Z">
 
 <style id="resonance-deck-viewport-lock-v1">
 /* Keep the horizontal result deck from changing the reveal viewport width. */
@@ -844,6 +844,35 @@ body.searching .send {
       rgba(10,10,9,.16) 32%,
       rgba(10,10,9,0) 58%
     ) !important;
+}
+</style>
+
+
+<style id="resonance-live-reveal-search-v1">
+/*
+ * Keep the current reveal visible while the new query is measured.
+ * Only the small field count signals that the result set is refreshing.
+ */
+body.live-searching #deckCount::after {
+  content: " · updating";
+  opacity: .58;
+}
+
+body.live-searching #reveal .send {
+  opacity: .46;
+  pointer-events: none;
+}
+
+body.live-searching #revealCanvas,
+body.live-searching #revealFrame {
+  transition: opacity 160ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.live-searching #revealCanvas,
+  body.live-searching #revealFrame {
+    transition: none;
+  }
 }
 </style>
 
@@ -1419,26 +1448,63 @@ function stopElapsed() {
   $("#elapsed").textContent = `${elapsed.toFixed(1)}s`;
 }
 
-async function search(rawQuery) {
+const LIVE_REVEAL_DELAY = 260;
+let liveRevealTimer = null;
+let liveRevealComposing = false;
+let searchRequestVersion = 0;
+let lastCompletedQuery = "";
+
+async function search(rawQuery, options = {}) {
   const query = String(rawQuery || "").trim();
   if (!query) return;
 
+  const live = Boolean(options.live);
+  const requestVersion = ++searchRequestVersion;
+
+  clearTimeout(liveRevealTimer);
+
+  if (
+    query === lastCompletedQuery &&
+    Array.isArray(results) &&
+    results.length
+  ) {
+    return;
+  }
+
   currentQuery = query;
-  $("#query").value = query;
-  $("#revealQuery").value = query;
+
+  if (!live) {
+    $("#query").value = query;
+  }
+
+  /*
+   * Never rewrite the reveal input after awaiting network work.
+   * The user's newer text must remain untouched.
+   */
+  if (!live) {
+    $("#revealQuery").value = query;
+  }
+
   document.body.classList.add("searching");
+
+  if (live) {
+    document.body.classList.add("live-searching");
+  }
 
   try {
     const queryVector = await embedQuery(query);
-    results = rankField(queryVector);
-    active = 0;
-    renderedCount = Math.min(PAGE_SIZE, results.length);
 
-    if (!results.length) {
+    if (requestVersion !== searchRequestVersion) {
+      return;
+    }
+
+    const nextResults = rankField(queryVector);
+
+    if (!nextResults.length) {
       throw new Error("No catalogue results were returned.");
     }
 
-    const first = results[0];
+    const first = nextResults[0];
     const hero = itemArt(first) || itemPoster(first);
 
     if (hero) {
@@ -1449,12 +1515,22 @@ async function search(rawQuery) {
         if (typeof preload.decode === "function") {
           await Promise.race([
             preload.decode(),
-            new Promise(resolve => setTimeout(resolve, 500)),
+            new Promise(resolve => setTimeout(resolve, 420)),
           ]);
         }
       } catch {
       }
     }
+
+    if (requestVersion !== searchRequestVersion) {
+      return;
+    }
+
+    results = nextResults;
+    active = 0;
+    renderedCount = Math.min(PAGE_SIZE, results.length);
+    currentQuery = query;
+    lastCompletedQuery = query;
 
     render({centerSelected: true});
     show("reveal");
@@ -1465,10 +1541,24 @@ async function search(rawQuery) {
       `${location.pathname}#${encodeURIComponent(query)}`,
     );
   } catch (error) {
-    console.error(error);
-    toast("search unavailable");
+    if (requestVersion === searchRequestVersion) {
+      console.error(error);
+
+      /*
+       * On live editing, preserve the current result instead of throwing the
+       * user back to the landing page or flashing an error state.
+       */
+      if (!live) {
+        toast("search unavailable");
+      }
+    }
   } finally {
-    document.body.classList.remove("searching");
+    if (requestVersion === searchRequestVersion) {
+      document.body.classList.remove(
+        "searching",
+        "live-searching",
+      );
+    }
   }
 }
 
@@ -1855,6 +1945,9 @@ function voice(buttonSelector, targetSelector) {
       if (value) {
         target.value = value;
         autoResize(target);
+        target.dispatchEvent(
+          new Event("input", {bubbles: true}),
+        );
       }
     };
 
@@ -1867,7 +1960,54 @@ function voice(buttonSelector, targetSelector) {
 }
 
 bindInput($("#query"), () => search($("#query").value));
-bindInput($("#revealQuery"), () => search($("#revealQuery").value));
+bindInput($("#revealQuery"), () => {
+  clearTimeout(liveRevealTimer);
+  search($("#revealQuery").value, {live: false});
+});
+
+function scheduleLiveRevealSearch(options = {}) {
+  clearTimeout(liveRevealTimer);
+
+  if (liveRevealComposing) return;
+  if (!$("#reveal").classList.contains("on")) return;
+
+  const query = String(
+    $("#revealQuery").value || "",
+  ).trim();
+
+  if (query.length < 2) return;
+  if (query === currentQuery) return;
+
+  liveRevealTimer = setTimeout(
+    () => search(query, {live: true}),
+    options.immediate ? 0 : LIVE_REVEAL_DELAY,
+  );
+}
+
+const revealLiveInput = $("#revealQuery");
+
+revealLiveInput.addEventListener(
+  "compositionstart",
+  () => {
+    liveRevealComposing = true;
+    clearTimeout(liveRevealTimer);
+  },
+);
+
+revealLiveInput.addEventListener(
+  "compositionend",
+  () => {
+    liveRevealComposing = false;
+    scheduleLiveRevealSearch({immediate: true});
+  },
+);
+
+revealLiveInput.addEventListener(
+  "input",
+  () => {
+    scheduleLiveRevealSearch();
+  },
+);
 
 $("#searchForm").addEventListener("submit", event => {
   event.preventDefault();
@@ -1885,7 +2025,8 @@ $("#searchForm").addEventListener("submit", event => {
 
 $("#revealForm").addEventListener("submit", event => {
   event.preventDefault();
-  search($("#revealQuery").value);
+  clearTimeout(liveRevealTimer);
+  search($("#revealQuery").value, {live: false});
 });
 
 $("#deck").addEventListener("scroll", () => {
