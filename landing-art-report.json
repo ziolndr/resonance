@@ -1,8 +1,5 @@
 {
-  "requested": 48,
-  "verified_wide_stills": 48,
-  "direct_trailer_stills": 0,
-  "searched_trailer_stills": 49,
-  "existing_real_backdrops": 0,
-  "titles_without_usable_still": 17
+  "source_entries": 48,
+  "localized_verified": 48,
+  "failed_downloads_or_rejections": 0
 }
